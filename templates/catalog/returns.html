@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}
+  Returns and Refunds | Qiksearch
+{% endblock %}
+{% block description %}Read Qiksearch Kenya's returns and refunds guidance, and contact our Nairobi team for help with an order.{% endblock %}
+{% block canonical_url %}{{ request.scheme }}://{{ request.get_host }}{% url 'returns' %}{% endblock %}
+{% block content %}
+  <div class="relative flex min-h-54 items-center overflow-hidden bg-stone-100">
+    <div class="mx-auto w-full max-w-7xl px-8 max-md:px-5 max-md:px-5">
+      <div class="mb-6 text-xs leading-relaxed text-neutral-500">
+        <a href="{% url 'home' %}">Home</a> / Returns and Refunds
+      </div><span class="mb-1 inline-block text-xs font-bold tracking-[1.7px] text-red-700">HERE TO HELP</span><h1 class="my-2 font-display text-5xl font-semibold leading-tight tracking-tight max-sm:text-4xl">Returns & refunds<span class="text-red-700">.</span></h1>
+    </div>
+  </div>
+  <article class="mx-auto max-w-4xl px-5 py-11 text-xs leading-[1.9] text-neutral-600 max-sm:py-7 mx-auto w-full max-w-7xl px-8 max-md:px-5 max-md:px-5">
+    <h2 class="my-3 font-display text-2xl font-semibold leading-tight tracking-tight">Need help with an order?</h2><p>Contact Qiksearch as soon as possible with your order details and a description of the issue. Our team will review the item, its condition, and the order information and explain the available options.</p><h2 class="my-3 font-display text-2xl font-semibold leading-tight tracking-tight">Before returning an item</h2><p>Please contact us before sending any product back. We will confirm whether a return is appropriate, how to package the item, and where it should be delivered. Items should be kept in their original condition and packaging where possible.</p><h2 class="my-3 font-display text-2xl font-semibold leading-tight tracking-tight">Refunds</h2><p>Where a refund is approved, our team will confirm the amount and payment method. Timing may depend on the original payment provider. Special-order, installed, perishable, or used products may require individual review.</p>
+    <p>
+      For help, call <a href="tel:+254700007552">+254 700 007 552</a> or email <a href="mailto:info@qiksearch.co.ke">info@qiksearch.co.ke</a>.
+    </p>
+  </article>
+{% endblock %}

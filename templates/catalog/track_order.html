@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}
+  Track your order | Qiksearch
+{% endblock %}
+{% block description %}Contact Qiksearch's Nairobi team for help checking your order status and delivery details across Kenya.{% endblock %}
+{% block canonical_url %}{{ request.scheme }}://{{ request.get_host }}{% url 'track_order' %}{% endblock %}
+{% block content %}
+  <div class="relative flex min-h-54 items-center overflow-hidden bg-stone-100">
+    <div class="mx-auto w-full max-w-7xl px-8 max-md:px-5 max-md:px-5">
+      <div class="mb-6 text-xs leading-relaxed text-neutral-500">
+        <a href="{% url 'home' %}">Home</a> / Track your order
+      </div><span class="mb-1 inline-block text-xs font-bold tracking-[1.7px] text-red-700">WE'LL HELP YOU FIND IT</span><h1 class="my-2 font-display text-5xl font-semibold leading-tight tracking-tight max-sm:text-4xl">Track your order<span class="text-red-700">.</span></h1><p>Our team can give you the latest delivery update.</p>
+    </div>
+  </div>
+  <section class="mx-auto grid w-full max-w-7xl px-8 max-md:px-5 grid-cols-[1fr_auto] items-center gap-8 py-14 max-md:px-5 max-sm:grid-cols-1 max-sm:py-8 mx-auto w-full max-w-7xl px-8 max-md:px-5 max-md:px-5">
+    <div>
+      <span class="mb-1 inline-block text-xs font-bold tracking-[1.7px] text-red-700">ORDER STATUS</span><h2 class="my-3 font-display text-2xl font-semibold leading-tight tracking-tight">Talk to our Nairobi team.</h2><p>Have your order reference ready and contact us by phone or WhatsApp. We'll check the latest status and delivery details for you.</p><a class="inline-flex min-h-12 items-center gap-6 rounded-sm px-5 text-xs font-semibold transition hover:-translate-y-0.5 bg-red-700 text-white" href="https://wa.me/254700007552?text=Hi%20Qiksearch%2C%20please%20help%20me%20track%20my%20order.%20My%20order%20reference%20is%3A%20" target="_blank" rel="noopener">Ask for an update on WhatsApp <span>↗</span></a>
+    </div>
+    <div class="grid gap-2 bg-stone-100 p-6">
+      <span>CALL US</span><a href="tel:+254700007552">+254 700 007 552</a><small>Monday–Saturday · 8am–6pm</small>
+    </div>
+  </section>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block description %}Review Qiksearch Kenya's terms and conditions for using the website and purchasing agricultural products.{% endblock %}
+{% block canonical_url %}{{ request.scheme }}://{{ request.get_host }}{% url 'terms' %}{% endblock %}
+{% block title %}
+  Terms and Conditions | Qiksearch
+{% endblock %}
+{% block content %}
+  <div class="relative flex min-h-54 items-center overflow-hidden bg-stone-100">
+    <div class="mx-auto w-full max-w-7xl px-8 max-md:px-5 max-md:px-5">
+      <div class="mb-6 text-xs leading-relaxed text-neutral-500">
+        <a href="{% url 'home' %}">Home</a> / Terms and Conditions
+      </div><span class="mb-1 inline-block text-xs font-bold tracking-[1.7px] text-red-700">THE IMPORTANT DETAILS</span><h1 class="my-2 font-display text-5xl font-semibold leading-tight tracking-tight max-sm:text-4xl">Terms and Conditions<span class="text-red-700">.</span></h1>
+    </div>
+  </div>
+  <article class="mx-auto max-w-4xl px-5 py-11 text-xs leading-[1.9] text-neutral-600 max-sm:py-7 mx-auto w-full max-w-7xl px-8 max-md:px-5 max-md:px-5">
+    <h2 class="my-3 font-display text-2xl font-semibold leading-tight tracking-tight">1. Acceptance of Terms</h2><p>Welcome to QikSearch. By accessing and using this Website, you agree to comply with and be bound by these Terms of Service. If you do not agree, please refrain from using the Website.</p><h2 class="my-3 font-display text-2xl font-semibold leading-tight tracking-tight">2. Use of the Website</h2><p>2.1. You must be at least 18 years old to use this Website.</p>
+    <p>2.2. You are responsible for ensuring the accuracy of the information you provide on the Website.</p>
+    <p>2.3. You agree not to use the Website for any unlawful purpose or in violation of any applicable laws.</p><h2 class="my-3 font-display text-2xl font-semibold leading-tight tracking-tight">3. Product Information</h2><p>3.1. Information provided on the Website is for general informational purposes. We make no warranties or representations regarding the accuracy, completeness, or reliability of product information.</p>
+    <p>3.2. Prices and availability of products are subject to change without notice.</p><h2 class="my-3 font-display text-2xl font-semibold leading-tight tracking-tight">4. Ordering and Payment</h2><p>4.1. By placing an order on the Website, you agree to pay the specified amount for the selected products.</p>
+    <p>4.2. We reserve the right to refuse or cancel an order for any reason, including product availability, errors in pricing, or suspicion of fraudulent activity.</p><h2 class="my-3 font-display text-2xl font-semibold leading-tight tracking-tight">5. Shipping and Delivery</h2><p>5.1. Shipping and delivery times are estimates and may vary. We are not responsible for delays in shipping.</p>
+    <p>5.2. You are responsible for providing accurate shipping information. We are not liable for delays or losses resulting from inaccurate shipping information.</p><h2 class="my-3 font-display text-2xl font-semibold leading-tight tracking-tight">6. Returns and Refunds</h2><p>
+      Please refer to our <a href="{% url 'returns' %}">Return &amp; Refund Policy</a> for information on returns and refunds.
+    </p><h2 class="my-3 font-display text-2xl font-semibold leading-tight tracking-tight">7. Intellectual Property</h2><p>7.1. All content on the Website, including text, graphics, logos, and images, is the property of QikSearch or its respective owners and is protected by copyright laws.</p>
+    <p>7.2. You may not reproduce, distribute, or otherwise use Website content without prior written consent.</p><h2 class="my-3 font-display text-2xl font-semibold leading-tight tracking-tight">8. Limitation of Liability</h2><p>We are not liable for indirect, incidental, special, or consequential damages arising out of or in connection with your use of this Website or products purchased from it.</p><h2 class="my-3 font-display text-2xl font-semibold leading-tight tracking-tight">9. Governing Law</h2><p>This Agreement is governed by and construed in accordance with the laws of Kenya.</p><h2 class="my-3 font-display text-2xl font-semibold leading-tight tracking-tight">10. Changes to Terms of Service</h2><p>We reserve the right to update or modify these terms at any time without prior notice. It is your responsibility to review them periodically.</p>
+    <p>
+      For questions, contact us at <a href="tel:+254700007552">+254 700 007 552</a> or <a href="mailto:sales@qiksearch.co.ke">sales@qiksearch.co.ke</a>. Our store is opposite City Stadium along Lusaka Road, Industrial Area, Nairobi, Kenya.
+    </p>
+  </article>
+{% endblock %}

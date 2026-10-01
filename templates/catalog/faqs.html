@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}
+  FAQs | Qiksearch Kenya
+{% endblock %}
+{% block description %}Find answers about ordering farm equipment and agricultural supplies from Qiksearch Kenya, delivery, payments and returns.{% endblock %}
+{% block canonical_url %}{{ request.scheme }}://{{ request.get_host }}{% url 'faqs' %}{% endblock %}
+{% block content %}
+  <div class="relative flex min-h-54 items-center overflow-hidden bg-stone-100">
+    <div class="mx-auto w-full max-w-7xl px-8 max-md:px-5 max-md:px-5">
+      <div class="mb-6 text-xs leading-relaxed text-neutral-500">
+        <a href="{% url 'home' %}">Home</a> / FAQs
+      </div><span class="mb-1 inline-block text-xs font-bold tracking-[1.7px] text-red-700">A FEW HELPFUL ANSWERS</span><h1 class="my-2 font-display text-5xl font-semibold leading-tight tracking-tight max-sm:text-4xl">Frequently asked questions<span class="text-red-700">.</span></h1>
+    </div>
+  </div>
+  <article class="mx-auto max-w-4xl px-5 py-11 text-xs leading-[1.9] text-neutral-600 max-sm:py-7 [&_details]:border-b [&_details]:border-neutral-200 [&_details]:py-4 [&_summary]:cursor-pointer [&_summary]:font-bold mx-auto w-full max-w-7xl px-8 max-md:px-5 max-md:px-5">
+    <details open>
+      <summary>How do I place an order?</summary>
+      <p>Add products to your cart, then send your order enquiry to our team on WhatsApp. We will confirm availability, delivery, and payment details with you.</p>
+    </details>
+    <details>
+      <summary>Do you deliver outside Nairobi?</summary>
+      <p>We arrange delivery across Kenya. Delivery options, cost, and estimated timing depend on your location and the product; our team will confirm these before finalizing your order.</p>
+    </details>
+    <details>
+      <summary>Can I ask for help choosing a product?</summary>
+      <p>Yes. Call or WhatsApp us on +254 700 007 552, or email info@qiksearch.co.ke.</p>
+    </details>
+    <details>
+      <summary>How can I pay?</summary>
+      <p>Our team will confirm the available payment methods when confirming your order. Please wait for official payment instructions from Qiksearch.</p>
+    </details>
+    <details>
+      <summary>How do I ask about a return?</summary>
+      <p>
+        Contact us with your order details before returning a product. See our <a href="{% url 'returns' %}">Returns and Refunds Policy</a> for more information.
+      </p>
+    </details>
+  </article>
+{% endblock %}

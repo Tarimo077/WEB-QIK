@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}
+  Wishlist | Qiksearch
+{% endblock %}
+{% block robots %}noindex,nofollow{% endblock %}
+{% block content %}
+  <div class="relative flex min-h-54 items-center overflow-hidden bg-stone-100">
+    <div class="mx-auto w-full max-w-7xl px-8 max-md:px-5 max-md:px-5">
+      <div class="mb-6 text-xs leading-relaxed text-neutral-500">
+        <a href="{% url 'home' %}">Home</a> / Wishlist
+      </div><span class="mb-1 inline-block text-xs font-bold tracking-[1.7px] text-red-700">SAVED FOR LATER</span><h1 class="my-2 font-display text-5xl font-semibold leading-tight tracking-tight max-sm:text-4xl">Your wishlist<span class="text-red-700">.</span></h1>
+    </div>
+  </div>
+  <section class="mx-auto w-full max-w-7xl px-8 max-md:px-5 max-md:px-5 py-20 max-sm:py-12">
+    {% if products %}
+      <div class="grid grid-cols-4 gap-x-4 gap-y-6 max-md:grid-cols-2">
+        {% for product in products %}
+          {% include 'catalog/_product_card.html' %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="bg-stone-100 px-5 py-22 text-center">
+        <span>♡</span><h2 class="my-3 font-display text-2xl font-semibold leading-tight tracking-tight">Nothing saved just yet</h2><p>Save products you want to come back to.</p><a class="inline-flex min-h-12 items-center gap-6 rounded-sm px-5 text-xs font-semibold transition hover:-translate-y-0.5 bg-red-700 text-white" href="{% url 'shop' %}">Browse products ↗</a>
+      </div>
+    {% endif %}
+  </section>
+{% endblock %}

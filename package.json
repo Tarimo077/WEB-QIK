@@ -1,0 +1,17 @@
+{
+  "name": "web-qik",
+  "version": "1.0.0",
+  "description": "A responsive Django storefront inspired by Qiksearch's Kenyan agricultural shop.",
+  "main": "index.js",
+  "scripts": {
+    "css:build": "tailwindcss -i ./assets/css/app.css -o ./static/catalog/tailwind.css --minify",
+    "css:watch": "tailwindcss -i ./assets/css/app.css -o ./static/catalog/tailwind.css --watch"
+  },
+  "keywords": [],
+  "type": "commonjs",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "daisyui": "^5.7.47",
+    "tailwindcss": "^4.3.3"
+  }
+}

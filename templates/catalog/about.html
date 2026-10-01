@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block title %}
+  About Us — Qiksearch Kenya
+{% endblock %}
+{% block description %}Learn about Qiksearch, a Nairobi social enterprise supporting Kenyan farmers with affordable agricultural tools, seeds, training and sustainable solutions.{% endblock %}
+{% block canonical_url %}{{ request.scheme }}://{{ request.get_host }}{% url 'about' %}{% endblock %}
+{% block og_title %}About Qiksearch | Agricultural equipment and support in Kenya{% endblock %}
+{% block content %}
+  <div class="relative flex min-h-54 items-center overflow-hidden bg-stone-100">
+    <div class="mx-auto w-full max-w-7xl px-8 max-md:px-5 max-md:px-5">
+      <div class="mb-6 text-xs leading-relaxed text-neutral-500">
+        <a href="{% url 'home' %}">Home</a> / About
+      </div><span class="mb-1 inline-block text-xs font-bold tracking-[1.7px] text-red-700">ROOTED IN KENYA · GROWING TOGETHER</span><h1 class="my-2 font-display text-5xl font-semibold leading-tight tracking-tight max-sm:text-4xl">About Qiksearch<span class="text-red-700">.</span></h1><p>Practical agricultural solutions, shaped around the people who grow our food.</p>
+    </div><span class="absolute right-[10%] top-[-67px] text-9xl leading-none text-stone-200">✳</span>
+  </div>
+  <section class="mx-auto grid w-full max-w-7xl px-8 max-md:px-5 grid-cols-2 items-center gap-16 py-20 max-md:px-5 max-sm:grid-cols-1 max-sm:gap-8 max-sm:py-12 mx-auto w-full max-w-7xl px-8 max-md:px-5 max-md:px-5">
+    <div class="relative grid h-85 place-items-center bg-stone-200 text-sm max-sm:h-58 max-sm:text-8xl">
+      🌱<span>Grown with care<br />in Kenya</span>
+    </div>
+    <div>
+      <span class="mb-1 inline-block text-xs font-bold tracking-[1.7px] text-red-700">WHAT WE REALLY DO</span><h2 class="my-3 font-display text-2xl font-semibold leading-tight tracking-tight">Better tools.<br /><em>Stronger farms.</em></h2><p>Qiksearch is a Kenyan social enterprise dedicated to enhancing the livelihoods and resilience of agricultural communities by improving farming productivity, minimizing pre- and post-harvest losses, and addressing climate change in arid and semi-arid regions.</p>
+      <p>Founded in 2020 and headquartered in Nairobi, Qiksearch designs, manufactures and distributes affordable, user-friendly agricultural tools and equipment. We also supply pasture seeds, provide farmer training and create market value-chain linkages.</p>
+    </div>
+  </section>
+  <section class="mx-auto w-full max-w-7xl px-8 max-md:px-5 bg-stone-100 py-14 max-md:px-5 max-sm:py-10">
+    <div class="mx-auto w-full max-w-7xl px-8 max-md:px-5 max-md:px-5 grid grid-cols-2 gap-11 max-sm:grid-cols-1 max-sm:gap-3">
+      <article>
+        <span class="mb-1 inline-block text-xs font-bold tracking-[1.7px] text-red-700">OUR VISION</span><h2 class="my-3 font-display text-2xl font-semibold leading-tight tracking-tight">A resilient future<br />for every farmer.</h2><p>To be a leading catalyst for agricultural transformation in Kenya through accessible technology and sustainable practices.</p>
+      </article>
+      <article>
+        <span class="mb-1 inline-block text-xs font-bold tracking-[1.7px] text-red-700">OUR MISSION</span><h2 class="my-3 font-display text-2xl font-semibold leading-tight tracking-tight">Make good solutions<br />within reach.</h2><p>To empower Kenyan farmers with affordable, innovative and sustainable tools that boost productivity, reduce losses and build climate resilience.</p>
+      </article>
+    </div>
+  </section>
+  <section class="mx-auto w-full max-w-7xl px-8 max-md:px-5 max-md:px-5 py-20 max-sm:py-12">
+    <div class="mb-7 flex items-end justify-between">
+      <div>
+        <span class="mb-1 inline-block text-xs font-bold tracking-[1.7px] text-red-700">HOW WE WORK</span><h2 class="my-3 font-display text-2xl font-semibold leading-tight tracking-tight">Built around real farm life<span class="text-red-700">.</span></h2>
+      </div>
+    </div>
+    <div class="my-6 grid grid-cols-4 gap-3 max-md:grid-cols-2">
+      <article>
+        <span>01</span><h3 class="my-2 font-display text-base font-bold leading-tight">Locally driven innovation</h3><p>Practical solutions shaped for the challenges Kenyan farmers face.</p>
+      </article>
+      <article>
+        <span>02</span><h3 class="my-2 font-display text-base font-bold leading-tight">Affordable and accessible</h3><p>Useful equipment for smallholder farms as well as growing operations.</p>
+      </article>
+      <article>
+        <span>03</span><h3 class="my-2 font-display text-base font-bold leading-tight">Impact that lasts</h3><p>Tools, training and community support to strengthen farming livelihoods.</p>
+      </article>
+      <article>
+        <span>04</span><h3 class="my-2 font-display text-base font-bold leading-tight">Partners in growing</h3><p>We welcome collaboration with organizations working toward sustainable agriculture.</p>
+      </article>
+    </div><a class="inline-flex min-h-12 items-center gap-6 rounded-sm px-5 text-xs font-semibold transition hover:-translate-y-0.5 bg-red-700 text-white" href="{% url 'contact' %}">Cooperate with us <span>↗</span></a>
+  </section>
+{% endblock %}

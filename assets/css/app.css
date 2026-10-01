@@ -1,0 +1,42 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+@font-face {
+  font-family: "DM Sans";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("./fonts/dm-sans-latin.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Manrope";
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url("./fonts/manrope-latin.woff2") format("woff2");
+}
+
+@plugin "daisyui/theme" {
+  name: "qik";
+  default: true;
+  prefersdark: false;
+  color-scheme: light;
+  --color-primary: var(--color-red-700);
+  --color-primary-content: var(--color-white);
+  --color-secondary: var(--color-rose-200);
+  --color-secondary-content: var(--color-red-950);
+  --color-accent: var(--color-lime-200);
+  --color-neutral: var(--color-neutral-900);
+  --color-base-100: var(--color-white);
+  --color-base-200: var(--color-stone-100);
+  --color-base-300: var(--color-stone-200);
+  --color-base-content: var(--color-neutral-900);
+}
+
+@source "../../templates/**/*.html";
+
+@theme {
+  --font-display: "Manrope", sans-serif;
+  --font-sans: "DM Sans", sans-serif;
+}

@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block title %}{{ product.name }} in Kenya — KSh {{ product.current_price|intcomma }} | Qiksearch{% endblock %}
+{% block description %}{{ product.description|striptags|truncatechars:115 }} Shop {{ product.name }} from Qiksearch Kenya. Price KSh {{ product.current_price|intcomma }}.{% endblock %}
+{% block canonical_url %}{{ request.scheme }}://{{ request.get_host }}{{ product.get_absolute_url }}{% endblock %}
+{% block og_type %}product{% endblock %}
+{% block og_title %}{{ product.name }} | Qiksearch Kenya{% endblock %}
+{% block og_description %}{{ product.description|striptags|truncatechars:180 }}{% endblock %}
+{% block og_image %}{% if absolute_product_image %}{{ absolute_product_image }}{% else %}{{ block.super }}{% endif %}{% endblock %}
+{% block extra_head %}<script type="application/ld+json">{{ structured_data }}</script>{% endblock %}
+{% block content %}
+  <div class="mx-auto w-full max-w-7xl px-8 max-md:px-5 max-md:px-5 mx-auto w-full max-w-7xl px-8 max-md:px-5 py-6 pb-20 max-md:px-5 max-sm:pb-14">
+    <div class="mb-6 text-xs leading-relaxed text-neutral-500">
+      <a href="{% url 'home' %}">Home</a> / <a href="{% url 'shop' %}">Shop</a> / <a href="{{ product.category.get_absolute_url }}">{{ product.category.name }}</a> / <span>{{ product.name }}</span>
+    </div>
+    <div class="grid grid-cols-2 items-start gap-18 max-md:gap-9 max-sm:grid-cols-1 max-sm:gap-4">
+      <div class="relative h-118 bg-stone-100 max-md:h-98 max-sm:h-72">
+        {% if product.display_image %}
+          <img class="h-full w-full object-cover" src="{{ product.display_image }}" alt="{{ product.name }} in Kenya" fetchpriority="high" width="900" height="720" />
+        {% else %}
+          <span class="grid h-full place-items-center px-4 text-center text-sm text-neutral-500">Add product photo in admin</span>
+        {% endif %}
+        {% if product.active_promo %}
+          <span class="absolute left-3 top-3 bg-rose-100 px-2 py-1.5 text-xs font-bold uppercase tracking-wider text-red-700">{{ product.active_promo.badge_text }}</span>
+        {% elif product.badge %}
+          <span class="absolute left-3 top-3 bg-rose-100 px-2 py-1.5 text-xs font-bold uppercase tracking-wider text-red-700">{{ product.badge }}</span>
+        {% endif %}
+      </div>
+      <div class="py-6 max-sm:py-2">
+        <span class="mb-1 inline-block text-xs font-bold tracking-[1.7px] text-red-700">{{ product.category.name }}</span><h1 class="my-2 font-display text-5xl font-semibold leading-tight tracking-tight max-sm:text-4xl">{{ product.name }}</h1><div class="border-b border-neutral-200 pb-5 text-2xl font-bold text-red-700 max-sm:text-xl">
+          {% if product.active_promo %}
+            <del class="text-neutral-500 mr-2">KSh {{ product.price|intcomma }}</del><strong class="font-bold text-red-700">KSh {{ product.current_price|intcomma }}</strong>
+          {% else %}
+            KSh {{ product.current_price|intcomma }}
+          {% endif %}
+        </div>
+        <div class="my-4 flex items-center gap-2 text-xs text-green-700">
+          <span></span> Available to order from Nairobi
+        </div>
+        <p class="mb-5 text-sm leading-[1.8] text-neutral-600 max-sm:text-xs">{{ product.description }}</p>
+        <div class="mb-3 flex flex-wrap gap-2">
+          <form method="post" action="{% url 'cart_action' product.pk %}">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="add" />
+            <input type="hidden" name="next" value="{% url 'cart' %}" /><button class="inline-flex min-h-12 items-center gap-6 rounded-sm px-5 text-xs font-semibold transition hover:-translate-y-0.5 bg-red-700 text-white">Add to cart <span>＋</span></button>
+          </form>
+          <form method="post" action="{% url 'wishlist_action' product.pk %}">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.get_full_path }}" /><button class="inline-flex min-h-12 items-center gap-6 rounded-sm px-5 text-xs font-semibold transition hover:-translate-y-0.5 border border-neutral-300 bg-white text-neutral-800">♡ Save for later</button>
+          </form>
+        </div><a class="inline-flex min-h-12 items-center gap-6 rounded-sm px-5 text-xs font-semibold transition hover:-translate-y-0.5 bg-red-700 text-white min-w-52 justify-between bg-red-700 text-white" href="https://wa.me/254700007552?text=Hi%20Qiksearch%2C%20I%27m%20interested%20in%20{{ product.name|urlencode }}" target="_blank" rel="noopener">Ask about this product <span>↗</span></a><div class="flex gap-5 border-b border-neutral-200 py-5 text-xs text-neutral-600 max-sm:gap-3 max-sm:text-xs">
+          <span>✳ &nbsp; Advice from a real person</span><span>⌁ &nbsp; Delivery across Kenya</span>
+        </div>
+        <div class="flex justify-between border-b border-neutral-200 py-3 text-xs">
+          <span>SKU</span><strong>{{ product.sku|default:product.slug|upper }}</strong>
+        </div>
+        <div class="flex justify-between border-b border-neutral-200 py-3 text-xs">
+          <span>Category</span><a href="{{ product.category.get_absolute_url }}">{{ product.category.name }}</a>
+        </div>
+      </div>
+    </div>
+    {% if related %}
+      <div class="mb-7 flex items-end justify-between mt-18 max-sm:mt-12">
+        <div>
+          <span class="mb-1 inline-block text-xs font-bold tracking-[1.7px] text-red-700">MORE FROM THIS COLLECTION</span><h2 class="my-3 font-display text-2xl font-semibold leading-tight tracking-tight">While you're here<span class="text-red-700">.</span></h2>
+        </div>
+      </div>
+      <div class="grid grid-cols-4 gap-x-4 gap-y-6 max-md:grid-cols-2">
+        {% for product in related %}
+          {% include 'catalog/_product_card.html' %}
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}

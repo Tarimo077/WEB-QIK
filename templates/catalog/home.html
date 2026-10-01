@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+  Farm equipment, seeds & livestock supplies in Kenya | Qiksearch
+{% endblock %}
+{% block description %}Shop farm equipment, livestock supplies, quality seeds and fodder in Kenya. Find the right tools for your farm at Qiksearch Nairobi.{% endblock %}
+{% block canonical_url %}{{ request.scheme }}://{{ request.get_host }}{% url 'home' %}{% endblock %}
+{% block og_title %}Farm equipment, seeds & livestock supplies in Kenya | Qiksearch{% endblock %}
+{% block og_description %}Shop practical farm equipment, livestock supplies, seeds and fodder from Qiksearch in Nairobi, Kenya.{% endblock %}
+{% block content %}
+  <section class="relative mx-auto mt-px h-130 w-full max-w-7xl px-8 max-md:px-5 overflow-hidden bg-red-700 text-white max-md:px-5 max-md:h-125 max-sm:h-142">
+    <img class="absolute inset-0 size-full object-cover saturate-90" src="{% static 'catalog/images/qiksearch-site-background.jpeg' %}" alt="" fetchpriority="high" decoding="async" />
+    <div class="absolute inset-0 bg-gradient-to-r from-red-950/90 via-red-950/70 to-red-950/10"></div>
+    <div class="relative mx-auto flex h-full w-full items-center px-[clamp(20px,4vw,52px)] max-sm:items-center max-sm:px-6 max-sm:pb-12 max-sm:pt-22">
+      <div class="max-w-[min(560px,70%)] min-w-0 max-sm:max-w-full">
+        <span class="inline-block text-xs font-bold tracking-[1.7px] text-lime-200">GOOD THINGS GROW HERE</span><h1 class="my-5 text-6xl font-semibold leading-[1.03] tracking-[-.065em] max-sm:text-5xl">For the love<br />of <em class="font-serif font-normal text-rose-200">growing.</em></h1><p class="mb-6 max-w-88 text-base leading-[1.7] text-neutral-100 max-sm:max-w-[30ch] max-sm:text-sm">Thoughtful tools and trusted supplies for the people who make Kenya bloom.</p><a class="inline-flex min-h-12 items-center gap-6 rounded-sm bg-rose-200 px-5 text-xs font-semibold text-red-950 transition hover:-translate-y-0.5" href="{% url 'shop' %}">Find your farm essentials <span class="text-lg">↗</span></a><div class="mt-9 flex flex-wrap gap-x-6 gap-y-2 text-xs text-neutral-100 max-sm:mt-7 max-sm:gap-x-4 max-sm:text-xs">
+          <span>✳ &nbsp; Rooted in Kenya</span><span>✳ &nbsp; Here to help you grow</span>
+        </div>
+      </div>
+      <div class="absolute bottom-8 left-[clamp(20px,4vw,52px)] flex items-center gap-3 text-xs tracking-[.12em] max-sm:bottom-6">
+        <span class="h-px w-12 bg-rose-200"></span><span>Made for the Kenyan farm</span>
+      </div>
+    </div>
+    <div class="absolute bottom-14 right-6 grid size-44 rotate-[-12deg] place-content-center rounded-full border border-white/65 text-2xl font-semibold leading-[1.12] tracking-tight text-white max-sm:right-4 max-sm:top-4 max-sm:bottom-auto max-sm:size-19 max-sm:text-xs">
+      <span>Growing</span><span>better,</span><span><em>together</em> ✳</span>
+    </div>
+  </section>
+  {% if deals %}
+    <section class="mx-auto w-full max-w-7xl px-8 max-md:px-5 bg-stone-100 py-16 max-md:px-5 max-sm:py-12">
+      <div>
+        <div class="mb-7 flex items-end justify-between max-sm:items-start">
+          <div>
+            <span class="inline-block text-xs font-bold tracking-[1.7px] text-red-700">LIMITED-TIME SAVINGS</span><h2 class="mt-2 text-4xl font-semibold leading-tight tracking-tight max-sm:text-3xl">Daily deals<span class="text-red-700">.</span></h2>
+          </div><a class="flex items-center gap-4 border-b border-green-300 pb-2 text-xs font-semibold" href="{% url 'deals' %}">See all deals <span class="text-lg text-red-700">↗</span></a>
+        </div>
+        <div class="grid grid-cols-4 gap-x-4 gap-y-6 max-md:grid-cols-2 max-sm:gap-2">
+          {% for product in deals %}
+            {% include 'catalog/_product_card.html' %}
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  {% endif %}
+  <section class="mx-auto w-full max-w-7xl px-8 max-md:px-5 border-b border-neutral-200 bg-stone-50 max-md:px-5">
+    <div class="mx-auto flex min-h-23 items-center justify-around gap-4 max-sm:grid max-sm:grid-cols-2 max-sm:py-5">
+      <span class="grid grid-cols-[26px_auto] items-center text-xl text-red-700">✳&nbsp; <strong class="text-xs text-neutral-800">For Kenyan farms</strong><small class="col-start-2 mt-1 text-xs text-neutral-500">Built around your needs</small></span><span class="grid grid-cols-[26px_auto] items-center text-xl text-red-700">♧&nbsp; <strong class="text-xs text-neutral-800">Practical quality</strong><small class="col-start-2 mt-1 text-xs text-neutral-500">Tools that work hard</small></span><span class="grid grid-cols-[26px_auto] items-center text-xl text-red-700">♡&nbsp; <strong class="text-xs text-neutral-800">People who care</strong><small class="col-start-2 mt-1 text-xs text-neutral-500">Real support, right here</small></span><span class="grid grid-cols-[26px_auto] items-center text-xl text-red-700">⌁&nbsp; <strong class="text-xs text-neutral-800">Growing together</strong><small class="col-start-2 mt-1 text-xs text-neutral-500">Better days start here</small></span>
+    </div>
+  </section>
+  <section class="mx-auto w-full max-w-7xl px-8 max-md:px-5 bg-stone-100 px-0 py-20 max-md:px-5 max-sm:py-12">
+    <div>
+      <div class="mb-7 flex items-end justify-between">
+        <div>
+          <span class="inline-block text-xs font-bold tracking-[1.7px] text-red-700">GOOD PICKS FOR GOOD WORK</span><h2 class="mt-2 text-4xl font-semibold leading-tight tracking-tight max-sm:text-3xl">Farm favourites<span class="text-red-700">.</span></h2>
+        </div><a class="flex items-center gap-4 border-b border-green-300 pb-2 text-xs font-semibold" href="{% url 'shop' %}">Shop all products <span class="text-lg text-red-700">↗</span></a>
+      </div>
+      <div class="grid grid-cols-4 gap-x-4 gap-y-6 max-md:grid-cols-2 max-sm:gap-2">
+        {% for product in products|slice:':8' %}
+          {% include 'catalog/_product_card.html' %}
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  <section class="relative mx-auto grid min-h-100 w-full max-w-7xl px-8 max-md:px-5 grid-cols-2 overflow-hidden bg-red-900 text-white max-md:px-5 max-sm:grid-cols-1">
+    <div class="flex justify-center w-full align-middle opacity-40 p-2"><img class="object-contain" src="{% static 'catalog/images/qiksearch-site-background.jpeg' %}" alt="" loading="lazy" decoding="async" /></div>
+    <div class="min-w-0 bg-red-900 px-[clamp(28px,5vw,64px)] py-13 max-md:px-8 max-md:py-10 max-sm:px-6 max-sm:pb-16 max-sm:pt-8">
+      <span class="inline-block text-xs font-bold tracking-[1.7px] text-lime-200">GROUNDED IN SOMETHING GOOD</span><h2 class="my-4 text-4xl font-semibold leading-tight tracking-tight max-sm:text-4xl">Big things begin<br />with <em class="font-serif font-normal text-rose-200">good soil.</em></h2><p class="mb-6 max-w-[46ch] text-xs leading-[1.8] text-neutral-100">We're a Nairobi-born social enterprise working alongside Kenya's agricultural communities. We bring together useful farm equipment, quality supplies and a real understanding of what it takes to grow.</p><a href="{% url 'about' %}" class="inline-flex min-h-10 items-center gap-6 rounded-sm bg-white px-5 text-xs font-semibold text-red-700">A little about us <span>↗</span></a>
+    </div>
+    <div class="absolute bottom-6 left-8 text-xl font-semibold text-white max-sm:top-36 max-sm:bottom-auto max-sm:left-4">
+      01 <span>/ &nbsp;OUR STORY</span>
+    </div>
+  </section>
+  <section class="mx-auto flex min-h-55 w-full max-w-7xl px-8 max-md:px-5 items-center gap-6 max-md:px-5 max-sm:flex-wrap max-sm:py-9">
+    <span class="text-sm text-red-700">✳</span><div>
+      <span class="inline-block text-xs font-bold tracking-[1.7px] text-red-700">A LITTLE PROMISE FROM US</span><h2 class="mt-2 text-3xl font-semibold leading-tight tracking-tight">Good tools. Good people.<br /><em class="font-serif font-normal text-red-700">Better growing.</em></h2>
+    </div><a class="ml-auto inline-flex min-h-12 items-center gap-6 rounded-sm bg-red-700 px-5 text-xs font-semibold text-white max-sm:ml-11" href="https://wa.me/254700007552" target="_blank" rel="noopener">Talk to our team <span>↗</span></a>
+  </section>
+{% endblock %}
