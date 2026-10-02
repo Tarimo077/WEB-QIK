@@ -5,11 +5,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "dev-only-change-me-before-deploying")
 
-DEBUG = os.environ.get("DJANGO_DEBUG", "1") == "1"
+#DEBUG = os.environ.get("DJANGO_DEBUG", "1") == "1"
+DEBUG = True
 
 ALLOWED_HOSTS = os.environ.get(
     "DJANGO_ALLOWED_HOSTS", 
-    "localhost,127.0.0.1,testserver"
+    "localhost,127.0.0.1,testserver,qiksearch.jefftarimo.co.ke"
 ).split(",")
 
 # Application definition
@@ -94,17 +95,17 @@ STORAGES = {
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Security & Cookies
-SECURE_CONTENT_TYPE_NOSNIFF = True
-X_FRAME_OPTIONS = "DENY"
-CSRF_COOKIE_SECURE = not DEBUG
-SESSION_COOKIE_SECURE = not DEBUG
-SESSION_COOKIE_HTTPONLY = True
+#SECURE_CONTENT_TYPE_NOSNIFF = True
+#X_FRAME_OPTIONS = "DENY"
+#CSRF_COOKIE_SECURE = not DEBUG
+#SESSION_COOKIE_SECURE = not DEBUG
+#SESSION_COOKIE_HTTPONLY = True
 
 # Production SSL / HSTS settings
-SECURE_SSL_REDIRECT = os.environ.get("DJANGO_SECURE_SSL_REDIRECT", "0") == "1"
-SECURE_HSTS_SECONDS = int(os.environ.get("DJANGO_SECURE_HSTS_SECONDS", "0"))
-SECURE_HSTS_INCLUDE_SUBDOMAINS = os.environ.get("DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS", "0") == "1"
-SECURE_HSTS_PRELOAD = os.environ.get("DJANGO_SECURE_HSTS_PRELOAD", "0") == "1"
+#SECURE_SSL_REDIRECT = os.environ.get("DJANGO_SECURE_SSL_REDIRECT", "0") == "1"
+#SECURE_HSTS_SECONDS = int(os.environ.get("DJANGO_SECURE_HSTS_SECONDS", "0"))
+#SECURE_HSTS_INCLUDE_SUBDOMAINS = os.environ.get("DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS", "0") == "1"
+#SECURE_HSTS_PRELOAD = os.environ.get("DJANGO_SECURE_HSTS_PRELOAD", "0") == "1"
 
-if os.environ.get("DJANGO_TRUST_X_FORWARDED_PROTO", "0") == "1":
-    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+#if os.environ.get("DJANGO_TRUST_X_FORWARDED_PROTO", "0") == "1":
+#    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
