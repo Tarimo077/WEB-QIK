@@ -1,12 +1,13 @@
 import os
+import shutil
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "dev-only-change-me-before-deploying")
 
-#DEBUG = os.environ.get("DJANGO_DEBUG", "1") == "1"
-DEBUG = True
+DEBUG = os.environ.get("DJANGO_DEBUG", "1") == "1"
+#DEBUG = True
 
 ALLOWED_HOSTS = os.environ.get(
     "DJANGO_ALLOWED_HOSTS", 
@@ -56,11 +57,24 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "qikstore.wsgi.application"
 
-# Database
+# Database: copy existing SQLite file to writable /tmp on serverless environments
+IS_SERVERLESS = os.environ.get("AWS_EXECUTION_ENV") is not None or "/var/task" in str(BASE_DIR)
+
+if IS_SERVERLESS:
+    DB_PATH = Path("/tmp") / "db.sqlite3"
+    SOURCE_DB = BASE_DIR / "db.sqlite3"
+    if not DB_PATH.exists() and SOURCE_DB.exists():
+        try:
+            shutil.copyfile(SOURCE_DB, DB_PATH)
+        except OSError:
+            pass
+else:
+    DB_PATH = BASE_DIR / "db.sqlite3"
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "NAME": DB_PATH,
     }
 }
 
@@ -97,19 +111,18 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Store session data inside signed, client-side HTTP cookies instead of SQLite
 SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 
-
 # Security & Cookies
-#SECURE_CONTENT_TYPE_NOSNIFF = True
-#X_FRAME_OPTIONS = "DENY"
-#CSRF_COOKIE_SECURE = not DEBUG
-#SESSION_COOKIE_SECURE = not DEBUG
-#SESSION_COOKIE_HTTPONLY = True
+# SECURE_CONTENT_TYPE_NOSNIFF = True
+# X_FRAME_OPTIONS = "DENY"
+# CSRF_COOKIE_SECURE = not DEBUG
+# SESSION_COOKIE_SECURE = not DEBUG
+# SESSION_COOKIE_HTTPONLY = True
 
 # Production SSL / HSTS settings
-#SECURE_SSL_REDIRECT = os.environ.get("DJANGO_SECURE_SSL_REDIRECT", "0") == "1"
-#SECURE_HSTS_SECONDS = int(os.environ.get("DJANGO_SECURE_HSTS_SECONDS", "0"))
-#SECURE_HSTS_INCLUDE_SUBDOMAINS = os.environ.get("DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS", "0") == "1"
-#SECURE_HSTS_PRELOAD = os.environ.get("DJANGO_SECURE_HSTS_PRELOAD", "0") == "1"
+# SECURE_SSL_REDIRECT = os.environ.get("DJANGO_SECURE_SSL_REDIRECT", "0") == "1"
+# SECURE_HSTS_SECONDS = int(os.environ.get("DJANGO_SECURE_HSTS_SECONDS", "0"))
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = os.environ.get("DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS", "0") == "1"
+# SECURE_HSTS_PRELOAD = os.environ.get("DJANGO_SECURE_HSTS_PRELOAD", "0") == "1"
 
-#if os.environ.get("DJANGO_TRUST_X_FORWARDED_PROTO", "0") == "1":
-#    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+# if os.environ.get("DJANGO_TRUST_X_FORWARDED_PROTO", "0") == "1":
+#     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
