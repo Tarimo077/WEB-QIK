@@ -94,6 +94,10 @@ STORAGES = {
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# Store session data inside signed, client-side HTTP cookies instead of SQLite
+SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
+
+
 # Security & Cookies
 #SECURE_CONTENT_TYPE_NOSNIFF = True
 #X_FRAME_OPTIONS = "DENY"
