@@ -1,5 +1,13 @@
 from django.urls import path
+from django.contrib.sitemaps.views import sitemap
 from . import views
+from .sitemaps import ProductSitemap, CategorySitemap, StaticViewSitemap
+
+sitemaps = {
+    "products": ProductSitemap,
+    "categories": CategorySitemap,
+    "static": StaticViewSitemap,
+}
 
 urlpatterns = [
     path("", views.home, name="home"),
@@ -18,4 +26,10 @@ urlpatterns = [
     path("wishlist/<int:product_id>/", views.wishlist_action, name="wishlist_action"),
     path("category/<slug:slug>/", views.category_detail, name="category"),
     path("product/<slug:slug>/", views.product_detail, name="product"),
+    path("api/search-suggestions/", views.search_suggestions, name="search_suggestions"),
+
+    # SEO & Google Shopping endpoints
+    path("robots.txt", views.robots, name="robots"),
+    path("sitemap.xml", sitemap, {"sitemaps": sitemaps}, name="django.contrib.sitemaps.views.sitemap"),
+    path("google-shopping-feed.xml", views.google_shopping_feed, name="google_shopping_feed"),
 ]

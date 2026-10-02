@@ -1,5 +1,5 @@
 from django.db.models import Count, Prefetch, Q
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 import json
@@ -9,6 +9,7 @@ from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.safestring import mark_safe
 from urllib.parse import quote
 from .models import Category, Product
+from django.contrib import messages
 
 def home(request):
     products = Product.objects.filter(is_active=True).select_related("category").prefetch_related("promotions")
@@ -19,8 +20,10 @@ def shop(request):
     products = Product.objects.filter(is_active=True).select_related("category").prefetch_related("promotions")
     query = request.GET.get("q", "").strip()
     category = request.GET.get("category", "")
-    if query: products = products.filter(Q(name__icontains=query) | Q(description__icontains=query) | Q(category__name__icontains=query))
-    if category: products = products.filter(category__slug=category)
+    if query:
+        products = products.filter(Q(name__icontains=query) | Q(description__icontains=query) | Q(category__name__icontains=query))
+    if category:
+        products = products.filter(category__slug=category)
     view_mode = request.GET.get("view", "grid")
     if view_mode not in ("grid", "list"):
         view_mode = "grid"
@@ -70,7 +73,8 @@ def category_detail(request, slug):
         view_mode = "grid"
     return render(request, "catalog/shop.html", {"products": products, "categories": Category.objects.all(), "active_category": category, "view_mode": view_mode})
 
-def about(request): return render(request, "catalog/about.html")
+def about(request): 
+    return render(request, "catalog/about.html")
 
 def categories(request):
     products_with_images = Product.objects.filter(is_active=True).exclude(image="", image_url="").order_by("name")
@@ -108,27 +112,66 @@ def cart_action(request, product_id):
     cart_data = request.session.get("cart", {})
     key = str(product.pk)
     action = request.POST.get("action", "add")
+    toast_msg = ""
+    toast_type = "success"
+
     if action == "remove":
         cart_data.pop(key, None)
+        toast_msg = f'"{product.name}" removed from your cart.'
+        toast_type = "warning"
+        messages.warning(request, toast_msg)
     elif action == "set":
         try:
-            quantity = min(99, max(1, int(request.POST.get("quantity", 1))))
+            quantity = min(99, max(0, int(request.POST.get("quantity", 1))))
         except (TypeError, ValueError):
             quantity = 1
-        cart_data[key] = quantity
+
+        if quantity == 0:
+            cart_data.pop(key, None)
+            toast_msg = f'"{product.name}" removed from your cart.'
+            toast_type = "warning"
+            messages.warning(request, toast_msg)
+        else:
+            cart_data[key] = quantity
+            toast_msg = f'Quantity updated for "{product.name}".'
+            toast_type = "info"
+            messages.info(request, toast_msg)
     else:
         cart_data[key] = min(99, int(cart_data.get(key, 0)) + 1)
+        toast_msg = f'"{product.name}" added to your cart!'
+        toast_type = "success"
+        messages.success(request, toast_msg)
+
     request.session["cart"] = cart_data
+    request.session.modified = True
+
+    if request.headers.get("x-requested-with") == "XMLHttpRequest":
+        return JsonResponse({
+            "success": True,
+            "message": toast_msg,
+            "type": toast_type,
+            "cart_count": sum(cart_data.values()),
+        })
+
     next_url = request.POST.get("next", "")
     if not url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
         next_url = reverse("cart")
     return redirect(next_url)
 
-def contact(request): return render(request, "catalog/contact.html")
-def terms(request): return render(request, "catalog/terms.html")
-def returns(request): return render(request, "catalog/returns.html")
-def faqs(request): return render(request, "catalog/faqs.html")
-def track_order(request): return render(request, "catalog/track_order.html")
+def contact(request): 
+    return render(request, "catalog/contact.html")
+
+def terms(request): 
+    return render(request, "catalog/terms.html")
+
+def returns(request): 
+    return render(request, "catalog/returns.html")
+
+def faqs(request): 
+    return render(request, "catalog/faqs.html")
+
+def track_order(request): 
+    return render(request, "catalog/track_order.html")
 
 def wishlist(request):
     saved = request.session.get("wishlist", [])
@@ -137,13 +180,34 @@ def wishlist(request):
 
 def wishlist_action(request, product_id):
     if request.method == "POST":
+        product = get_object_or_404(Product, pk=product_id, is_active=True)
         saved = request.session.get("wishlist", [])
-        product_id = str(product_id)
-        if product_id in saved:
-            saved.remove(product_id)
+        str_id = str(product_id)
+        if str_id in saved:
+            saved.remove(str_id)
+            added = False
+            toast_msg = f'"{product.name}" removed from your wishlist.'
+            toast_type = "info"
+            messages.info(request, toast_msg)
         else:
-            saved.append(product_id)
+            saved.append(str_id)
+            added = True
+            toast_msg = f'"{product.name}" added to your wishlist!'
+            toast_type = "success"
+            messages.success(request, toast_msg)
+
         request.session["wishlist"] = saved
+        request.session.modified = True
+
+        if request.headers.get("x-requested-with") == "XMLHttpRequest":
+            return JsonResponse({
+                "success": True,
+                "added": added,
+                "message": toast_msg,
+                "type": toast_type,
+                "wishlist_count": len(saved),
+            })
+
     next_url = request.POST.get("next", "")
     if not url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
         next_url = reverse("wishlist")
@@ -184,3 +248,29 @@ def google_shopping_feed(request):
             ET.SubElement(item, f"{{http://base.google.com/ns/1.0}}{key}").text = str(value)
     body = ET.tostring(rss, encoding="utf-8", xml_declaration=True)
     return HttpResponse(body, content_type="application/rss+xml; charset=utf-8")
+
+def search_suggestions(request):
+    """
+    Returns instant search suggestion results matching the query `q`.
+    """
+    query = request.GET.get('q', '').strip()
+    results = []
+
+    if len(query) >= 2:
+        products = Product.objects.filter(
+            Q(is_active=True) & (
+                Q(name__icontains=query) |
+                Q(description__icontains=query)
+            )
+        ).distinct()[:6]
+
+        for product in products:
+            image_url = product.image.url if getattr(product, 'image', None) else ''
+            results.append({
+                'name': product.name,
+                'url': f'/product/{product.slug}/',
+                'price': f'{product.price:,.2f}' if getattr(product, 'price', None) else '',
+                'image': image_url,
+            })
+
+    return JsonResponse({'results': results})

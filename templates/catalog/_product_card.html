@@ -10,10 +10,15 @@
       <span class="absolute left-3 top-3 bg-rose-100 px-2 py-1.5 text-xs font-bold uppercase tracking-wider text-red-700">{{ product.active_promo.badge_text }}</span>
     {% elif product.badge %}
       <span class="absolute left-3 top-3 bg-rose-100 px-2 py-1.5 text-xs font-bold uppercase tracking-wider text-red-700">{{ product.badge }}</span>
-    {% endif %}<span class="absolute bottom-2 right-2 translate-y-1 bg-white px-2.5 py-2 text-xs opacity-0 transition group-hover:translate-y-0 group-hover:opacity-100 {% if view_mode == 'list' %}max-sm:hidden{% endif %}">View product&nbsp; ↗</span>
+    {% endif %}
+    <span class="absolute bottom-2 right-2 translate-y-1 bg-white px-2.5 py-2 text-xs opacity-0 transition group-hover:translate-y-0 group-hover:opacity-100 {% if view_mode == 'list' %}max-sm:hidden{% endif %}">View product&nbsp; ↗</span>
   </a>
   <div class="p-4 pb-3 {% if view_mode == 'list' %}px-5 py-4 max-sm:p-2.5{% endif %}">
-    <a class="text-xs font-bold uppercase tracking-0 text-red-700 max-sm:text-xs" href="{{ product.category.get_absolute_url }}">{{ product.category.name }}</a><h3 class="my-2 mb-4 min-h-10 text-sm font-semibold leading-[1.45] max-sm:text-xs {% if view_mode == 'list' %}mb-1 min-h-0{% endif %}"><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h3><p class="mb-3 hidden text-xs leading-relaxed text-neutral-500 {% if view_mode == 'list' %}block max-h-[4.5em] overflow-hidden text-xs sm:text-xs{% endif %}">{{ product.description|truncatechars:150 }}</p>
+    <a class="text-xs font-bold uppercase tracking-0 text-red-700 max-sm:text-xs" href="{{ product.category.get_absolute_url }}">{{ product.category.name }}</a>
+    <h3 class="my-2 mb-4 min-h-10 text-sm font-semibold leading-[1.45] max-sm:text-xs {% if view_mode == 'list' %}mb-1 min-h-0{% endif %}">
+      <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+    </h3>
+    <p class="mb-3 hidden text-xs leading-relaxed text-neutral-500 {% if view_mode == 'list' %}block max-h-[4.5em] overflow-hidden text-xs sm:text-xs{% endif %}">{{ product.description|truncatechars:150 }}</p>
     <div class="flex items-center justify-between border-t border-neutral-200 pt-3 {% if view_mode == 'list' %}max-w-75{% endif %}">
       <span class="text-sm font-bold">
         {% if product.active_promo %}
@@ -22,10 +27,12 @@
         {% else %}
           KSh {{ product.current_price|intcomma }}
         {% endif %}
-      </span><form method="post" action="{% url 'cart_action' product.pk %}">
+      </span>
+      <form method="post" action="{% url 'cart_action' product.pk %}" data-async-form data-product-name="{{ product.name }}">
         {% csrf_token %}
         <input type="hidden" name="action" value="add" />
-        <input type="hidden" name="next" value="{{ request.get_full_path }}" /><button class="grid size-7 cursor-pointer place-items-center rounded-full bg-red-700 text-white" aria-label="Add {{ product.name }} to cart" title="add to cart">
+        <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+        <button class="grid size-7 cursor-pointer place-items-center rounded-full bg-red-700 text-white transition hover:bg-red-800" aria-label="Add {{ product.name }} to cart" title="Add to cart">
           <svg class="size-4 fill-none stroke-current stroke-[1.8]" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M3 4h2l2.2 11.1a2 2 0 0 0 2 1.6h8.5a2 2 0 0 0 1.9-1.4L22 8H6" />
             <circle cx="10" cy="20" r="1.3" />
