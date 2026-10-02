@@ -274,3 +274,6 @@ def search_suggestions(request):
             })
 
     return JsonResponse({'results': results})
+
+def migration_gains(request):
+    return render(request, "catalog/migration_gains.html")

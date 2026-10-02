@@ -27,6 +27,7 @@ urlpatterns = [
     path("category/<slug:slug>/", views.category_detail, name="category"),
     path("product/<slug:slug>/", views.product_detail, name="product"),
     path("api/search-suggestions/", views.search_suggestions, name="search_suggestions"),
+    path("platform-gains/", views.migration_gains, name="migration_gains"),
 
     # SEO & Google Shopping endpoints
     path("robots.txt", views.robots, name="robots"),
