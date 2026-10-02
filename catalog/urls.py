@@ -1,6 +1,6 @@
 from django.urls import path
 from django.contrib.sitemaps.views import sitemap
-from . import views
+from . import views, editor_views
 from .sitemaps import ProductSitemap, CategorySitemap, StaticViewSitemap
 
 sitemaps = {
@@ -28,6 +28,13 @@ urlpatterns = [
     path("product/<slug:slug>/", views.product_detail, name="product"),
     path("api/search-suggestions/", views.search_suggestions, name="search_suggestions"),
     path("platform-gains/", views.migration_gains, name="migration_gains"),
+
+    # Superadmin Live Editor & Preview Portal
+    path("superadmin/live-editor/", editor_views.live_editor_dashboard, name="live_editor"),
+    path("superadmin/live-editor/api/entity/", editor_views.api_get_entity, name="live_editor_api_entity"),
+    path("superadmin/live-editor/api/preview/", editor_views.api_preview_entity, name="live_editor_api_preview"),
+    path("superadmin/live-editor/api/save/", editor_views.api_save_entity, name="live_editor_api_save"),
+    path("superadmin/live-editor/api/toggle/", editor_views.api_toggle_field, name="live_editor_api_toggle"),
 
     # SEO & Google Shopping endpoints
     path("robots.txt", views.robots, name="robots"),

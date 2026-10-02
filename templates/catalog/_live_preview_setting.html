@@ -1,0 +1,61 @@
+<div class="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm space-y-6">
+  <div class="border-b border-neutral-100 pb-3">
+    <span class="text-[11px] font-bold uppercase tracking-wider text-red-700">{{ setting.group }}</span>
+    <h3 class="font-display text-lg font-bold text-neutral-900">{{ setting.label }}</h3>
+    <p class="text-xs text-neutral-500">{{ setting.help_text|default:"Live preview of how this content will render across storefront components." }}</p>
+  </div>
+
+  <!-- Live Render Context Previews based on key -->
+  {% if "announcement" in setting.key %}
+    <div class="rounded-xl border border-neutral-200 overflow-hidden">
+      <span class="block bg-neutral-100 px-3 py-1.5 text-[11px] font-semibold text-neutral-600 border-b border-neutral-200">
+        Top Announcement Bar Context Preview
+      </span>
+      <div class="bg-gradient-to-r from-red-800 via-red-700 to-red-800 px-4 py-2.5 text-center text-xs font-semibold text-white shadow-inner">
+        {{ setting.value|default:"(Empty announcement banner)" }}
+      </div>
+    </div>
+  {% elif "hero" in setting.key %}
+    <div class="rounded-xl border border-neutral-200 overflow-hidden">
+      <span class="block bg-neutral-100 px-3 py-1.5 text-[11px] font-semibold text-neutral-600 border-b border-neutral-200">
+        Homepage Hero Banner Context Preview
+      </span>
+      <div class="bg-stone-900 p-8 text-white rounded-b-xl relative overflow-hidden">
+        <div class="relative z-10 max-w-lg">
+          <span class="inline-block rounded-full bg-red-700/80 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white mb-3">
+            {{ site_settings.hero_badge|default:"ROOTED IN KENYA" }}
+          </span>
+          <h2 class="font-display text-2xl font-bold leading-tight">
+            {% if "title" in setting.key %}{{ setting.value }}{% else %}{{ site_settings.hero_title }}{% endif %}
+          </h2>
+          <p class="mt-2 text-xs text-stone-300 leading-relaxed">
+            {% if "description" in setting.key %}{{ setting.value }}{% else %}{{ site_settings.hero_description }}{% endif %}
+          </p>
+        </div>
+      </div>
+    </div>
+  {% elif "phone" in setting.key or "whatsapp" in setting.key or "email" in setting.key or "address" in setting.key %}
+    <div class="rounded-xl border border-neutral-200 overflow-hidden">
+      <span class="block bg-neutral-100 px-3 py-1.5 text-[11px] font-semibold text-neutral-600 border-b border-neutral-200">
+        Contact & Support Card Preview
+      </span>
+      <div class="p-6 bg-stone-50 flex items-start gap-4">
+        <div class="grid size-10 place-items-center rounded-xl bg-red-700 text-white font-bold text-lg shrink-0">
+          {% if "whatsapp" in setting.key %}💬{% elif "phone" in setting.key %}📞{% elif "email" in setting.key %}✉️{% else %}📍{% endif %}
+        </div>
+        <div>
+          <span class="text-[10px] font-bold uppercase tracking-wider text-red-700">{{ setting.label }}</span>
+          <h4 class="font-display text-lg font-bold text-neutral-900 mt-0.5">{{ setting.value|linebreaksbr }}</h4>
+          <p class="text-xs text-neutral-500 mt-1">Directly accessible by customers on web and mobile devices.</p>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="rounded-xl border border-neutral-200 p-5 bg-stone-50">
+      <span class="text-xs font-semibold text-neutral-600 block mb-2">Setting Value:</span>
+      <div class="rounded-lg border border-neutral-200 bg-white p-4 text-xs font-mono text-neutral-800">
+        {{ setting.value|linebreaksbr }}
+      </div>
+    </div>
+  {% endif %}
+</div>

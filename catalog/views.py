@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Count, Prefetch, Q
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -10,6 +11,29 @@ from django.utils.safestring import mark_safe
 from urllib.parse import quote
 from .models import Category, Product
 from django.contrib import messages
+
+ALLOWED_PAGE_SIZES = [10, 20, 50]
+
+def paginate_queryset(request, queryset, default_page_size=20):
+    try:
+        page_size = int(request.GET.get("page_size", default_page_size))
+        if page_size not in ALLOWED_PAGE_SIZES:
+            page_size = default_page_size
+    except (ValueError, TypeError):
+        page_size = default_page_size
+
+    paginator = Paginator(queryset, page_size)
+    page_number = request.GET.get("page", 1)
+    try:
+        page_obj = paginator.get_page(page_number)
+    except (EmptyPage, PageNotAnInteger):
+        page_obj = paginator.get_page(1)
+
+    return page_obj, page_size
+
+def get_view_mode(request):
+    view_mode = request.GET.get("view", "grid")
+    return "list" if view_mode == "list" else "grid"
 
 def home(request):
     products = Product.objects.filter(is_active=True).select_related("category").prefetch_related("promotions")
@@ -24,10 +48,20 @@ def shop(request):
         products = products.filter(Q(name__icontains=query) | Q(description__icontains=query) | Q(category__name__icontains=query))
     if category:
         products = products.filter(category__slug=category)
-    view_mode = request.GET.get("view", "grid")
-    if view_mode not in ("grid", "list"):
-        view_mode = "grid"
-    return render(request, "catalog/shop.html", {"products": products, "categories": Category.objects.all(), "query": query, "selected_category": category, "view_mode": view_mode})
+    
+    view_mode = get_view_mode(request)
+    page_obj, page_size = paginate_queryset(request, products)
+    
+    return render(request, "catalog/shop.html", {
+        "products": page_obj,
+        "page_obj": page_obj,
+        "page_size": page_size,
+        "allowed_page_sizes": ALLOWED_PAGE_SIZES,
+        "categories": Category.objects.all(),
+        "query": query,
+        "selected_category": category,
+        "view_mode": view_mode,
+    })
 
 def product_detail(request, slug):
     product = get_object_or_404(Product.objects.filter(is_active=True).select_related("category").prefetch_related("promotions"), slug=slug)
@@ -67,11 +101,18 @@ def product_detail(request, slug):
 
 def category_detail(request, slug):
     category = get_object_or_404(Category, slug=slug)
-    products = Product.objects.filter(category=category, is_active=True).prefetch_related("promotions")
-    view_mode = request.GET.get("view", "grid")
-    if view_mode not in ("grid", "list"):
-        view_mode = "grid"
-    return render(request, "catalog/shop.html", {"products": products, "categories": Category.objects.all(), "active_category": category, "view_mode": view_mode})
+    products = Product.objects.filter(category=category, is_active=True).select_related("category").prefetch_related("promotions")
+    view_mode = get_view_mode(request)
+    page_obj, page_size = paginate_queryset(request, products)
+    return render(request, "catalog/shop.html", {
+        "products": page_obj,
+        "page_obj": page_obj,
+        "page_size": page_size,
+        "allowed_page_sizes": ALLOWED_PAGE_SIZES,
+        "categories": Category.objects.all(),
+        "active_category": category,
+        "view_mode": view_mode,
+    })
 
 def about(request): 
     return render(request, "catalog/about.html")
@@ -86,9 +127,17 @@ def categories(request):
     return render(request, "catalog/categories.html", {"categories": categories})
 
 def deals(request):
-    products = Product.objects.filter(is_active=True).select_related("category").prefetch_related("promotions")
-    products = [product for product in products if product.active_promo()]
-    return render(request, "catalog/deals.html", {"products": products})
+    all_products = Product.objects.filter(is_active=True).select_related("category").prefetch_related("promotions")
+    deal_products = [product for product in all_products if product.active_promo()]
+    view_mode = get_view_mode(request)
+    page_obj, page_size = paginate_queryset(request, deal_products)
+    return render(request, "catalog/deals.html", {
+        "products": page_obj,
+        "page_obj": page_obj,
+        "page_size": page_size,
+        "allowed_page_sizes": ALLOWED_PAGE_SIZES,
+        "view_mode": view_mode,
+    })
 
 def cart(request):
     cart_data = request.session.get("cart", {})
@@ -176,7 +225,16 @@ def track_order(request):
 def wishlist(request):
     saved = request.session.get("wishlist", [])
     products = Product.objects.filter(pk__in=saved, is_active=True).select_related("category").prefetch_related("promotions")
-    return render(request, "catalog/wishlist.html", {"products": products})
+    view_mode = get_view_mode(request)
+    page_obj, page_size = paginate_queryset(request, products)
+    return render(request, "catalog/wishlist.html", {
+        "products": page_obj,
+        "page_obj": page_obj,
+        "page_size": page_size,
+        "allowed_page_sizes": ALLOWED_PAGE_SIZES,
+        "view_mode": view_mode,
+        "saved_count": len(saved),
+    })
 
 def wishlist_action(request, product_id):
     if request.method == "POST":

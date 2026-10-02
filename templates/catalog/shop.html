@@ -93,40 +93,19 @@
 
     <!-- Product Listing Area -->
     <div class="min-w-0">
-      <!-- Toolbar: Count & View Switcher -->
-      <div class="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-neutral-200 pb-3 text-xs text-neutral-500">
-        <div>
-          {% if active_category %}
-            <span class="font-medium text-neutral-800">{{ products|length }} items in {{ active_category.name }}</span>
-          {% elif query %}
-            <span class="font-medium text-neutral-800">{{ products|length }} results for “{{ query }}”</span>
-          {% else %}
-            <span class="font-medium text-neutral-800">{{ products|length }} products available</span>
-          {% endif %}
-        </div>
-
-        <div class="flex items-center gap-2" aria-label="Product view options">
-          <span class="text-neutral-400">View:</span>
-          <a class="inline-flex items-center gap-1 rounded-md border px-2.5 py-1 text-xs font-medium transition {% if view_mode != 'list' %}border-red-700 bg-red-700 text-white shadow-xs{% else %}border-neutral-200 bg-white text-neutral-700 hover:bg-stone-50{% endif %}"
-            href="?{% if query %}q={{ query|urlencode }}&amp;{% endif %}view=grid"
-            aria-label="Grid view">
-            ▦ Grid
-          </a>
-          <a class="inline-flex items-center gap-1 rounded-md border px-2.5 py-1 text-xs font-medium transition {% if view_mode == 'list' %}border-red-700 bg-red-700 text-white shadow-xs{% else %}border-neutral-200 bg-white text-neutral-700 hover:bg-stone-50{% endif %}"
-            href="?{% if query %}q={{ query|urlencode }}&amp;{% endif %}view=list"
-            aria-label="List view">
-            ☷ List
-          </a>
-        </div>
-      </div>
-
-      <!-- Products Grid / List -->
       {% if products %}
+        <!-- Toolbar: Count, Per-Page Selector & View Switcher -->
+        {% include 'catalog/_listing_toolbar.html' with item_label='products' %}
+
+        <!-- Products Grid / List -->
         <div class="{% if view_mode == 'list' %}grid grid-cols-1 gap-3 sm:gap-4{% else %}grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-2 lg:grid-cols-3{% endif %}">
           {% for product in products %}
             {% include 'catalog/_product_card.html' %}
           {% endfor %}
         </div>
+
+        <!-- Modern Pagination Controls -->
+        {% include 'catalog/_pagination.html' with item_label='products' %}
       {% else %}
         <!-- Empty State -->
         <div class="rounded-2xl border border-neutral-200 bg-stone-50 px-6 py-16 text-center">

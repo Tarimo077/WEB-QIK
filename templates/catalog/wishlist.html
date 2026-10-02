@@ -18,11 +18,18 @@
 
   <section class="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
     {% if products %}
-      <div class="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
+      <!-- Toolbar: Count, Per-Page Selector & View Switcher -->
+      {% include 'catalog/_listing_toolbar.html' with item_label='saved items' %}
+
+      <!-- Products Grid / List -->
+      <div class="{% if view_mode == 'list' %}grid grid-cols-1 gap-3 sm:gap-4{% else %}grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4{% endif %}">
         {% for product in products %}
           {% include 'catalog/_product_card.html' %}
         {% endfor %}
       </div>
+
+      <!-- Modern Pagination Controls -->
+      {% include 'catalog/_pagination.html' with item_label='saved items' %}
     {% else %}
       <div class="rounded-2xl border border-neutral-200 bg-stone-50 px-6 py-16 text-center">
         <span class="text-4xl">♡</span>

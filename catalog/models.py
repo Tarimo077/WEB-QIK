@@ -117,3 +117,38 @@ class Promotion(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class SiteSetting(models.Model):
+    FIELD_TYPES = [
+        ("text", "Single-line Text"),
+        ("textarea", "Multi-line Text"),
+        ("html", "Rich HTML / Markdown"),
+        ("boolean", "Boolean Switch (true/false)"),
+        ("url", "URL Link"),
+    ]
+
+    key = models.SlugField(max_length=64, unique=True, help_text="Unique key identifier for template lookup")
+    label = models.CharField(max_length=120, help_text="Human readable field title")
+    group = models.CharField(max_length=60, default="General", help_text="Category group for editor organization")
+    value = models.TextField(blank=True, default="")
+    field_type = models.CharField(max_length=20, default="text", choices=FIELD_TYPES)
+    help_text = models.CharField(max_length=200, blank=True, default="")
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["group", "label"]
+        verbose_name = "Site Setting"
+        verbose_name_plural = "Site Settings"
+
+    def __str__(self):
+        return f"{self.group} — {self.label}"
+
+    @classmethod
+    def get_value(cls, key, default=""):
+        try:
+            item = cls.objects.filter(key=key).first()
+            return item.value if item and item.value else default
+        except Exception:
+            return default
+

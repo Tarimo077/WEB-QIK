@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-Migrating from WordPress to a tailored Django architecture provides a lightweight, highly maintainable, and secure foundation designed specifically for e-commerce in Kenya. By shedding plugin bloat, database overhead, and rigid theme layers, this new implementation directly improves page speed, conversion rates, SEO discoverability, and long-term operating costs.
+Migrating from WordPress / WooCommerce to a tailored Django architecture provides a lightweight, highly maintainable, and secure foundation designed specifically for agricultural e-commerce in Kenya. By shedding plugin bloat, database overhead, and rigid theme layers, this new implementation directly improves page speed, conversion rates, mobile usability, SEO discoverability, and administrative agility.
 
 ---
 
@@ -14,13 +14,36 @@ Migrating from WordPress to a tailored Django architecture provides a lightweigh
 | **Server Latency (TTFB)** | 800ms – 2500ms due to PHP hooks & plugin chains | 50ms – 200ms lightweight WSGI/ASGI Python responses |
 | **Client Overhead** | Heavy render-blocking scripts, jQuery, Gutenberg styles | Zero third-party runtime frameworks; lightweight native Vanilla JS |
 | **Core Web Vitals** | High Cumulative Layout Shift (CLS) from injected widgets | Zero CLS; pre-sized containers and optimized local asset loading |
+| **Listing Pagination** | Clunky full-page reloads losing filters | Instant, lightweight pagination with custom `param_replace` query state preservation |
 
 * **Conversion Impact:** Kenyan mobile shoppers operating on limited data packages or 3G/4G connections receive near-instant page loads.
 * **Serverless Compatibility:** The architecture deploys seamlessly to read-only, ephemeral serverless execution environments (e.g., AWS Lambda, Vercel) without persistent disk dependencies.
 
 ---
 
-## 2. Security & Maintenance Overhead
+## 2. Superadmin Live Editor & Real-Time Preview Portal
+
+Unlike standard WordPress customizer tools or rigid admin tables, the Django platform includes a dedicated **Superadmin Live Editor & Preview Portal (`/superadmin/live-editor/`)**:
+
+* **Universal Database Entity Editing:** Superadmins can modify Products, Categories, Promotions, and Site Settings (announcements, hero banners, phone numbers, WhatsApp lines, addresses, operating hours) directly from one interface.
+* **Instant In-Memory Live Preview:** Renders live component previews (**Grid Cards**, **List Cards**, **Product Detail Views**, **Category Headers**, and **Banner Contexts**) debounced in real time as the administrator types, without writing unverified data to the database.
+* **Multi-Device Viewport Switching:** One-click preview testing across **Desktop (100%)**, **Tablet (768px)**, and **Mobile (375px)** viewports to ensure presentation quality before publishing.
+* **Storefront Quick Launcher:** Authenticated superusers have a direct floating `⚡ Live Editor` shortcut on the storefront for instant edits.
+* **Zero-Downtime Content Updates:** The `SiteSetting` model and context processor eliminate code edits and deployments for updating phone numbers, WhatsApp order routing, or homepage campaigns.
+
+---
+
+## 3. Mobile-First Storefront & Modern UI/UX
+
+* **Mobile App-Like Experience:** Integrated slide-out navigation drawer and a fixed bottom navigation bar with real-time cart and wishlist badges.
+* **Universal Grid & List View Toggle:** Available across all product listings (**Shop**, **Daily Deals**, and **Wishlist**) allowing users to switch between visual gallery cards and information-dense list cards.
+* **User-Selectable Pagination:** Buyers can choose between **10**, **20**, and **50** products per page, with touch-friendly navigation controls and active page pill indicators.
+* **Automatic Discount Percentage Badges:** Dynamically computes and displays `-X%` badges on products with active promotions or reduced comparison prices.
+* **Clean Visual Brand Identity:** Pure alpha-transparent logo assets integrated seamlessly without background box artifacts.
+
+---
+
+## 4. Security & Maintenance Overhead
 
 ### Eliminate the Plugin Vulnerability Trap
 * **No Third-Party Plugin Risk:** WordPress vulnerabilities originate predominantly from third-party plugins. This platform uses native Django modules for session handling, sitemaps, messaging, and search.
@@ -29,7 +52,7 @@ Migrating from WordPress to a tailored Django architecture provides a lightweigh
 
 ---
 
-## 3. Custom E-Commerce & Kenyan Market Localization
+## 5. Custom E-Commerce & Kenyan Market Localization
 
 ### Direct WhatsApp Order Routing
 * Unlike generic WooCommerce checkout flows that force multi-step account creation and payment gateways, this platform provides direct, pre-formatted WhatsApp order generation (`https://wa.me/...`).
@@ -42,7 +65,7 @@ Migrating from WordPress to a tailored Django architecture provides a lightweigh
 
 ---
 
-## 4. Search Engine Optimization (SEO) & Google Shopping
+## 6. Search Engine Optimization (SEO) & Google Shopping
 
 * **Automated Product Schema (`JSON-LD`):** Every product page renders `schema.org/Product` metadata out of the box, including currency (`KES`), price, availability, and SKU.
 * **Live Google Merchant Feed:** Built-in XML endpoint (`/google-shopping-feed.xml`) directly generates compliant feeds for Google Shopping campaigns without requiring paid extensions.
@@ -50,8 +73,8 @@ Migrating from WordPress to a tailored Django architecture provides a lightweigh
 
 ---
 
-## 5. Architectural Scalability & Infrastructure Cost
+## 7. Architectural Scalability & Infrastructure Cost
 
 * **Stateless Client Sessions:** Support for cryptographically signed cookie sessions (`SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"`) eliminates database writes during browsing, cart modification, and wishlist actions.
 * **Lower Compute Requirements:** Serves significantly more concurrent users on entry-level hosting or serverless tiers compared to heavy PHP/MySQL stacks.
-* **Data Ownership & Clean Schema:** Direct control over relational tables (`Category`, `Product`, `Promotion`) without serialized meta-tables (`wp_postmeta`, `wp_options`) slowing down lookups.
+* **Data Ownership & Clean Schema:** Direct control over relational tables (`Category`, `Product`, `Promotion`, `SiteSetting`) without serialized meta-tables (`wp_postmeta`, `wp_options`) slowing down lookups.

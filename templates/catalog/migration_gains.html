@@ -4,7 +4,7 @@
 {% block robots %}noindex,nofollow{% endblock %}
 
 {% block content %}
-<div class="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+<div class="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
   <div class="mb-8 border-b border-neutral-200 pb-6">
     <span class="text-xs font-bold tracking-wider text-red-700 uppercase">Architecture & Performance</span>
     <h1 class="mt-2 font-display text-3xl sm:text-4xl font-semibold tracking-tight text-neutral-900">
@@ -20,7 +20,7 @@
     <section class="rounded-2xl border border-neutral-200 bg-white p-5 sm:p-6 shadow-xs">
       <h2 class="text-base sm:text-lg font-bold text-neutral-900">Executive Summary</h2>
       <p class="mt-2 text-neutral-600">
-        Migrating from WordPress to a tailored Django architecture provides a lightweight, highly maintainable, and secure foundation designed specifically for e-commerce in Kenya. By shedding plugin bloat, database overhead, and rigid theme layers, this new implementation directly improves page speed, conversion rates, SEO discoverability, and long-term operating costs.
+        Migrating from WordPress to a tailored Django architecture provides a lightweight, highly maintainable, and secure foundation designed specifically for agricultural e-commerce in Kenya. By shedding plugin bloat, database overhead, and rigid theme layers, this implementation directly improves page speed, mobile usability, SEO discoverability, and administrative agility.
       </p>
     </section>
 
@@ -57,14 +57,49 @@
               <td class="p-3 sm:p-3.5 text-neutral-600">High Cumulative Layout Shift (CLS)</td>
               <td class="p-3 sm:p-3.5 font-medium text-green-700">Zero CLS with pre-sized containers and optimized local assets</td>
             </tr>
+            <tr>
+              <td class="p-3 sm:p-3.5 font-semibold text-neutral-900">Catalog Pagination</td>
+              <td class="p-3 sm:p-3.5 text-neutral-600">Full page reloads losing active filters</td>
+              <td class="p-3 sm:p-3.5 font-medium text-green-700">User-selectable (10, 20, 50) with query state preservation</td>
+            </tr>
           </tbody>
         </table>
       </div>
     </section>
 
+    <!-- Superadmin Live Editor & Real-Time Preview Portal -->
+    <section class="rounded-2xl border border-neutral-200 bg-white p-5 sm:p-6 shadow-xs">
+      <div class="flex items-center gap-2">
+        <span class="grid size-7 place-items-center rounded-lg bg-red-700 text-xs font-bold text-white">⚡</span>
+        <h2 class="text-base sm:text-lg font-bold text-neutral-900">2. Superadmin Live Editor & Real-Time Preview Portal</h2>
+      </div>
+      <p class="mt-2 text-neutral-600">
+        Unlike standard WordPress customizer tools or rigid table editors, the platform includes a dedicated <strong>Superadmin Live Editor & Preview Portal (<code>/superadmin/live-editor/</code>)</strong>:
+      </p>
+      <ul class="mt-3 list-disc space-y-2 pl-5 text-neutral-600">
+        <li><strong>Universal DB Entity Editing:</strong> Superadmins can modify Products, Categories, Promotions, and Site Settings (announcements, hero banners, phone numbers, WhatsApp lines, addresses, operating hours) directly from one screen.</li>
+        <li><strong>Instant In-Memory Live Preview:</strong> Renders live component previews (<strong>Grid Cards</strong>, <strong>List Cards</strong>, <strong>Product Detail Views</strong>, <strong>Category Headers</strong>, and <strong>Banner Contexts</strong>) in real time as the admin types, before writing to the database.</li>
+        <li><strong>Multi-Device Viewport Switching:</strong> One-click preview testing across <strong>Desktop (100%)</strong>, <strong>Tablet (768px)</strong>, and <strong>Mobile (375px)</strong> viewports to verify layout responsiveness before publishing.</li>
+        <li><strong>Storefront Quick Launcher:</strong> Authenticated superusers have a floating <code>⚡ Live Editor</code> button on the storefront for immediate access.</li>
+        <li><strong>Zero-Downtime Content Updates:</strong> Dynamic <code>SiteSetting</code> models and context processors eliminate code edits and deployments for updating phone numbers, WhatsApp lines, or hero promotions.</li>
+      </ul>
+    </section>
+
+    <!-- Mobile-First Storefront & Modern UI/UX -->
+    <section class="rounded-2xl border border-neutral-200 bg-white p-5 sm:p-6 shadow-xs">
+      <h2 class="text-base sm:text-lg font-bold text-neutral-900">3. Mobile-First Storefront & Modern UI/UX</h2>
+      <ul class="mt-3 list-disc space-y-2 pl-5 text-neutral-600">
+        <li><strong>Mobile App Experience:</strong> Integrated slide-out navigation drawer and a fixed bottom navigation bar with real-time cart and wishlist counter badges.</li>
+        <li><strong>Universal Grid & List View Toggle:</strong> Available across all product listings (<strong>Shop</strong>, <strong>Daily Deals</strong>, and <strong>Wishlist</strong>) allowing buyers to switch between visual gallery cards and information-dense list cards.</li>
+        <li><strong>User-Selectable Pagination:</strong> Buyers can choose between <strong>10</strong>, <strong>20</strong>, and <strong>50</strong> products per page with touch-friendly navigation controls and active page pill indicators.</li>
+        <li><strong>Automatic Discount Percentage Badges:</strong> Dynamically computes and displays <code>-X%</code> badges on products with active promotions or reduced comparison prices.</li>
+        <li><strong>Clean Brand Logo:</strong> Pure alpha-transparent logo assets integrated seamlessly without background box artifacts.</li>
+      </ul>
+    </section>
+
     <!-- Security & Maintenance -->
     <section class="rounded-2xl border border-neutral-200 bg-white p-5 sm:p-6 shadow-xs">
-      <h2 class="text-base sm:text-lg font-bold text-neutral-900">2. Security & Maintenance Overhead</h2>
+      <h2 class="text-base sm:text-lg font-bold text-neutral-900">4. Security & Maintenance Overhead</h2>
       <ul class="mt-3 list-disc space-y-2 pl-5 text-neutral-600">
         <li><strong>No Third-Party Plugin Risk:</strong> Replaced bloated third-party plugins with clean native Django modules for sessions, sitemaps, messaging, and search.</li>
         <li><strong>Zero Breaking Updates:</strong> Eliminates site crashes caused by automated plugin or theme updates clashing with PHP runtimes.</li>
@@ -74,7 +109,7 @@
 
     <!-- Custom E-Commerce Features -->
     <section class="rounded-2xl border border-neutral-200 bg-white p-5 sm:p-6 shadow-xs">
-      <h2 class="text-base sm:text-lg font-bold text-neutral-900">3. Custom E-Commerce & Market Localization</h2>
+      <h2 class="text-base sm:text-lg font-bold text-neutral-900">5. Custom E-Commerce & Market Localization</h2>
       <ul class="mt-3 list-disc space-y-2 pl-5 text-neutral-600">
         <li><strong>Direct WhatsApp Order Routing:</strong> Pre-formats items, quantities, and totals directly to WhatsApp instead of forcing multi-step checkouts.</li>
         <li><strong>Instant Search & Live Toasts:</strong> Client-side debounced search suggestions and real-time top-right notifications without full page refreshes.</li>
@@ -84,7 +119,7 @@
 
     <!-- Architecture & Costs -->
     <section class="rounded-2xl border border-neutral-200 bg-white p-5 sm:p-6 shadow-xs">
-      <h2 class="text-base sm:text-lg font-bold text-neutral-900">4. Architectural Scalability & Infrastructure Cost</h2>
+      <h2 class="text-base sm:text-lg font-bold text-neutral-900">6. Architectural Scalability & Infrastructure Cost</h2>
       <ul class="mt-3 list-disc space-y-2 pl-5 text-neutral-600">
         <li><strong>Stateless Client Sessions:</strong> Signed cookie sessions eliminate database writes during cart browsing, reducing database load.</li>
         <li><strong>Lower Compute Overhead:</strong> Accommodates higher concurrent traffic on entry-level hosting or serverless tiers.</li>

@@ -1,37 +1,70 @@
 # Qiksearch Farm Shop
 
-A responsive Django storefront inspired by Qiksearch's Kenyan agricultural shop.
+A high-performance, responsive Django storefront and e-commerce platform built for Qiksearch Kenya agricultural equipment, machinery, seeds, and farm supplies.
 
-## Run locally
+## Key Features & Functionalities
+
+### 1. Storefront & Catalog Experience
+- **Responsive Mobile-First UI**: Fully optimized for mobile screens, tablets, and desktop displays with a slide-out navigation drawer, sticky search header, and a fixed bottom app bar with real-time cart and wishlist counter badges.
+- **User-Selectable Pagination**: Dynamic pagination with selectable page size options (**10**, **20**, and **50** items per page) and modern page controls (elided page numbers, previous/next buttons, results range count).
+- **Universal Grid & List View Toggle**: Seamlessly switch between Grid (`▦`) and List (`☷`) product views across all listing pages (Main Shop, Category listings, Daily Deals, and Wishlist).
+- **Smart Query Parameter Preservation**: Custom template tags preserve active search keywords, category filters, page size, and view modes during navigation.
+- **Instant Search & Autocomplete**: Debounced typeahead search suggestions endpoint (`/api/search-suggestions/`) with instant product dropdowns.
+- **Dynamic Discount Badges**: Automatic `-X%` percentage savings badges on products with active promotions or reduced comparison prices.
+- **1-Click WhatsApp Ordering**: Pre-formatted cart order routing directly to Qiksearch WhatsApp support (`+254 700 007 552`), fitting Kenyan agricultural purchasing workflows.
+- **Session-Based Cart & Wishlist**: Fast, client-side signed cookie sessions with real-time top-right toast alerts for additions and quantity updates.
+
+### 2. Superadmin Live Editor & Real-Time Preview Portal
+- **Dedicated Live Editor Dashboard (`/superadmin/live-editor/`)**: In-place management for all database entities with immediate visual feedback.
+  - **Products**: Title, slug, category, price, old price, stock status (InStock, PreOrder, OutOfStock), promotional badge, SKU, image URL, and active visibility.
+  - **Categories**: Name, slug, icon emoji, and descriptions.
+  - **Promotions**: Promotional name, badge text, discount type (Percentage vs Fixed KSh), discount value, date ranges, and active toggle.
+  - **Site Content & Settings**: Top announcement bar text, homepage hero title/subtitle, support phone numbers, WhatsApp lines, email, address, operating hours, and mission statement.
+- **Real-Time Interactive Preview**: Dual-pane layout that re-renders live component previews (Grid Card, List Card, Product Detail layout, Category header, Component preview) as you type, before committing changes to the database.
+- **Multi-Device Viewport Switching**: Toggle preview canvas between Desktop (100%), Tablet (768px), and Mobile (375px) device viewports.
+- **Superadmin Storefront Integration**: Floating `⚡ Live Editor` quick launcher and navbar shortcuts for authenticated superusers.
+
+### 3. Search Visibility & SEO
+- **Structured Data (JSON-LD)**: Schema.org `Product`, `Offer`, `Organization`, and `BreadcrumbList` metadata on all product and landing pages.
+- **Google Shopping Merchant Feed**: Live XML endpoint (`/google-shopping-feed.xml`) publishing active pictured products with prices, SKU, availability, and currency (`KES`).
+- **Dynamic Sitemaps & Robots**: Automated `sitemap.xml` for active categories, products, and static routes with canonical URL enforcement.
+
+---
+
+## Local Development Setup
 
 ```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
+# 1. Create and activate virtual environment
+python -m venv qikvenv
+.\qikvenv\Scripts\Activate.ps1
+
+# 2. Install dependencies
 python -m pip install -r requirements.txt
 npm install
+
+# 3. Build Tailwind CSS
 npm run css:build
+
+# 4. Run database migrations & seed settings
 python manage.py migrate
-python manage.py seed_catalog
+
+# 5. Create superuser & start server
 python manage.py createsuperuser
 python manage.py runserver
 ```
 
-Tailwind CSS v4 and DaisyUI 5 are used in the Django templates. Use Tailwind's standard color palette, text sizes, and spacing utilities in template classes. Edit `assets/css/app.css` to configure Tailwind and the DaisyUI `qik` theme, then rebuild `static/catalog/tailwind.css` with `npm run css:build`. During development, use `npm run css:watch` in a separate terminal so template utility classes are picked up as you work. The hero background, Qiksearch logo and web fonts are stored locally in `static/catalog`; product photos are served from Django media uploads. The generated stylesheet and fonts are loaded from local static files; no runtime CDN or `site.css` is used.
+* Visit `http://127.0.0.1:8000/` for the storefront.
+* Visit `http://127.0.0.1:8000/superadmin/live-editor/` for the Superadmin Live Editor & Preview Portal.
+* Visit `http://127.0.0.1:8000/admin/` for standard Django Admin.
 
-Visit `http://127.0.0.1:8000/` for the storefront and `/admin/` to manage products and categories. Product photos can be uploaded in admin, or an external image URL can be set on each product. The seed data is starter catalog content based on publicly listed Qiksearch product examples; review prices, descriptions, availability, and photos before launch.
+---
 
-## Production
+## Production Deployment
 
-Set `DJANGO_SECRET_KEY` to a private random value, `DJANGO_DEBUG=0`, and `DJANGO_ALLOWED_HOSTS` to the deployed hostnames. Configure HTTPS, a production database, persistent media storage, and a WSGI/ASGI server before deployment. WhiteNoise serves compressed, fingerprinted static files; run `python manage.py collectstatic` during each release. Set `DJANGO_SECURE_SSL_REDIRECT=1` after HTTPS is active, `DJANGO_TRUST_X_FORWARDED_PROTO=1` only behind a trusted proxy that sets `X-Forwarded-Proto`, and optionally set `DJANGO_SECURE_HSTS_SECONDS` after verifying HTTPS across the host. Create a superuser. Do not deploy with the development secret or SQLite as the production database.
-
-## Search visibility
-
-Product pages include canonical URLs, unique titles and descriptions, Open Graph metadata, and Schema.org `Product`/`Offer` JSON-LD. The site also publishes organization and website details, a catalog sitemap, and crawl instructions. Product search results are excluded from indexing to avoid thin duplicate URLs, while category, product, and informational pages remain discoverable. `/google-shopping-feed.xml` publishes active products with images, prices, and stock for Google Merchant Center. After deployment on the final domain, verify the site in Google Search Console, submit the sitemap, add the feed in Merchant Center, and check product URLs with Google's Rich Results Test. Accurate prices, stock, photos, and shipping/returns details matter for product listings. Structured data can make pages eligible for enhanced results but cannot guarantee rankings, indexing, or AI recommendations. Ranking depends on the quality and usefulness of the content, competition, authority, and user needs.
-
-## Catalog and promotions
-
-Use a Django superuser at `/admin/` to manage the storefront. Add categories and products there; product photos are uploaded on each product (or set an image URL). Products can be edited, deleted, featured, or deactivated from the Product list. Create a Promotion, select its products, choose a percentage or fixed KSh reduction, optionally set start/end dates, and switch `Active` on to publish it. Promotions show their badge and discounted price only while active and within their date window. The database catalog is authoritative; no seed catalog runs on startup.
-
-## Storefront
-
-The storefront includes a category directory, daily deals, grid/list product views, session-based cart and wishlist, FAQs, contact, order-help, returns, and terms pages. Cart orders are handed off to Qiksearch through WhatsApp so their team can confirm availability, delivery, and payment with the customer.
+1. Set environment variables:
+   * `DJANGO_SECRET_KEY`: Secure random key
+   * `DJANGO_DEBUG=0`
+   * `DJANGO_ALLOWED_HOSTS`: Domain names (e.g. `qiksearch.co.ke,www.qiksearch.co.ke`)
+2. Run `python manage.py collectstatic --noinput` to generate fingerprinted WhiteNoise static bundles.
+3. Configure PostgreSQL / production database and persistent media storage if user uploads are used.
+4. Enable SSL/HTTPS headers: `DJANGO_SECURE_SSL_REDIRECT=1`, `DJANGO_TRUST_X_FORWARDED_PROTO=1`.

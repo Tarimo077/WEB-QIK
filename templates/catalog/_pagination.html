@@ -1,0 +1,86 @@
+{% load catalog_tags %}
+{% if page_obj.paginator.num_pages > 1 %}
+  <nav class="mt-10 flex flex-col items-center justify-between gap-4 border-t border-neutral-200 pt-6 sm:flex-row" aria-label="Pagination Navigation">
+    <!-- Results Count / Page Info (Desktop & Mobile) -->
+    <div class="text-xs text-neutral-500 order-2 sm:order-1">
+      Page <span class="font-semibold text-neutral-900">{{ page_obj.number }}</span> of <span class="font-semibold text-neutral-900">{{ page_obj.paginator.num_pages }}</span> 
+      <span class="hidden md:inline">({{ page_obj.paginator.count }} total {{ item_label|default:"items" }})</span>
+    </div>
+
+    <!-- Page Number Controls -->
+    <div class="flex items-center gap-1.5 order-1 sm:order-2">
+      <!-- Previous Button -->
+      {% if page_obj.has_previous %}
+        <a href="?{% param_replace page=page_obj.previous_page_number %}"
+           class="inline-flex h-9 items-center gap-1 rounded-lg border border-neutral-200 bg-white px-3 text-xs font-semibold text-neutral-700 shadow-xs transition hover:border-neutral-300 hover:bg-stone-50 hover:text-red-700 active:scale-95"
+           aria-label="Previous page">
+          <svg class="size-3.5 stroke-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+          <span class="hidden sm:inline">Prev</span>
+        </a>
+      {% else %}
+        <span class="inline-flex h-9 items-center gap-1 rounded-lg border border-neutral-200/60 bg-neutral-100/60 px-3 text-xs font-semibold text-neutral-400 cursor-not-allowed pointer-events-none"
+              aria-disabled="true">
+          <svg class="size-3.5 stroke-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+          <span class="hidden sm:inline">Prev</span>
+        </span>
+      {% endif %}
+
+      <!-- Page Number Pills (Elided) -->
+      <div class="flex items-center gap-1">
+        {% for page_num in page_obj|elided_page_range:1 %}
+          {% if page_num == "…" or page_num == "..." %}
+            <span class="grid size-9 place-items-center text-xs font-bold text-neutral-400">…</span>
+          {% elif page_num == page_obj.number %}
+            <span aria-current="page"
+                  class="grid size-9 place-items-center rounded-lg bg-red-700 text-xs font-bold text-white shadow-xs">
+              {{ page_num }}
+            </span>
+          {% else %}
+            <a href="?{% param_replace page=page_num %}"
+               class="grid size-9 place-items-center rounded-lg border border-neutral-200 bg-white text-xs font-medium text-neutral-700 shadow-xs transition hover:border-red-300 hover:bg-stone-50 hover:text-red-700"
+               aria-label="Page {{ page_num }}">
+              {{ page_num }}
+            </a>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <!-- Next Button -->
+      {% if page_obj.has_next %}
+        <a href="?{% param_replace page=page_obj.next_page_number %}"
+           class="inline-flex h-9 items-center gap-1 rounded-lg border border-neutral-200 bg-white px-3 text-xs font-semibold text-neutral-700 shadow-xs transition hover:border-neutral-300 hover:bg-stone-50 hover:text-red-700 active:scale-95"
+           aria-label="Next page">
+          <span class="hidden sm:inline">Next</span>
+          <svg class="size-3.5 stroke-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
+      {% else %}
+        <span class="inline-flex h-9 items-center gap-1 rounded-lg border border-neutral-200/60 bg-neutral-100/60 px-3 text-xs font-semibold text-neutral-400 cursor-not-allowed pointer-events-none"
+              aria-disabled="true">
+          <span class="hidden sm:inline">Next</span>
+          <svg class="size-3.5 stroke-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </span>
+      {% endif %}
+    </div>
+
+    <!-- Quick Jump / Per page option in footer -->
+    <div class="hidden lg:flex items-center gap-2 text-xs text-neutral-500 order-3">
+      <span>Per page:</span>
+      <div class="inline-flex rounded-md border border-neutral-200 bg-stone-50 p-0.5">
+        {% for size in allowed_page_sizes|default:"10,20,50"|slice:":3" %}
+          <a href="?{% param_replace page_size=size page=1 %}" 
+             class="rounded px-2 py-0.5 text-[11px] font-semibold transition {% if page_size == size %}bg-white text-red-700 shadow-xs{% else %}text-neutral-600 hover:text-neutral-900{% endif %}">
+            {{ size }}
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+  </nav>
+{% endif %}

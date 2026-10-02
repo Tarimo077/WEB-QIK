@@ -1,10 +1,11 @@
 from django.contrib import admin
-from .models import Category, Product, Promotion
+from .models import Category, Product, Promotion, SiteSetting
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
     list_display = ("name", "slug")
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ("name", "category", "price", "stock_status", "featured", "is_active")
@@ -29,3 +30,10 @@ class PromotionAdmin(admin.ModelAdmin):
     @admin.display(boolean=True, description="Valid now")
     def currently_valid(self, promotion):
         return promotion.is_current
+
+@admin.register(SiteSetting)
+class SiteSettingAdmin(admin.ModelAdmin):
+    list_display = ("key", "label", "group", "field_type", "updated_at")
+    list_filter = ("group", "field_type")
+    search_fields = ("key", "label", "value")
+
