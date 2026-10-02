@@ -26,6 +26,7 @@ Migrating from WordPress / WooCommerce to a tailored Django architecture provide
 Unlike standard WordPress customizer tools or rigid admin tables, the Django platform includes a dedicated **Superadmin Live Editor & Preview Portal (`/superadmin/live-editor/`)**:
 
 * **Universal Database Entity Editing:** Superadmins can modify Products, Categories, Promotions, and Site Settings (announcements, hero banners, phone numbers, WhatsApp lines, addresses, operating hours) directly from one interface.
+* **Dual-Mode Image Management (File Upload & URL):** Supports instant drag-and-drop / file upload (`PNG`, `JPG`, `WEBP`, `GIF`, `SVG`) directly into Django media storage **or** external image URLs, with instant client-side object URL previews before saving.
 * **Instant In-Memory Live Preview:** Renders live component previews (**Grid Cards**, **List Cards**, **Product Detail Views**, **Category Headers**, and **Banner Contexts**) debounced in real time as the administrator types, without writing unverified data to the database.
 * **Multi-Device Viewport Switching:** One-click preview testing across **Desktop (100%)**, **Tablet (768px)**, and **Mobile (375px)** viewports to ensure presentation quality before publishing.
 * **Storefront Quick Launcher:** Authenticated superusers have a direct floating `⚡ Live Editor` shortcut on the storefront for instant edits.
@@ -33,11 +34,19 @@ Unlike standard WordPress customizer tools or rigid admin tables, the Django pla
 
 ---
 
-## 3. Mobile-First Storefront & Modern UI/UX
+## 3. Mobile-First Storefront, Filtering & Sorting Engine
 
+* **Advanced Multi-Metric Sorting:** Instant sorting across all listings by **Price (Low to High / High to Low)**, **Name (A to Z / Z to A)**, **Newest Arrivals**, and **Featured / Best Match**.
+* **Multi-Faceted Sidebar & Mobile Drawer Filters:**
+  - **Category Directory:** Category navigation annotated with real-time product counts.
+  - **Price Range Filtering:** Min and max price limits with quick presets (*Under KSh 5k*, *KSh 5k–20k*, *KSh 20k–50k*, *Over KSh 50k*).
+  - **Stock Availability:** Filter for *In Stock Only* or *Available on Pre-Order*.
+  - **Special Deals & Featured:** 1-click toggles for *On Sale Discounts* and *Featured Equipment*.
+  - **Active Removable Chips:** Visual badges showing all currently applied filters with 1-click removal and reset.
+  - **Mobile Slide-Out Drawer:** Seamless touch modal for mobile shoppers to filter and sort without losing navigation context.
 * **Mobile App-Like Experience:** Integrated slide-out navigation drawer and a fixed bottom navigation bar with real-time cart and wishlist badges.
 * **Universal Grid & List View Toggle:** Available across all product listings (**Shop**, **Daily Deals**, and **Wishlist**) allowing users to switch between visual gallery cards and information-dense list cards.
-* **User-Selectable Pagination:** Buyers can choose between **10**, **20**, and **50** products per page, with touch-friendly navigation controls and active page pill indicators.
+* **User-Selectable Pagination:** Buyers can choose between **10**, **20**, and **50** products per page, with touch-friendly navigation controls, active page pill indicators, and query state preservation.
 * **Automatic Discount Percentage Badges:** Dynamically computes and displays `-X%` badges on products with active promotions or reduced comparison prices.
 * **Clean Visual Brand Identity:** Pure alpha-transparent logo assets integrated seamlessly without background box artifacts.
 

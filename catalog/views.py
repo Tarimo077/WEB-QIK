@@ -1,5 +1,6 @@
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.db.models import Count, Prefetch, Q
+from django.db.models import Count, F, Max, Min, Prefetch, Q
+from django.db.models.functions import Lower
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
@@ -13,6 +14,15 @@ from .models import Category, Product
 from django.contrib import messages
 
 ALLOWED_PAGE_SIZES = [10, 20, 50]
+
+SORT_OPTIONS = [
+    ("featured", "Featured / Recommended"),
+    ("price_asc", "Price: Low to High"),
+    ("price_desc", "Price: High to Low"),
+    ("name_asc", "Name: A to Z"),
+    ("name_desc", "Name: Z to A"),
+    ("newest", "Newest Arrivals"),
+]
 
 def paginate_queryset(request, queryset, default_page_size=20):
     try:
@@ -35,6 +45,106 @@ def get_view_mode(request):
     view_mode = request.GET.get("view", "grid")
     return "list" if view_mode == "list" else "grid"
 
+def apply_product_filters_and_sorting(request, queryset, active_category=None):
+    """
+    Applies comprehensive keyword, category, price range, stock status,
+    on-sale, featured filters and ordering to the product queryset.
+    Returns (queryset, context_dict).
+    """
+    query = request.GET.get("q", "").strip()
+    category_slug = active_category.slug if active_category else request.GET.get("category", "").strip()
+    min_price_raw = request.GET.get("min_price", "").strip()
+    max_price_raw = request.GET.get("max_price", "").strip()
+    stock = request.GET.get("stock", "").strip()
+    on_sale = request.GET.get("on_sale", "").strip() in ("1", "true", "True")
+    featured = request.GET.get("featured", "").strip() in ("1", "true", "True")
+    sort = request.GET.get("sort", "featured").strip()
+
+    active_filters = []
+
+    # 1. Search Query
+    if query:
+        queryset = queryset.filter(
+            Q(name__icontains=query) |
+            Q(description__icontains=query) |
+            Q(category__name__icontains=query) |
+            Q(sku__icontains=query)
+        )
+        active_filters.append({"label": f'Search: "{query}"', "key": "q"})
+
+    # 2. Category
+    if category_slug:
+        queryset = queryset.filter(category__slug=category_slug)
+        if not active_category:
+            cat_obj = Category.objects.filter(slug=category_slug).first()
+            active_filters.append({"label": f'Category: {cat_obj.name if cat_obj else category_slug}', "key": "category"})
+
+    # 3. Price Range Filtering
+    if min_price_raw.isdigit():
+        min_p = int(min_price_raw)
+        queryset = queryset.filter(price__gte=min_p)
+        active_filters.append({"label": f"Min: KSh {min_p:,.0f}", "key": "min_price"})
+
+    if max_price_raw.isdigit():
+        max_p = int(max_price_raw)
+        queryset = queryset.filter(price__lte=max_p)
+        active_filters.append({"label": f"Max: KSh {max_p:,.0f}", "key": "max_price"})
+
+    # 4. Stock Status
+    if stock in ("InStock", "PreOrder", "OutOfStock"):
+        queryset = queryset.filter(stock_status=stock)
+        stock_labels = {"InStock": "In Stock", "PreOrder": "Available to Order", "OutOfStock": "Out of Stock"}
+        active_filters.append({"label": stock_labels.get(stock, stock), "key": "stock"})
+
+    # 5. On Sale / Promos
+    if on_sale:
+        queryset = queryset.filter(
+            Q(promotions__is_active=True) |
+            Q(old_price__gt=F("price"))
+        ).distinct()
+        active_filters.append({"label": "On Sale Deals", "key": "on_sale"})
+
+    # 6. Featured Only
+    if featured:
+        queryset = queryset.filter(featured=True)
+        active_filters.append({"label": "Featured Only", "key": "featured"})
+
+    # 7. Sorting
+    if sort == "price_asc":
+        queryset = queryset.order_by("price", Lower("name"))
+    elif sort == "price_desc":
+        queryset = queryset.order_by("-price", Lower("name"))
+    elif sort == "name_asc":
+        queryset = queryset.order_by(Lower("name").asc())
+    elif sort == "name_desc":
+        queryset = queryset.order_by(Lower("name").desc())
+    elif sort == "newest":
+        queryset = queryset.order_by("-id")
+    else:
+        sort = "featured"
+        queryset = queryset.order_by("-featured", "-updated_at", Lower("name"))
+
+    categories_annotated = Category.objects.annotate(
+        product_count=Count("products", filter=Q(products__is_active=True), distinct=True)
+    ).order_by("name")
+
+    context = {
+        "query": query,
+        "selected_category": category_slug,
+        "min_price": min_price_raw,
+        "max_price": max_price_raw,
+        "selected_stock": stock,
+        "on_sale": on_sale,
+        "featured_only": featured,
+        "selected_sort": sort,
+        "sort_options": SORT_OPTIONS,
+        "active_filters": active_filters,
+        "active_filters_count": len(active_filters),
+        "categories": categories_annotated,
+    }
+
+    return queryset, context
+
 def home(request):
     products = Product.objects.filter(is_active=True).select_related("category").prefetch_related("promotions")
     deals = [product for product in products if product.active_promo()][:4]
@@ -42,26 +152,19 @@ def home(request):
 
 def shop(request):
     products = Product.objects.filter(is_active=True).select_related("category").prefetch_related("promotions")
-    query = request.GET.get("q", "").strip()
-    category = request.GET.get("category", "")
-    if query:
-        products = products.filter(Q(name__icontains=query) | Q(description__icontains=query) | Q(category__name__icontains=query))
-    if category:
-        products = products.filter(category__slug=category)
-    
+    filtered_products, filter_ctx = apply_product_filters_and_sorting(request, products)
     view_mode = get_view_mode(request)
-    page_obj, page_size = paginate_queryset(request, products)
+    page_obj, page_size = paginate_queryset(request, filtered_products)
     
-    return render(request, "catalog/shop.html", {
+    ctx = {
         "products": page_obj,
         "page_obj": page_obj,
         "page_size": page_size,
         "allowed_page_sizes": ALLOWED_PAGE_SIZES,
-        "categories": Category.objects.all(),
-        "query": query,
-        "selected_category": category,
         "view_mode": view_mode,
-    })
+        **filter_ctx,
+    }
+    return render(request, "catalog/shop.html", ctx)
 
 def product_detail(request, slug):
     product = get_object_or_404(Product.objects.filter(is_active=True).select_related("category").prefetch_related("promotions"), slug=slug)
@@ -102,17 +205,19 @@ def product_detail(request, slug):
 def category_detail(request, slug):
     category = get_object_or_404(Category, slug=slug)
     products = Product.objects.filter(category=category, is_active=True).select_related("category").prefetch_related("promotions")
+    filtered_products, filter_ctx = apply_product_filters_and_sorting(request, products, active_category=category)
     view_mode = get_view_mode(request)
-    page_obj, page_size = paginate_queryset(request, products)
-    return render(request, "catalog/shop.html", {
+    page_obj, page_size = paginate_queryset(request, filtered_products)
+    ctx = {
         "products": page_obj,
         "page_obj": page_obj,
         "page_size": page_size,
         "allowed_page_sizes": ALLOWED_PAGE_SIZES,
-        "categories": Category.objects.all(),
         "active_category": category,
         "view_mode": view_mode,
-    })
+        **filter_ctx,
+    }
+    return render(request, "catalog/shop.html", ctx)
 
 def about(request): 
     return render(request, "catalog/about.html")
@@ -129,14 +234,18 @@ def categories(request):
 def deals(request):
     all_products = Product.objects.filter(is_active=True).select_related("category").prefetch_related("promotions")
     deal_products = [product for product in all_products if product.active_promo()]
+    
+    # Apply price range and sorting to deals
+    filtered_products, filter_ctx = apply_product_filters_and_sorting(request, Product.objects.filter(pk__in=[p.pk for p in deal_products]))
     view_mode = get_view_mode(request)
-    page_obj, page_size = paginate_queryset(request, deal_products)
+    page_obj, page_size = paginate_queryset(request, filtered_products)
     return render(request, "catalog/deals.html", {
         "products": page_obj,
         "page_obj": page_obj,
         "page_size": page_size,
         "allowed_page_sizes": ALLOWED_PAGE_SIZES,
         "view_mode": view_mode,
+        **filter_ctx,
     })
 
 def cart(request):

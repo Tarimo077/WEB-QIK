@@ -19,7 +19,11 @@ def live_editor_dashboard(request):
     Main Live Editor & Preview dashboard for superadmin.
     """
     products = Product.objects.select_related("category").prefetch_related("promotions").order_by("-updated_at")
-    categories = Category.objects.all().order_by("name")
+    products_with_images = Product.objects.filter(is_active=True).exclude(image="", image_url="").order_by("name")
+    from django.db.models import Prefetch
+    categories = Category.objects.prefetch_related(
+        Prefetch("products", queryset=products_with_images, to_attr="collage_products")
+    ).order_by("name")
     promotions = Promotion.objects.all().order_by("-created_at")
     settings_qs = SiteSetting.objects.all().order_by("group", "label")
 
@@ -87,22 +91,25 @@ def api_get_entity(request):
                 "featured": p.featured,
                 "is_active": p.is_active,
                 "image_url": p.image_url,
+                "display_image": p.display_image,
+                "has_uploaded_image": bool(p.image),
+                "image_filename": p.image.name.split("/")[-1] if p.image else "",
                 "sku": p.sku,
                 "current_price": p.current_price,
                 "discount_percent": p.discount_percent,
-                "display_image": p.display_image,
                 "absolute_url": p.get_absolute_url(),
                 "updated_at": p.updated_at.strftime("%Y-%m-%d %H:%M"),
             }
         elif entity_type == "category":
             c = get_object_or_404(Category, pk=entity_id)
+            collage_images = [p.display_image for p in c.products.filter(is_active=True) if p.display_image][:4]
             data = {
                 "id": c.pk,
                 "name": c.name,
                 "slug": c.slug,
                 "description": c.description,
-                "icon": c.icon,
                 "products_count": c.products.count(),
+                "collage_images": collage_images,
                 "absolute_url": c.get_absolute_url(),
             }
         elif entity_type == "promotion":
@@ -141,17 +148,21 @@ def api_get_entity(request):
 def api_preview_entity(request):
     """
     Renders live HTML previews without committing changes to DB.
+    Supports both JSON and Multipart FormData.
     """
     if not is_superadmin(request.user):
         return HttpResponseForbidden("Unauthorized")
 
-    try:
-        body = json.loads(request.body.decode("utf-8"))
-    except Exception:
-        return JsonResponse({"error": "Invalid JSON"}, status=400)
-
-    entity_type = body.get("type", "product")
-    fields = body.get("fields", {})
+    if request.content_type and "application/json" in request.content_type:
+        try:
+            body = json.loads(request.body.decode("utf-8"))
+            entity_type = body.get("type", "product")
+            fields = body.get("fields", {})
+        except Exception:
+            return JsonResponse({"error": "Invalid JSON"}, status=400)
+    else:
+        entity_type = request.POST.get("type", "product")
+        fields = request.POST.dict()
 
     try:
         if entity_type == "product":
@@ -163,6 +174,9 @@ def api_preview_entity(request):
 
             price = int(fields.get("price") or 0)
             old_price = int(fields.get("old_price")) if fields.get("old_price") else None
+            
+            # Preview image URL can be passed via image_preview_url or image_url
+            preview_img = fields.get("image_preview_url") or fields.get("image_url") or ""
 
             prod = Product(
                 pk=fields.get("id") or 99999,
@@ -174,9 +188,9 @@ def api_preview_entity(request):
                 description=fields.get("description") or "High quality agricultural equipment and supplies.",
                 badge=fields.get("badge", ""),
                 stock_status=fields.get("stock_status", "InStock"),
-                featured=bool(fields.get("featured", False)),
-                is_active=bool(fields.get("is_active", True)),
-                image_url=fields.get("image_url", ""),
+                featured=str(fields.get("featured", "")).lower() in ("true", "1", "on"),
+                is_active=str(fields.get("is_active", "true")).lower() in ("true", "1", "on"),
+                image_url=preview_img,
                 sku=fields.get("sku", ""),
             )
 
@@ -213,15 +227,25 @@ def api_preview_entity(request):
             })
 
         elif entity_type == "category":
+            cat_id = fields.get("id")
+            collage_products = []
+            if cat_id:
+                existing_cat = Category.objects.filter(pk=cat_id).first()
+                if existing_cat:
+                    collage_products = list(existing_cat.products.filter(is_active=True).exclude(image="", image_url="")[:4])
+
             cat = Category(
-                pk=fields.get("id") or 99999,
+                pk=cat_id or 99999,
                 name=fields.get("name") or "Sample Category",
                 slug=fields.get("slug") or "sample-category",
                 description=fields.get("description") or "Category description",
-                icon=fields.get("icon") or "🌱",
             )
+            cat.collage_products = collage_products
+            cat.product_count = len(collage_products)
+
             banner_html = render_to_string("catalog/_live_preview_category.html", {
                 "category": cat,
+                "collage_products": collage_products,
                 "request": request,
             })
             return JsonResponse({
@@ -256,16 +280,25 @@ def api_preview_entity(request):
 
 @require_http_methods(["POST"])
 def api_save_entity(request):
+    """
+    Saves entity changes to database.
+    Accepts both JSON and Multipart FormData with file upload support.
+    """
     if not is_superadmin(request.user):
         return HttpResponseForbidden("Unauthorized")
 
-    try:
-        body = json.loads(request.body.decode("utf-8"))
-    except Exception:
-        return JsonResponse({"error": "Invalid JSON"}, status=400)
+    is_json = request.content_type and "application/json" in request.content_type
+    if is_json:
+        try:
+            body = json.loads(request.body.decode("utf-8"))
+            entity_type = body.get("type", "product")
+            fields = body.get("fields", {})
+        except Exception:
+            return JsonResponse({"error": "Invalid JSON"}, status=400)
+    else:
+        entity_type = request.POST.get("type", "product")
+        fields = request.POST.dict()
 
-    entity_type = body.get("type", "product")
-    fields = body.get("fields", {})
     entity_id = fields.get("id")
 
     try:
@@ -285,29 +318,52 @@ def api_save_entity(request):
             p.description = fields.get("description", "")
             p.badge = fields.get("badge", "").strip()
             p.stock_status = fields.get("stock_status", "InStock")
-            p.featured = bool(fields.get("featured", False))
-            p.is_active = bool(fields.get("is_active", True))
-            p.image_url = fields.get("image_url", "").strip()
+            p.featured = str(fields.get("featured", "")).lower() in ("true", "1", "on")
+            p.is_active = str(fields.get("is_active", "true")).lower() in ("true", "1", "on")
             p.sku = fields.get("sku", "").strip()
+
+            # Handle Image Upload, URL, and Clear Image options
+            clear_image = str(fields.get("clear_image", "")).lower() in ("true", "1", "yes")
+            image_mode = fields.get("image_mode", "url")
+
+            if clear_image:
+                if p.image:
+                    p.image.delete(save=False)
+                p.image = None
+                p.image_url = ""
+            else:
+                if "image_file" in request.FILES:
+                    p.image = request.FILES["image_file"]
+                elif image_mode == "url" or fields.get("image_url"):
+                    new_url = fields.get("image_url", "").strip()
+                    p.image_url = new_url
+                    if new_url and p.image and not request.FILES.get("image_file"):
+                        # Clear old uploaded file if user explicitly switched to a new external URL
+                        p.image.delete(save=False)
+                        p.image = None
+
             p.full_clean()
             p.save()
 
             return JsonResponse({
                 "success": True,
-                "message": f'Product "{p.name}" updated successfully in database.',
+                "message": f'Product "{p.name}" saved successfully in database.',
                 "id": p.pk,
                 "name": p.name,
+                "display_image": p.display_image,
+                "image_url": p.image_url,
+                "has_uploaded_image": bool(p.image),
+                "image_filename": p.image.name.split("/")[-1] if p.image else "",
                 "view_url": p.get_absolute_url(),
             })
 
         elif entity_type == "category":
             if entity_id:
                 c = get_object_or_404(Category, pk=entity_id)
+                # Existing category: slug is locked and immutable in Live Editor to preserve URLs and SEO
             else:
                 c = Category()
             c.name = fields.get("name", "").strip()
-            if fields.get("slug"):
-                c.slug = fields.get("slug", "").strip()
             c.description = fields.get("description", "").strip()
             c.icon = fields.get("icon", "🌱").strip()
             c.full_clean()
@@ -318,6 +374,7 @@ def api_save_entity(request):
                 "message": f'Category "{c.name}" saved successfully.',
                 "id": c.pk,
                 "name": c.name,
+                "slug": c.slug,
                 "view_url": c.get_absolute_url(),
             })
 
@@ -330,13 +387,16 @@ def api_save_entity(request):
             promo.badge_text = fields.get("badge_text", "Sale").strip()
             promo.discount_type = fields.get("discount_type", "percentage")
             promo.discount_value = Decimal(str(fields.get("discount_value", "10")))
-            promo.is_active = bool(fields.get("is_active", False))
+            promo.is_active = str(fields.get("is_active", "")).lower() in ("true", "1", "on")
             promo.full_clean()
             promo.save()
 
             product_ids = fields.get("product_ids", [])
-            if isinstance(product_ids, list):
-                promo.products.set(product_ids)
+            if isinstance(product_ids, str):
+                product_ids = [int(x.strip()) for x in product_ids.split(",") if x.strip().isdigit()]
+            elif not isinstance(product_ids, list):
+                product_ids = []
+            promo.products.set(product_ids)
 
             return JsonResponse({
                 "success": True,

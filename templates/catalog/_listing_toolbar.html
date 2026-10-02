@@ -1,50 +1,129 @@
 {% load catalog_tags %}
-<div class="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-neutral-200 pb-4 text-xs">
-  <!-- Item Count & Showing Range -->
-  <div class="text-neutral-600">
-    {% if page_obj.paginator.count > 0 %}
-      Showing <span class="font-semibold text-neutral-900">{{ page_obj.start_index }}–{{ page_obj.end_index }}</span> of <span class="font-semibold text-neutral-900">{{ page_obj.paginator.count }}</span> {{ item_label|default:"products" }}
-    {% else %}
-      <span class="font-medium text-neutral-800">0 {{ item_label|default:"products" }}</span>
-    {% endif %}
-  </div>
+<div class="mb-6 space-y-3 border-b border-neutral-200 pb-4 text-xs">
+  <!-- Top Row: Results Count, Mobile Filter Trigger, Sort Dropdown & View Mode Switcher -->
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <!-- Item Count & Showing Range -->
+    <div class="flex items-center gap-2 text-neutral-600">
+      {% if page_obj.paginator.count > 0 %}
+        <span>Showing <strong class="font-semibold text-neutral-900">{{ page_obj.start_index }}–{{ page_obj.end_index }}</strong> of <strong class="font-semibold text-neutral-900">{{ page_obj.paginator.count }}</strong> {{ item_label|default:"products" }}</span>
+      {% else %}
+        <span class="font-medium text-neutral-800">0 {{ item_label|default:"products" }} found</span>
+      {% endif %}
 
-  <!-- Controls: Per-Page and Grid/List View Toggle -->
-  <div class="flex flex-wrap items-center gap-3 sm:gap-4">
-    <!-- Per Page Selector (10, 20, 50) -->
-    <div class="flex items-center gap-1.5">
-      <span class="text-neutral-400">Show:</span>
-      <div class="inline-flex rounded-lg border border-neutral-200 bg-stone-50 p-0.5" role="group" aria-label="Items per page">
-        {% for size in allowed_page_sizes|default:"10,20,50"|slice:":3" %}
-          <a href="?{% param_replace page_size=size page=1 %}" 
-             class="rounded-md px-2.5 py-1 text-xs font-semibold transition-all {% if page_size == size %}bg-white text-red-700 shadow-xs ring-1 ring-neutral-200/80{% else %}text-neutral-600 hover:text-neutral-900{% endif %}"
-             title="Show {{ size }} per page">
-            {{ size }}
-          </a>
-        {% endfor %}
+      <!-- Mobile Filter Drawer Trigger Button (Visible only on mobile/tablet) -->
+      <button type="button" 
+              onclick="document.getElementById('mobile-filter-drawer').classList.remove('hidden')"
+              class="inline-flex items-center gap-1.5 rounded-lg border border-neutral-200 bg-stone-50 px-2.5 py-1 text-xs font-semibold text-neutral-700 shadow-xs transition hover:bg-stone-100 md:hidden">
+        <svg class="size-3.5 text-red-700" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M2.628 1.601C5.028 1.206 7.49 1 10 1s4.972.206 7.372.601a.75.75 0 01.628.74v2.288a2.25 2.25 0 01-.659 1.59l-4.682 4.683a2.25 2.25 0 00-.659 1.59v3.037c0 .684-.31 1.33-.844 1.757l-1.937 1.55A.75.75 0 018 18.25v-5.757a2.25 2.25 0 00-.659-1.591L2.659 6.22A2.25 2.25 0 012 4.629V2.34a.75.75 0 01.628-.74z" clip-rule="evenodd" />
+        </svg>
+        <span>Filters</span>
+        {% if active_filters_count %}
+          <span class="grid size-4 place-items-center rounded-full bg-red-700 text-[10px] font-bold text-white">{{ active_filters_count }}</span>
+        {% endif %}
+      </button>
+    </div>
+
+    <!-- Right Controls: Sort Dropdown, Per Page, Grid/List Switcher -->
+    <div class="flex flex-wrap items-center gap-2.5 sm:gap-3">
+      <!-- Sort Selector Dropdown -->
+      <div class="flex items-center gap-1.5">
+        <label for="sort-select" class="hidden sm:inline text-neutral-400">Sort:</label>
+        <select id="sort-select" 
+                onchange="window.location.href=this.value"
+                class="rounded-lg border border-neutral-200 bg-white px-2.5 py-1 text-xs font-medium text-neutral-700 shadow-xs outline-none transition focus:border-red-700 focus:ring-1 focus:ring-red-700 cursor-pointer">
+          {% for val, label in sort_options %}
+            <option value="?{% param_replace sort=val page=1 %}" {% if selected_sort == val %}selected{% endif %}>
+              {{ label }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- Per Page Selector (10, 20, 50) -->
+      <div class="hidden sm:flex items-center gap-1.5">
+        <span class="text-neutral-400">Show:</span>
+        <div class="inline-flex rounded-lg border border-neutral-200 bg-stone-50 p-0.5" role="group" aria-label="Items per page">
+          {% for size in allowed_page_sizes|default:"10,20,50"|slice:":3" %}
+            <a href="?{% param_replace page_size=size page=1 %}" 
+               class="rounded-md px-2 py-0.5 text-xs font-semibold transition-all {% if page_size == size %}bg-white text-red-700 shadow-xs ring-1 ring-neutral-200/80{% else %}text-neutral-600 hover:text-neutral-900{% endif %}"
+               title="Show {{ size }} per page">
+              {{ size }}
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Grid / List Switcher -->
+      <div class="flex items-center gap-1" role="group" aria-label="Product display mode">
+        <a href="?{% param_replace view='grid' %}"
+           class="inline-flex items-center gap-1 rounded-lg border px-2.5 py-1 text-xs font-semibold transition-all {% if view_mode != 'list' %}border-red-700 bg-red-700 text-white shadow-xs{% else %}border-neutral-200 bg-white text-neutral-700 hover:border-neutral-300 hover:bg-stone-50{% endif %}"
+           title="Grid view"
+           aria-label="Grid view">
+          <svg class="size-3.5" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+            <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zm0 8A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm8-8A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 2.5v-3zm0 8A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3z"/>
+          </svg>
+          <span class="hidden md:inline">Grid</span>
+        </a>
+        <a href="?{% param_replace view='list' %}"
+           class="inline-flex items-center gap-1 rounded-lg border px-2.5 py-1 text-xs font-semibold transition-all {% if view_mode == 'list' %}border-red-700 bg-red-700 text-white shadow-xs{% else %}border-neutral-200 bg-white text-neutral-700 hover:border-neutral-300 hover:bg-stone-50{% endif %}"
+           title="List view"
+           aria-label="List view">
+          <svg class="size-3.5" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M2 3.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0 4.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0 4.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/>
+          </svg>
+          <span class="hidden md:inline">List</span>
+        </a>
       </div>
     </div>
+  </div>
 
-    <!-- Grid / List Switcher -->
-    <div class="flex items-center gap-1" role="group" aria-label="Product display mode">
-      <a href="?{% param_replace view='grid' %}"
-         class="inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-semibold transition-all {% if view_mode != 'list' %}border-red-700 bg-red-700 text-white shadow-xs{% else %}border-neutral-200 bg-white text-neutral-700 hover:border-neutral-300 hover:bg-stone-50{% endif %}"
-         title="Grid view"
-         aria-label="Grid view">
-        <svg class="size-3.5" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-          <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zm0 8A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm8-8A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 2.5v-3zm0 8A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3z"/>
-        </svg>
-        <span class="hidden sm:inline">Grid</span>
-      </a>
-      <a href="?{% param_replace view='list' %}"
-         class="inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-semibold transition-all {% if view_mode == 'list' %}border-red-700 bg-red-700 text-white shadow-xs{% else %}border-neutral-200 bg-white text-neutral-700 hover:border-neutral-300 hover:bg-stone-50{% endif %}"
-         title="List view"
-         aria-label="List view">
-        <svg class="size-3.5" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-          <path fill-rule="evenodd" d="M2 3.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0 4.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0 4.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/>
-        </svg>
-        <span class="hidden sm:inline">List</span>
+  <!-- Active Removable Filter Chips Bar -->
+  {% if active_filters %}
+    <div class="flex flex-wrap items-center gap-1.5 pt-1">
+      <span class="text-[11px] font-bold text-neutral-500 uppercase tracking-wider mr-1">Active Filters:</span>
+      {% for f in active_filters %}
+        {% if f.key == 'q' %}
+          <a href="?{% param_remove 'q' 'page' %}" class="inline-flex items-center gap-1.5 rounded-full border border-red-200 bg-red-50 px-2.5 py-0.5 text-xs font-semibold text-red-800 transition hover:bg-red-100" title="Remove filter">
+            <span>{{ f.label }}</span>
+            <span class="font-bold text-red-600">✕</span>
+          </a>
+        {% elif f.key == 'category' %}
+          <a href="?{% param_remove 'category' 'page' %}" class="inline-flex items-center gap-1.5 rounded-full border border-red-200 bg-red-50 px-2.5 py-0.5 text-xs font-semibold text-red-800 transition hover:bg-red-100" title="Remove filter">
+            <span>{{ f.label }}</span>
+            <span class="font-bold text-red-600">✕</span>
+          </a>
+        {% elif f.key == 'min_price' %}
+          <a href="?{% param_remove 'min_price' 'page' %}" class="inline-flex items-center gap-1.5 rounded-full border border-red-200 bg-red-50 px-2.5 py-0.5 text-xs font-semibold text-red-800 transition hover:bg-red-100" title="Remove filter">
+            <span>{{ f.label }}</span>
+            <span class="font-bold text-red-600">✕</span>
+          </a>
+        {% elif f.key == 'max_price' %}
+          <a href="?{% param_remove 'max_price' 'page' %}" class="inline-flex items-center gap-1.5 rounded-full border border-red-200 bg-red-50 px-2.5 py-0.5 text-xs font-semibold text-red-800 transition hover:bg-red-100" title="Remove filter">
+            <span>{{ f.label }}</span>
+            <span class="font-bold text-red-600">✕</span>
+          </a>
+        {% elif f.key == 'stock' %}
+          <a href="?{% param_remove 'stock' 'page' %}" class="inline-flex items-center gap-1.5 rounded-full border border-red-200 bg-red-50 px-2.5 py-0.5 text-xs font-semibold text-red-800 transition hover:bg-red-100" title="Remove filter">
+            <span>{{ f.label }}</span>
+            <span class="font-bold text-red-600">✕</span>
+          </a>
+        {% elif f.key == 'on_sale' %}
+          <a href="?{% param_remove 'on_sale' 'page' %}" class="inline-flex items-center gap-1.5 rounded-full border border-red-200 bg-red-50 px-2.5 py-0.5 text-xs font-semibold text-red-800 transition hover:bg-red-100" title="Remove filter">
+            <span>{{ f.label }}</span>
+            <span class="font-bold text-red-600">✕</span>
+          </a>
+        {% elif f.key == 'featured' %}
+          <a href="?{% param_remove 'featured' 'page' %}" class="inline-flex items-center gap-1.5 rounded-full border border-red-200 bg-red-50 px-2.5 py-0.5 text-xs font-semibold text-red-800 transition hover:bg-red-100" title="Remove filter">
+            <span>{{ f.label }}</span>
+            <span class="font-bold text-red-600">✕</span>
+          </a>
+        {% endif %}
+      {% endfor %}
+
+      <a href="{% if active_category %}{{ active_category.get_absolute_url }}{% else %}{% url 'shop' %}{% endif %}" class="ml-1 text-[11px] font-bold text-red-700 hover:underline">
+        Clear all
       </a>
     </div>
-  </div>
+  {% endif %}
 </div>

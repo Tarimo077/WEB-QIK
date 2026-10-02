@@ -1,0 +1,151 @@
+{% load catalog_tags %}
+<div class="space-y-6">
+  <!-- Reset All Filters Button (if filters active) -->
+  {% if active_filters_count %}
+    <div class="flex items-center justify-between rounded-xl bg-red-50 p-3 text-xs border border-red-200">
+      <span class="font-bold text-red-900">{{ active_filters_count }} filter{{ active_filters_count|pluralize }} applied</span>
+      <a href="{% if active_category %}{{ active_category.get_absolute_url }}{% else %}{% url 'shop' %}{% endif %}" class="font-bold text-red-700 hover:underline">
+        Reset all ✕
+      </a>
+    </div>
+  {% endif %}
+
+  <!-- 1. Categories Section -->
+  <div>
+    <h3 class="mb-3 text-xs font-bold uppercase tracking-wider text-neutral-900">Categories</h3>
+    <nav class="max-h-64 overflow-y-auto space-y-1 text-xs pr-1 scrollbar-thin">
+      <a class="flex items-center justify-between rounded-lg px-3 py-2 transition {% if not selected_category and not active_category %}bg-red-700 font-bold text-white shadow-xs{% else %}text-neutral-700 hover:bg-neutral-200/60{% endif %}"
+         href="?{% param_remove 'category' 'page' %}">
+        <span>All Products</span>
+        <span class="{% if not selected_category and not active_category %}text-white/80{% else %}text-neutral-400{% endif %}">↗</span>
+      </a>
+      {% for category in categories %}
+        <a class="flex items-center justify-between rounded-lg px-3 py-1.5 transition {% if active_category.slug == category.slug or selected_category == category.slug %}bg-red-700 font-bold text-white shadow-xs{% else %}text-neutral-700 hover:bg-neutral-200/60{% endif %}"
+           href="{% if active_category %}{{ category.get_absolute_url }}{% else %}?{% param_replace category=category.slug page=1 %}{% endif %}">
+          <span class="truncate pr-1">{{ category.name }}</span>
+          <span class="text-[10px] font-mono {% if active_category.slug == category.slug or selected_category == category.slug %}text-white/80{% else %}text-neutral-400{% endif %}">
+            ({{ category.product_count|default:0 }})
+          </span>
+        </a>
+      {% endfor %}
+    </nav>
+  </div>
+
+  <!-- 2. Price Range Filter -->
+  <div class="border-t border-neutral-200 pt-5">
+    <h3 class="mb-3 text-xs font-bold uppercase tracking-wider text-neutral-900">Price Range (KSh)</h3>
+    
+    <!-- Quick Price Presets -->
+    <div class="mb-3 space-y-1 text-xs">
+      <a href="?{% param_remove 'min_price' 'max_price' 'page' %}" 
+         class="block rounded-md px-2.5 py-1 transition {% if not min_price and not max_price %}font-bold text-red-700 bg-stone-100{% else %}text-neutral-600 hover:bg-stone-100{% endif %}">
+        All Prices
+      </a>
+      <a href="?{% param_replace max_price='5000' min_price='' page=1 %}" 
+         class="block rounded-md px-2.5 py-1 transition {% if max_price == '5000' and not min_price %}font-bold text-red-700 bg-stone-100{% else %}text-neutral-600 hover:bg-stone-100{% endif %}">
+        Under KSh 5,000
+      </a>
+      <a href="?{% param_replace min_price='5000' max_price='20000' page=1 %}" 
+         class="block rounded-md px-2.5 py-1 transition {% if min_price == '5000' and max_price == '20000' %}font-bold text-red-700 bg-stone-100{% else %}text-neutral-600 hover:bg-stone-100{% endif %}">
+        KSh 5,000 – 20,000
+      </a>
+      <a href="?{% param_replace min_price='20000' max_price='50000' page=1 %}" 
+         class="block rounded-md px-2.5 py-1 transition {% if min_price == '20000' and max_price == '50000' %}font-bold text-red-700 bg-stone-100{% else %}text-neutral-600 hover:bg-stone-100{% endif %}">
+        KSh 20,000 – 50,000
+      </a>
+      <a href="?{% param_replace min_price='50000' max_price='' page=1 %}" 
+         class="block rounded-md px-2.5 py-1 transition {% if min_price == '50000' and not max_price %}font-bold text-red-700 bg-stone-100{% else %}text-neutral-600 hover:bg-stone-100{% endif %}">
+        Over KSh 50,000
+      </a>
+    </div>
+
+    <!-- Custom Min/Max Inputs Form -->
+    <form method="get" class="space-y-2">
+      <!-- Preserve query, category, sort, view parameters -->
+      {% if query %}<input type="hidden" name="q" value="{{ query }}" />{% endif %}
+      {% if selected_category and not active_category %}<input type="hidden" name="category" value="{{ selected_category }}" />{% endif %}
+      {% if selected_sort and selected_sort != 'featured' %}<input type="hidden" name="sort" value="{{ selected_sort }}" />{% endif %}
+      {% if view_mode == 'list' %}<input type="hidden" name="view" value="list" />{% endif %}
+      {% if selected_stock %}<input type="hidden" name="stock" value="{{ selected_stock }}" />{% endif %}
+      {% if on_sale %}<input type="hidden" name="on_sale" value="1" />{% endif %}
+      {% if featured_only %}<input type="hidden" name="featured" value="1" />{% endif %}
+
+      <div class="grid grid-cols-2 gap-2 text-xs">
+        <div>
+          <label for="min-price-input" class="text-[10px] text-neutral-400 block mb-0.5">Min (KSh)</label>
+          <input type="number" id="min-price-input" name="min_price" value="{{ min_price }}" placeholder="0" min="0" step="500"
+                 class="w-full rounded-lg border border-neutral-300 bg-white px-2.5 py-1 text-xs text-neutral-900 outline-none focus:border-red-700" />
+        </div>
+        <div>
+          <label for="max-price-input" class="text-[10px] text-neutral-400 block mb-0.5">Max (KSh)</label>
+          <input type="number" id="max-price-input" name="max_price" value="{{ max_price }}" placeholder="200000" min="0" step="500"
+                 class="w-full rounded-lg border border-neutral-300 bg-white px-2.5 py-1 text-xs text-neutral-900 outline-none focus:border-red-700" />
+        </div>
+      </div>
+      <button type="submit" class="w-full rounded-lg bg-neutral-900 py-1.5 text-xs font-semibold text-white shadow-xs transition hover:bg-black">
+        Apply Price Filter
+      </button>
+    </form>
+  </div>
+
+  <!-- 3. Availability & Stock Status -->
+  <div class="border-t border-neutral-200 pt-5">
+    <h3 class="mb-3 text-xs font-bold uppercase tracking-wider text-neutral-900">Availability</h3>
+    <div class="space-y-1 text-xs">
+      <a href="?{% param_remove 'stock' 'page' %}" 
+         class="flex items-center justify-between rounded-md px-2.5 py-1 transition {% if not selected_stock %}font-bold text-red-700 bg-stone-100{% else %}text-neutral-600 hover:bg-stone-100{% endif %}">
+        <span>All Availability</span>
+        {% if not selected_stock %}<span>✓</span>{% endif %}
+      </a>
+      <a href="?{% param_replace stock='InStock' page=1 %}" 
+         class="flex items-center justify-between rounded-md px-2.5 py-1 transition {% if selected_stock == 'InStock' %}font-bold text-red-700 bg-stone-100{% else %}text-neutral-600 hover:bg-stone-100{% endif %}">
+        <span class="flex items-center gap-1.5">
+          <span class="size-1.5 rounded-full bg-emerald-500"></span>
+          <span>In Stock Only</span>
+        </span>
+        {% if selected_stock == 'InStock' %}<span>✓</span>{% endif %}
+      </a>
+      <a href="?{% param_replace stock='PreOrder' page=1 %}" 
+         class="flex items-center justify-between rounded-md px-2.5 py-1 transition {% if selected_stock == 'PreOrder' %}font-bold text-red-700 bg-stone-100{% else %}text-neutral-600 hover:bg-stone-100{% endif %}">
+        <span class="flex items-center gap-1.5">
+          <span class="size-1.5 rounded-full bg-amber-500"></span>
+          <span>Available to Order</span>
+        </span>
+        {% if selected_stock == 'PreOrder' %}<span>✓</span>{% endif %}
+      </a>
+    </div>
+  </div>
+
+  <!-- 4. Special Offers & Badges -->
+  <div class="border-t border-neutral-200 pt-5">
+    <h3 class="mb-3 text-xs font-bold uppercase tracking-wider text-neutral-900">Special Deals</h3>
+    <div class="space-y-2 text-xs">
+      <a href="{% if on_sale %}?{% param_remove 'on_sale' 'page' %}{% else %}?{% param_replace on_sale='1' page=1 %}{% endif %}"
+         class="flex items-center justify-between rounded-lg border p-2.5 transition {% if on_sale %}border-red-700 bg-red-50 text-red-800 font-bold{% else %}border-neutral-200 bg-white text-neutral-700 hover:bg-stone-50{% endif %}">
+        <span class="flex items-center gap-2">
+          <span>🏷️</span>
+          <span>On Sale / Discounts</span>
+        </span>
+        <span>{% if on_sale %}✓{% else %}+{% endif %}</span>
+      </a>
+
+      <a href="{% if featured_only %}?{% param_remove 'featured' 'page' %}{% else %}?{% param_replace featured='1' page=1 %}{% endif %}"
+         class="flex items-center justify-between rounded-lg border p-2.5 transition {% if featured_only %}border-red-700 bg-red-50 text-red-800 font-bold{% else %}border-neutral-200 bg-white text-neutral-700 hover:bg-stone-50{% endif %}">
+        <span class="flex items-center gap-2">
+          <span>⭐</span>
+          <span>Featured Products</span>
+        </span>
+        <span>{% if featured_only %}✓{% else %}+{% endif %}</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Agronomist Advice Box -->
+  <div class="rounded-xl border border-neutral-200 bg-white p-3.5 text-xs text-neutral-600 shadow-xs">
+    <span class="text-sm text-red-700">✳</span>
+    <p class="mt-1 leading-snug">
+      Need advice on machinery or sizing?<br />
+      <a href="https://wa.me/{{ site_settings.whatsapp_number|default:'254700007552' }}" target="_blank" rel="noopener" class="mt-1 inline-block font-semibold text-red-700 hover:underline">Chat with our agronomist ↗</a>
+    </p>
+  </div>
+</div>

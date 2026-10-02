@@ -20,6 +20,20 @@ def param_replace(context, **kwargs):
             del d[k]
     return d.urlencode()
 
+@register.simple_tag(takes_context=True)
+def param_remove(context, *keys):
+    """
+    Return encoded URL parameters removing the given keys.
+    """
+    request = context.get("request")
+    if not request:
+        return ""
+    d = request.GET.copy()
+    for k in keys:
+        if k in d:
+            del d[k]
+    return d.urlencode()
+
 @register.filter
 def elided_page_range(page_obj, on_each_side=1, on_ends=1):
     """
