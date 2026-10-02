@@ -20,8 +20,7 @@
     <meta name="twitter:card" content="summary" />
     <script type="application/ld+json">
       {"@context":"https://schema.org","@graph":[
-        {"@type":"Store","@id":"{{ request.scheme }}://{{ request.get_host }}/#organization","name":"Qiksearch Kenya","url":"{{ request.scheme }}://{{ request.get_host }}/","logo":"{{ request.scheme }}://{{ request.get_host }}{% static 'catalog/images/qiksearch-logo.png' %}","email":"info@qiksearch.co.ke","telephone":"+254700007552","address":{"@type":"PostalAddress","streetAddress":"Opposite City Stadium, Lusaka Road, Industrial Area","addressLocality":"Nairobi","addressCountry":"KE"},"openingHoursSpecification":{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],"opens":"08:00","closes":"18:00"}},
-        {"@type":"WebSite","@id":"{{ request.scheme }}://{{ request.get_host }}/#website","url":"{{ request.scheme }}://{{ request.get_host }}/","name":"Qiksearch Kenya","publisher":{"@id":"{{ request.scheme }}://{{ request.get_host }}/#organization"},"inLanguage":"en-KE"}
+        {"@type":"Store","@id":"{{ request.scheme }}://{{ request.get_host }}/#organization","name":"Qiksearch Kenya","url":"{{ request.scheme }}://{{ request.get_host }}/","logo":"{{ request.scheme }}://{{ request.get_host }}{% static 'catalog/images/qiksearch-logo.png' %}","email":"info@qiksearch.co.ke","telephone":"+254700007552","address":{"@type":"PostalAddress","streetAddress":"Opposite City Stadium, Lusaka Road, Industrial Area","addressLocality":"Nairobi","addressCountry":"KE"},"openingHoursSpecification":{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],"opens":"08:00","closes":"18:00"},"sameAs":["https://www.facebook.com/qiksearchke/","https://www.instagram.com/qiksearchke/","https://www.tiktok.com/@qiksearch","https://www.youtube.com/@qiksearch"]}
       ]}
     </script>
     <title>{% block title %}Farm supplies & equipment in Kenya | Qiksearch{% endblock %}</title>
@@ -32,12 +31,12 @@
     <!-- Responsive Top Announcement Bar -->
     <div class="relative w-full bg-red-700 px-4 py-1.5 text-xs text-white">
       <div class="mx-auto flex max-w-7xl items-center justify-between gap-3 max-sm:justify-center">
-        <!-- Tagline (collapses gracefully on small phones) -->
+        <!-- Tagline -->
         <p class="truncate text-[11px] font-normal tracking-wide sm:text-xs">
           Growing better, together <span class="px-1 text-rose-200">·</span> Your trusted farm partner in Kenya
         </p>
 
-        <!-- Quick action links (clean spacing on mobile) -->
+        <!-- Quick action links -->
         <div class="flex shrink-0 items-center gap-4 text-[11px] font-medium max-sm:hidden sm:text-xs">
           <a href="{% url 'deals' %}" class="transition-colors hover:text-rose-200">Daily deals</a>
           <span class="text-rose-300/60">|</span>
@@ -67,7 +66,9 @@
 
     <header class="relative z-30 bg-white">
       <div class="mx-auto flex h-22 w-full max-w-7xl px-8 max-md:px-5 items-center justify-between gap-8 max-md:px-5 max-sm:gap-3">
-        <a class="flex min-w-42 items-center max-sm:min-w-0" href="{% url 'home' %}" aria-label="Qiksearch home"><img class="block h-auto max-h-14 w-40 object-contain mix-blend-multiply max-sm:w-33" src="{% static 'catalog/images/qiksearch-logo.png' %}" alt="Qiksearch" width="160" height="56" /></a>
+        <a class="flex min-w-42 items-center max-sm:min-w-0" href="{% url 'home' %}" aria-label="Qiksearch home">
+          <img class="block h-auto max-h-14 w-40 object-contain mix-blend-multiply max-sm:w-33" src="{% static 'catalog/images/qiksearch-logo.png' %}" alt="Qiksearch" width="160" height="56" />
+        </a>
         
         <!-- Search Form Container -->
         <div class="relative flex-1 max-w-136">
@@ -92,15 +93,30 @@
           ></div>
         </div>
 
-        <a class="flex items-center gap-2.5 max-md:hidden" href="https://wa.me/254700007552" target="_blank" rel="noopener"><span class="grid size-10 place-items-center rounded-full border border-neutral-200 text-xl text-red-700">↗</span><span><small class="mb-1 block text-xs text-neutral-500">Need help? Call us</small><strong class="block text-xs">+254 700 007 552</strong></span></a>
+        <a class="flex items-center gap-2.5 max-md:hidden" href="https://wa.me/254700007552" target="_blank" rel="noopener">
+          <span class="grid size-10 place-items-center rounded-full border border-neutral-200 text-xl text-red-700">↗</span>
+          <span>
+            <small class="mb-1 block text-xs text-neutral-500">Need help? Call us</small>
+            <strong class="block text-xs">+254 700 007 552</strong>
+          </span>
+        </a>
       </div>
       <nav class="mx-auto flex h-12 w-full max-w-7xl px-8 max-md:px-5 items-stretch gap-7 overflow-x-auto border-t border-neutral-200 text-xs text-neutral-600 max-md:px-5 max-sm:gap-4 max-sm:text-xs">
-        <a class="flex shrink-0 items-center bg-red-700 px-4 font-semibold text-white" href="{% url 'shop' %}">☰ &nbsp; Shop all</a><a class="flex shrink-0 items-center" href="{% url 'home' %}">Home</a><a class="flex shrink-0 items-center" href="{% url 'categories' %}">Categories</a><a class="flex shrink-0 items-center" href="{% url 'deals' %}">Daily deals</a><a class="flex shrink-0 items-center" href="{% url 'about' %}">About</a><a class="flex shrink-0 items-center" href="{% url 'contact' %}">Contact</a><a class="flex shrink-0 items-center" href="{% url 'terms' %}">Terms</a><a class="flex shrink-0 items-center" href="{% url 'track_order' %}">Track order</a><a class="ml-auto flex shrink-0 items-center gap-2 font-bold text-red-700 max-sm:ml-0" href="{% url 'cart' %}" aria-label="Shopping cart, {{ request.session.cart|length|default:0 }} items">
+        <a class="flex shrink-0 items-center bg-red-700 px-4 font-semibold text-white" href="{% url 'shop' %}">☰ &nbsp; Shop all</a>
+        <a class="flex shrink-0 items-center" href="{% url 'home' %}">Home</a>
+        <a class="flex shrink-0 items-center" href="{% url 'categories' %}">Categories</a>
+        <a class="flex shrink-0 items-center" href="{% url 'deals' %}">Daily deals</a>
+        <a class="flex shrink-0 items-center" href="{% url 'about' %}">About</a>
+        <a class="flex shrink-0 items-center" href="{% url 'contact' %}">Contact</a>
+        <a class="flex shrink-0 items-center" href="{% url 'terms' %}">Terms</a>
+        <a class="flex shrink-0 items-center" href="{% url 'track_order' %}">Track order</a>
+        <a class="ml-auto flex shrink-0 items-center gap-2 font-bold text-red-700 max-sm:ml-0" href="{% url 'cart' %}" aria-label="Shopping cart, {{ request.session.cart|length|default:0 }} items">
           <svg class="size-6 fill-none stroke-current stroke-[1.8]" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M3 4h2l2.2 11.1a2 2 0 0 0 2 1.6h8.5a2 2 0 0 0 1.9-1.4L22 8H6" />
             <circle cx="10" cy="20" r="1.3" />
             <circle cx="18" cy="20" r="1.3" />
-          </svg><span id="header-cart-badge" class="grid size-5 place-items-center rounded-full bg-red-700 text-xs text-white">{{ request.session.cart|length|default:0 }}</span>
+          </svg>
+          <span id="header-cart-badge" class="grid size-5 place-items-center rounded-full bg-red-700 text-xs text-white">{{ request.session.cart|length|default:0 }}</span>
         </a>
       </nav>
     </header>
@@ -114,22 +130,87 @@
     <footer class="bg-stone-100 px-0 pt-14 text-neutral-800">
       <div class="mx-auto grid w-full max-w-7xl px-8 max-md:px-5 grid-cols-[1.6fr_.8fr_1fr_1fr] gap-12 pb-11 max-md:px-5 max-md:grid-cols-2 max-md:gap-7 max-sm:[&>div:first-child]:col-span-full">
         <div>
-          <a class="mb-4 inline-flex min-w-40 items-center" href="{% url 'home' %}"><img class="h-14 w-40 object-contain mix-blend-multiply" src="{% static 'catalog/images/qiksearch-logo.png' %}" alt="Qiksearch" width="160" height="56" /></a><p class="max-w-xs text-xs leading-relaxed text-neutral-500">Tools, supplies and know-how for the people who grow our future.</p>
+          <a class="mb-4 inline-flex min-w-40 items-center" href="{% url 'home' %}">
+            <img class="h-14 w-40 object-contain mix-blend-multiply" src="{% static 'catalog/images/qiksearch-logo.png' %}" alt="Qiksearch" width="160" height="56" />
+          </a>
+          <p class="max-w-xs text-xs leading-relaxed text-neutral-500">Tools, supplies and know-how for the people who grow our future.</p>
+
+          <!-- Social Media Profiles -->
+          <!-- Social Media Profiles -->
+          <div class="mt-5">
+            <h5 class="mb-2 text-[11px] font-bold uppercase tracking-wider text-neutral-500">Follow us</h5>
+            <div class="flex items-center gap-2.5">
+              <!-- Facebook -->
+              <a href="https://www.facebook.com/Qiksearch/" target="_blank" rel="noopener noreferrer" class="grid size-8 place-items-center rounded-full border border-neutral-300 bg-white text-neutral-700 transition hover:border-red-700 hover:bg-red-700 hover:text-white" aria-label="Follow Qiksearch on Facebook" title="Facebook">
+                <svg class="size-4 fill-currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+              </a>
+
+              <!-- Instagram -->
+              <a href="https://www.instagram.com/@Qiksearch/" target="_blank" rel="noopener noreferrer" class="grid size-8 place-items-center rounded-full border border-neutral-300 bg-white text-neutral-700 transition hover:border-red-700 hover:bg-red-700 hover:text-white" aria-label="Follow Qiksearch on Instagram" title="Instagram">
+                <svg class="size-4 fill-currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+              </a>
+
+              <!-- X (formerly Twitter) -->
+              <a href="https://x.com/Qiksearch" target="_blank" rel="noopener noreferrer" class="grid size-8 place-items-center rounded-full border border-neutral-300 bg-white text-neutral-700 transition hover:border-red-700 hover:bg-red-700 hover:text-white" aria-label="Follow Qiksearch on X" title="X (Twitter)">
+                <svg class="size-3.5 fill-currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+              </a>
+
+              <!-- WhatsApp 
+              <a href="https://wa.me/254700007552" target="_blank" rel="noopener noreferrer" class="grid size-8 place-items-center rounded-full border border-neutral-300 bg-white text-neutral-700 transition hover:border-red-700 hover:bg-red-700 hover:text-white" aria-label="Chat with Qiksearch on WhatsApp" title="WhatsApp">
+                <svg class="size-4 fill-none stroke-currentColor stroke-2" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M20 11.5a8.4 8.4 0 0 1-12.4 7.4L4 20l1.2-3.4A8.4 8.4 0 1 1 20 11.5Z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 8.5c.3-.6.6-.6.9-.6h.5c.2 0 .4.1.5.4l.7 1.7c.1.2 0 .4-.1.6l-.5.6c-.2.2-.2.4 0 .7.4.7 1.1 1.4 1.8 1.8.3.2.5.2.7 0l.7-.8c.2-.2.4-.2.6-.1l1.7.8c.3.1.4.3.4.5 0 .3-.2 1-.6 1.3-.5.4-1.1.6-1.8.5-1-.1-2.3-.7-3.5-1.8-1.3-1.1-2.1-2.4-2.4-3.4-.3-.9-.1-1.6.4-2.2Z" />
+                </svg>
+              </a> -->
+
+              <!-- YouTube -->
+              <a href="https://www.youtube.com/@Qiksearch" target="_blank" rel="noopener noreferrer" class="grid size-8 place-items-center rounded-full border border-neutral-300 bg-white text-neutral-700 transition hover:border-red-700 hover:bg-red-700 hover:text-white" aria-label="Subscribe to Qiksearch on YouTube" title="YouTube">
+                <svg class="size-4 fill-currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                </svg>
+              </a>
+            </div>
+          </div>
         </div>
+
         <div>
-          <h4 class="mb-4 mt-1 text-xs font-bold">Find your way</h4><a class="mb-3 block text-xs text-neutral-600" href="{% url 'shop' %}">Shop all</a><a class="mb-3 block text-xs text-neutral-600" href="{% url 'categories' %}">Product categories</a><a class="mb-3 block text-xs text-neutral-600" href="{% url 'deals' %}">Daily deals</a><a class="mb-3 block text-xs text-neutral-600" href="{% url 'wishlist' %}">Wishlist</a><a class="mb-3 block text-xs text-neutral-600" href="{% url 'about' %}">About Qiksearch</a><a class="mb-3 block text-xs text-neutral-600" href="{% url 'terms' %}">Terms and conditions</a><a class="mb-3 block text-xs text-neutral-600" href="{% url 'returns' %}">Returns and refunds</a><a class="mb-3 block text-xs text-neutral-600" href="{% url 'faqs' %}">FAQs</a><a class="mb-3 block text-xs text-neutral-600" href="{% url 'track_order' %}">Track your order</a>
+          <h4 class="mb-4 mt-1 text-xs font-bold">Find your way</h4>
+          <a class="mb-3 block text-xs text-neutral-600 transition hover:text-red-700" href="{% url 'shop' %}">Shop all</a>
+          <a class="mb-3 block text-xs text-neutral-600 transition hover:text-red-700" href="{% url 'categories' %}">Product categories</a>
+          <a class="mb-3 block text-xs text-neutral-600 transition hover:text-red-700" href="{% url 'deals' %}">Daily deals</a>
+          <a class="mb-3 block text-xs text-neutral-600 transition hover:text-red-700" href="{% url 'wishlist' %}">Wishlist</a>
+          <a class="mb-3 block text-xs text-neutral-600 transition hover:text-red-700" href="{% url 'about' %}">About Qiksearch</a>
+          <a class="mb-3 block text-xs text-neutral-600 transition hover:text-red-700" href="{% url 'terms' %}">Terms and conditions</a>
+          <a class="mb-3 block text-xs text-neutral-600 transition hover:text-red-700" href="{% url 'returns' %}">Returns and refunds</a>
+          <a class="mb-3 block text-xs text-neutral-600 transition hover:text-red-700" href="{% url 'faqs' %}">FAQs</a>
+          <a class="mb-3 block text-xs text-neutral-600 transition hover:text-red-700" href="{% url 'track_order' %}">Track your order</a>
         </div>
+
         <div>
-          <h4 class="mb-4 mt-1 text-xs font-bold">Visit us</h4><p class="text-xs leading-relaxed text-neutral-500">
+          <h4 class="mb-4 mt-1 text-xs font-bold">Visit us</h4>
+          <p class="text-xs leading-relaxed text-neutral-500">
             Opposite City Stadium,<br />Lusaka Road, Industrial Area<br />Nairobi, Kenya
-          </p><a class="text-xs text-neutral-600" href="{% url 'contact' %}">Contact our team ↗</a>
+          </p>
+          <a class="mt-3 inline-block text-xs text-neutral-600 transition hover:text-red-700" href="{% url 'contact' %}">Contact our team ↗</a>
         </div>
+
         <div>
-          <h4 class="mb-4 mt-1 text-xs font-bold">Talk to our team</h4><a class="mb-3 block text-xs text-neutral-600" href="tel:+254700007552">+254 700 007 552</a><a class="mb-3 block text-xs text-neutral-600" href="mailto:info@qiksearch.co.ke">info@qiksearch.co.ke</a><p class="text-xs text-neutral-500">Mon–Sat, 8am–6pm</p>
+          <h4 class="mb-4 mt-1 text-xs font-bold">Talk to our team</h4>
+          <a class="mb-3 block text-xs text-neutral-600 transition hover:text-red-700" href="tel:+254700007552">+254 700 007 552</a>
+          <a class="mb-3 block text-xs text-neutral-600 transition hover:text-red-700" href="mailto:info@qiksearch.co.ke">info@qiksearch.co.ke</a>
+          <p class="text-xs text-neutral-500">Mon–Sat, 8am–6pm</p>
         </div>
       </div>
+
       <div class="mx-auto flex h-12 w-full max-w-7xl px-8 max-md:px-5 items-center justify-between border-t border-neutral-300 text-xs text-neutral-500 max-md:px-5 max-sm:flex-wrap max-sm:py-3">
-        <span>©{% now 'Y' %} Qiksearch Kenya</span><span>Rooted in Kenya. Growing everywhere.</span>
+        <span>©{% now 'Y' %} Qiksearch Kenya</span>
+        <span>Rooted in Kenya. Growing everywhere.</span>
       </div>
     </footer>
 
@@ -181,18 +262,14 @@
           </button>
         `;
 
-        // Safely set text content without raw Unicode entity leaks
         el.querySelector('.toast-text').textContent = message;
-
         container.appendChild(el);
 
-        // Slide down and fade in from top
         requestAnimationFrame(() => {
           el.classList.remove('-translate-y-4', 'opacity-0');
           el.classList.add('translate-y-0', 'opacity-100');
         });
 
-        // 5-second timeout (5000ms) with smooth dismiss
         setTimeout(() => {
           el.classList.remove('translate-y-0', 'opacity-100');
           el.classList.add('-translate-y-4', 'opacity-0');
@@ -200,7 +277,6 @@
         }, 5000);
       };
 
-      // Cleanly parse JSON messages injected by Django
       const messagesScript = document.getElementById('django-messages-data');
       if (messagesScript) {
         try {
