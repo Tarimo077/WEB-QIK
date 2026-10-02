@@ -1,5 +1,5 @@
 {% load humanize %}
-<article class="group min-w-0 bg-white transition hover:-translate-y-1 {% if view_mode == 'list' %}grid grid-cols-[190px_minmax(0,1fr)] items-stretch border border-neutral-200 max-sm:grid-cols-[112px_minmax(0,1fr)]{% endif %}">
+<article class="group min-w-0 bg-base-300 transition rounded-lg card hover:-translate-y-1 {% if view_mode == 'list' %}grid grid-cols-[190px_minmax(0,1fr)] items-stretch border border-neutral-200 max-sm:grid-cols-[112px_minmax(0,1fr)]{% endif %}">
   <a class="relative block h-51 overflow-hidden bg-neutral-100 max-md:h-55 max-sm:h-36 {% if view_mode == 'list' %}h-39 max-sm:h-full max-sm:min-h-36{% endif %}" href="{{ product.get_absolute_url }}">
     {% if product.display_image %}
       <img class="h-full w-full object-cover transition duration-500 group-hover:scale-105" src="{{ product.display_image }}" alt="{{ product.name }} — farm supplies in Kenya" loading="lazy" decoding="async" width="640" height="480" />
