@@ -28,9 +28,22 @@
     {% block extra_head %}{% endblock %}
   </head>
   <body class="m-0 bg-white font-sans text-base text-neutral-900 antialiased">
-    <!-- Top Announcement Bar -->
-    <div class="relative flex min-h-8 items-center justify-center bg-red-700 px-2 text-xs tracking-wide text-white max-sm:justify-start max-sm:text-xs">
-      Growing better, together <span class="px-2 text-rose-200">·</span> Your trusted farm partner in Kenya <span class="absolute right-[max(calc((100vw-1240px)/2),32px)] flex gap-4 max-sm:static max-sm:ml-auto max-sm:gap-2"><a href="{% url 'deals' %}">Daily deals</a><a href="{% url 'wishlist' %}">Wishlist</a></span>
+    
+    <!-- Responsive Top Announcement Bar -->
+    <div class="relative w-full bg-red-700 px-4 py-1.5 text-xs text-white">
+      <div class="mx-auto flex max-w-7xl items-center justify-between gap-3 max-sm:justify-center">
+        <!-- Tagline (collapses gracefully on small phones) -->
+        <p class="truncate text-[11px] font-normal tracking-wide sm:text-xs">
+          Growing better, together <span class="px-1 text-rose-200">·</span> Your trusted farm partner in Kenya
+        </p>
+
+        <!-- Quick action links (clean spacing on mobile) -->
+        <div class="flex shrink-0 items-center gap-4 text-[11px] font-medium max-sm:hidden sm:text-xs">
+          <a href="{% url 'deals' %}" class="transition-colors hover:text-rose-200">Daily deals</a>
+          <span class="text-rose-300/60">|</span>
+          <a href="{% url 'wishlist' %}" class="transition-colors hover:text-rose-200">Wishlist</a>
+        </div>
+      </div>
     </div>
 
     <!-- Top-Right Red & White Toast Container -->
