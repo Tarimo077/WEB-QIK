@@ -4,21 +4,21 @@
 {% block robots %}noindex,nofollow{% endblock %}
 
 {% block content %}
-<div class="mx-auto w-full max-w-4xl px-8 py-14 max-md:px-5">
+<div class="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
   <div class="mb-8 border-b border-neutral-200 pb-6">
     <span class="text-xs font-bold tracking-wider text-red-700 uppercase">Architecture & Performance</span>
-    <h1 class="mt-2 font-display text-4xl font-semibold tracking-tight text-neutral-900 max-sm:text-3xl">
+    <h1 class="mt-2 font-display text-3xl sm:text-4xl font-semibold tracking-tight text-neutral-900">
       Platform Migration Overview
     </h1>
-    <p class="mt-2 text-sm text-neutral-500">
+    <p class="mt-1 text-xs sm:text-sm text-neutral-500">
       Transition from WordPress / WooCommerce to Custom Django
     </p>
   </div>
 
-  <div class="space-y-10 text-sm leading-relaxed text-neutral-700">
+  <div class="space-y-8 sm:space-y-10 text-xs sm:text-sm leading-relaxed text-neutral-700">
     <!-- Executive Summary -->
-    <section>
-      <h2 class="text-lg font-bold text-neutral-900">Executive Summary</h2>
+    <section class="rounded-2xl border border-neutral-200 bg-white p-5 sm:p-6 shadow-xs">
+      <h2 class="text-base sm:text-lg font-bold text-neutral-900">Executive Summary</h2>
       <p class="mt-2 text-neutral-600">
         Migrating from WordPress to a tailored Django architecture provides a lightweight, highly maintainable, and secure foundation designed specifically for e-commerce in Kenya. By shedding plugin bloat, database overhead, and rigid theme layers, this new implementation directly improves page speed, conversion rates, SEO discoverability, and long-term operating costs.
       </p>
@@ -26,36 +26,36 @@
 
     <!-- Performance Comparison Table -->
     <section>
-      <h2 class="mb-4 text-lg font-bold text-neutral-900">1. Performance & Page Speed</h2>
-      <div class="overflow-x-auto rounded-lg border border-neutral-200">
-        <table class="w-full text-left text-xs">
+      <h2 class="mb-3 text-base sm:text-lg font-bold text-neutral-900">1. Performance & Page Speed</h2>
+      <div class="overflow-x-auto rounded-xl border border-neutral-200 bg-white shadow-xs">
+        <table class="w-full min-w-[500px] text-left text-xs">
           <thead class="border-b border-neutral-200 bg-stone-50 font-semibold text-neutral-800">
             <tr>
-              <th class="p-3">Dimension</th>
-              <th class="p-3">Legacy WordPress / WooCommerce</th>
-              <th class="p-3">New Custom Django Platform</th>
+              <th class="p-3 sm:p-3.5">Dimension</th>
+              <th class="p-3 sm:p-3.5">Legacy WordPress / WooCommerce</th>
+              <th class="p-3 sm:p-3.5">New Custom Django Platform</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-neutral-200">
             <tr>
-              <td class="p-3 font-medium">Asset Delivery</td>
-              <td class="p-3 text-neutral-600">30+ separate CSS/JS plugin bundles</td>
-              <td class="p-3 text-neutral-600">Single compiled Tailwind CSS bundle with WhiteNoise compression</td>
+              <td class="p-3 sm:p-3.5 font-semibold text-neutral-900">Asset Delivery</td>
+              <td class="p-3 sm:p-3.5 text-neutral-600">30+ separate CSS/JS plugin bundles</td>
+              <td class="p-3 sm:p-3.5 font-medium text-green-700">Single compiled Tailwind CSS bundle with WhiteNoise compression</td>
             </tr>
             <tr>
-              <td class="p-3 font-medium">Server Latency (TTFB)</td>
-              <td class="p-3 text-neutral-600">800ms – 2500ms (PHP hook chains)</td>
-              <td class="p-3 text-neutral-600">50ms – 200ms lightweight Python WSGI/ASGI responses</td>
+              <td class="p-3 sm:p-3.5 font-semibold text-neutral-900">Server Latency (TTFB)</td>
+              <td class="p-3 sm:p-3.5 text-neutral-600">800ms – 2500ms (PHP hook chains)</td>
+              <td class="p-3 sm:p-3.5 font-medium text-green-700">50ms – 200ms lightweight Python WSGI/ASGI responses</td>
             </tr>
             <tr>
-              <td class="p-3 font-medium">Client Overhead</td>
-              <td class="p-3 text-neutral-600">Heavy render-blocking scripts & jQuery</td>
-              <td class="p-3 text-neutral-600">Zero third-party runtime frameworks; native Vanilla JS</td>
+              <td class="p-3 sm:p-3.5 font-semibold text-neutral-900">Client Overhead</td>
+              <td class="p-3 sm:p-3.5 text-neutral-600">Heavy render-blocking scripts & jQuery</td>
+              <td class="p-3 sm:p-3.5 font-medium text-green-700">Zero third-party runtime frameworks; native Vanilla JS</td>
             </tr>
             <tr>
-              <td class="p-3 font-medium">Core Web Vitals</td>
-              <td class="p-3 text-neutral-600">High Cumulative Layout Shift (CLS)</td>
-              <td class="p-3 text-neutral-600">Zero CLS with pre-sized containers and optimized local assets</td>
+              <td class="p-3 sm:p-3.5 font-semibold text-neutral-900">Core Web Vitals</td>
+              <td class="p-3 sm:p-3.5 text-neutral-600">High Cumulative Layout Shift (CLS)</td>
+              <td class="p-3 sm:p-3.5 font-medium text-green-700">Zero CLS with pre-sized containers and optimized local assets</td>
             </tr>
           </tbody>
         </table>
@@ -63,8 +63,8 @@
     </section>
 
     <!-- Security & Maintenance -->
-    <section>
-      <h2 class="text-lg font-bold text-neutral-900">2. Security & Maintenance Overhead</h2>
+    <section class="rounded-2xl border border-neutral-200 bg-white p-5 sm:p-6 shadow-xs">
+      <h2 class="text-base sm:text-lg font-bold text-neutral-900">2. Security & Maintenance Overhead</h2>
       <ul class="mt-3 list-disc space-y-2 pl-5 text-neutral-600">
         <li><strong>No Third-Party Plugin Risk:</strong> Replaced bloated third-party plugins with clean native Django modules for sessions, sitemaps, messaging, and search.</li>
         <li><strong>Zero Breaking Updates:</strong> Eliminates site crashes caused by automated plugin or theme updates clashing with PHP runtimes.</li>
@@ -73,8 +73,8 @@
     </section>
 
     <!-- Custom E-Commerce Features -->
-    <section>
-      <h2 class="text-lg font-bold text-neutral-900">3. Custom E-Commerce & Market Localization</h2>
+    <section class="rounded-2xl border border-neutral-200 bg-white p-5 sm:p-6 shadow-xs">
+      <h2 class="text-base sm:text-lg font-bold text-neutral-900">3. Custom E-Commerce & Market Localization</h2>
       <ul class="mt-3 list-disc space-y-2 pl-5 text-neutral-600">
         <li><strong>Direct WhatsApp Order Routing:</strong> Pre-formats items, quantities, and totals directly to WhatsApp instead of forcing multi-step checkouts.</li>
         <li><strong>Instant Search & Live Toasts:</strong> Client-side debounced search suggestions and real-time top-right notifications without full page refreshes.</li>
@@ -83,8 +83,8 @@
     </section>
 
     <!-- Architecture & Costs -->
-    <section>
-      <h2 class="text-lg font-bold text-neutral-900">4. Architectural Scalability & Infrastructure Cost</h2>
+    <section class="rounded-2xl border border-neutral-200 bg-white p-5 sm:p-6 shadow-xs">
+      <h2 class="text-base sm:text-lg font-bold text-neutral-900">4. Architectural Scalability & Infrastructure Cost</h2>
       <ul class="mt-3 list-disc space-y-2 pl-5 text-neutral-600">
         <li><strong>Stateless Client Sessions:</strong> Signed cookie sessions eliminate database writes during cart browsing, reducing database load.</li>
         <li><strong>Lower Compute Overhead:</strong> Accommodates higher concurrent traffic on entry-level hosting or serverless tiers.</li>

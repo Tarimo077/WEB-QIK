@@ -13,11 +13,14 @@
 {% block robots %}{% if query or selected_category %}noindex,follow{% else %}index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1{% endif %}{% endblock %}
 {% block og_title %}{% if active_category %}{{ active_category.name }} in Kenya | Qiksearch{% else %}Shop farm equipment, seeds & supplies | Qiksearch{% endif %}{% endblock %}
 {% block content %}
-  <div class="relative flex min-h-54 items-center overflow-hidden bg-stone-100">
-    <div class="relative z-10 mx-auto w-full max-w-7xl px-8 max-md:px-5 max-md:px-5">
-      <div class="mb-6 text-xs text-neutral-500">
-        <a href="{% url 'home' %}">Home</a> / <span>Shop</span>
-      </div><span class="inline-block text-xs font-bold tracking-[1.7px] text-red-700">GOOD THINGS FOR GROWING</span><h1 class="my-2 text-5xl font-semibold leading-tight tracking-tight max-sm:text-4xl">
+  <!-- Page Header Banner -->
+  <div class="relative overflow-hidden bg-stone-100 py-8 sm:py-12">
+    <div class="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="mb-3 text-xs text-neutral-500">
+        <a href="{% url 'home' %}" class="hover:text-red-700">Home</a> / <span class="text-neutral-800">Shop</span>
+      </div>
+      <span class="inline-block text-[11px] sm:text-xs font-bold tracking-[1.7px] text-red-700 uppercase">GOOD THINGS FOR GROWING</span>
+      <h1 class="mt-1 font-display text-3xl font-semibold leading-tight tracking-tight sm:text-4xl lg:text-5xl">
         {% if active_category %}
           {{ active_category.name }}
         {% elif query %}
@@ -25,56 +28,114 @@
         {% else %}
           The farm shop<span class="text-red-700">.</span>
         {% endif %}
-      </h1><p class="text-xs text-neutral-500">Useful things for the work you love.</p>
-    </div><span class="absolute right-[10%] top-[-67px] text-9xl leading-none text-stone-200 max-sm:right-0 max-sm:top-[-20px] max-sm:text-9xl">✳</span>
+      </h1>
+      <p class="mt-1 text-xs sm:text-sm text-neutral-500">
+        {% if active_category %}
+          {{ active_category.description|default:"Useful equipment and supplies for this category." }}
+        {% elif query %}
+          Products matching "{{ query }}"
+        {% else %}
+          Useful tools, seeds, and equipment for the work you love.
+        {% endif %}
+      </p>
+    </div>
+    <span class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-8xl sm:text-9xl font-bold leading-none text-stone-200/70" aria-hidden="true">✳</span>
   </div>
-  <section class="mx-auto grid w-full max-w-7xl px-8 max-md:px-5 grid-cols-[220px_minmax(0,1fr)] gap-9 py-12 max-md:px-5 max-md:grid-cols-[160px_minmax(0,1fr)] max-md:gap-5 max-sm:block max-sm:py-7">
-    <aside class="max-sm:mb-6">
-      <h3 class="mb-4 text-sm font-bold">Find your fit</h3><a class="flex justify-between border-b border-neutral-200 py-3 text-xs text-neutral-600 {% if not selected_category and not active_category %}font-bold text-red-700{% endif %}" href="{% url 'shop' %}">All products <span>↗</span></a>{% for category in categories %}
-        <a class="flex justify-between border-b border-neutral-200 py-3 text-xs text-neutral-600 max-sm:mr-1.5 max-sm:inline-flex max-sm:border max-sm:px-2.5 max-sm:py-2 {% if active_category.slug == category.slug or selected_category == category.slug %}font-bold text-red-700{% endif %}" href="{{ category.get_absolute_url }}">{{ category.name }} <span class="text-red-700">↗</span></a>
+
+  <!-- Mobile Category Filter Bar (Horizontal Scrollable Chips) -->
+  <div class="border-b border-neutral-200 bg-white px-4 py-2.5 md:hidden">
+    <div class="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+      <a 
+        href="{% url 'shop' %}" 
+        class="shrink-0 rounded-full px-3.5 py-1.5 text-xs font-semibold transition {% if not selected_category and not active_category %}bg-red-700 text-white shadow-sm{% else %}bg-stone-100 text-neutral-700 hover:bg-stone-200{% endif %}"
+      >
+        All Products
+      </a>
+      {% for category in categories %}
+        <a 
+          href="{{ category.get_absolute_url }}" 
+          class="shrink-0 rounded-full px-3.5 py-1.5 text-xs font-medium transition {% if active_category.slug == category.slug or selected_category == category.slug %}bg-red-700 font-bold text-white shadow-sm{% else %}bg-stone-100 text-neutral-700 hover:bg-stone-200{% endif %}"
+        >
+          {{ category.name }}
+        </a>
       {% endfor %}
-      <div class="mt-7 bg-stone-100 p-4 max-sm:hidden">
-        <span>✳</span><p>
-          Not sure what you need?<br /><a href="https://wa.me/254700007552">We're happy to help ↗</a>
-        </p>
+    </div>
+  </div>
+
+  <!-- Main Content Layout -->
+  <section class="mx-auto grid w-full max-w-7xl grid-cols-1 gap-8 px-4 py-8 sm:px-6 md:grid-cols-[200px_minmax(0,1fr)] lg:grid-cols-[240px_minmax(0,1fr)] lg:px-8 lg:py-12">
+    <!-- Desktop Category Sidebar -->
+    <aside class="hidden md:block">
+      <div class="sticky top-24 rounded-xl border border-neutral-200 bg-stone-50/70 p-5">
+        <h3 class="mb-3 text-xs font-bold uppercase tracking-wider text-neutral-900">Categories</h3>
+        <nav class="space-y-1 text-xs">
+          <a class="flex items-center justify-between rounded-lg px-3 py-2 transition {% if not selected_category and not active_category %}bg-red-700 font-bold text-white shadow-sm{% else %}text-neutral-700 hover:bg-neutral-200/60{% endif %}" href="{% url 'shop' %}">
+            <span>All products</span>
+            <span>↗</span>
+          </a>
+          {% for category in categories %}
+            <a class="flex items-center justify-between rounded-lg px-3 py-2 transition {% if active_category.slug == category.slug or selected_category == category.slug %}bg-red-700 font-bold text-white shadow-sm{% else %}text-neutral-700 hover:bg-neutral-200/60{% endif %}" href="{{ category.get_absolute_url }}">
+              <span>{{ category.name }}</span>
+              <span class="{% if active_category.slug == category.slug or selected_category == category.slug %}text-white{% else %}text-red-700{% endif %}">↗</span>
+            </a>
+          {% endfor %}
+        </nav>
+
+        <div class="mt-6 rounded-lg border border-neutral-200 bg-white p-3.5 text-xs text-neutral-600 shadow-xs">
+          <span class="text-sm text-red-700">✳</span>
+          <p class="mt-1 leading-snug">
+            Need advice on farm sizing?<br />
+            <a href="https://wa.me/254700007552" class="mt-1 inline-block font-semibold text-red-700 hover:underline">Chat with our agronomist ↗</a>
+          </p>
+        </div>
       </div>
     </aside>
+
+    <!-- Product Listing Area -->
     <div class="min-w-0">
-      <div class="mb-4 flex min-h-10 items-start justify-between border-b border-neutral-200 text-xs text-neutral-500">
-        <span>
+      <!-- Toolbar: Count & View Switcher -->
+      <div class="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-neutral-200 pb-3 text-xs text-neutral-500">
+        <div>
           {% if active_category %}
-            {{ active_category.description }}
+            <span class="font-medium text-neutral-800">{{ products|length }} items in {{ active_category.name }}</span>
           {% elif query %}
-            Results for “{{ query }}”
+            <span class="font-medium text-neutral-800">{{ products|length }} results for “{{ query }}”</span>
           {% else %}
-            {{ products|length }} useful things for your farm
+            <span class="font-medium text-neutral-800">{{ products|length }} products available</span>
           {% endif %}
-        </span><span class="text-xs font-bold tracking-widest text-red-700">JUST GOOD PICKS&nbsp; ✳</span>
+        </div>
+
+        <div class="flex items-center gap-2" aria-label="Product view options">
+          <span class="text-neutral-400">View:</span>
+          <a class="inline-flex items-center gap-1 rounded-md border px-2.5 py-1 text-xs font-medium transition {% if view_mode != 'list' %}border-red-700 bg-red-700 text-white shadow-xs{% else %}border-neutral-200 bg-white text-neutral-700 hover:bg-stone-50{% endif %}"
+            href="?{% if query %}q={{ query|urlencode }}&amp;{% endif %}view=grid"
+            aria-label="Grid view">
+            ▦ Grid
+          </a>
+          <a class="inline-flex items-center gap-1 rounded-md border px-2.5 py-1 text-xs font-medium transition {% if view_mode == 'list' %}border-red-700 bg-red-700 text-white shadow-xs{% else %}border-neutral-200 bg-white text-neutral-700 hover:bg-stone-50{% endif %}"
+            href="?{% if query %}q={{ query|urlencode }}&amp;{% endif %}view=list"
+            aria-label="List view">
+            ☷ List
+          </a>
+        </div>
       </div>
-      <div class="mb-4 flex items-center justify-end gap-1.5 text-xs text-neutral-500" aria-label="Product view">
-        <span>View</span><a class="rounded border border-neutral-200 px-2.5 py-2 {% if view_mode == 'grid' %}border-red-700 bg-red-700 text-white{% endif %}"
-          href="?{% if query %}
-            q={{ query|urlencode }}&amp;
-          {% endif %}view=grid"
-          aria-label="Grid view">
-          ▦ Grid
-        </a><a class="rounded border border-neutral-200 px-2.5 py-2 {% if view_mode == 'list' %}border-red-700 bg-red-700 text-white{% endif %}"
-          href="?{% if query %}
-            q={{ query|urlencode }}&amp;
-          {% endif %}view=list"
-          aria-label="List view">
-          ☷ List
-        </a>
-      </div>
+
+      <!-- Products Grid / List -->
       {% if products %}
-        <div class="{% if view_mode == 'list' %}grid grid-cols-1 gap-3{% else %}grid grid-cols-3 gap-x-3.5 gap-y-4 max-md:grid-cols-2 max-sm:grid-cols-2 max-sm:gap-2{% endif %}">
+        <div class="{% if view_mode == 'list' %}grid grid-cols-1 gap-3 sm:gap-4{% else %}grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-2 lg:grid-cols-3{% endif %}">
           {% for product in products %}
             {% include 'catalog/_product_card.html' %}
           {% endfor %}
         </div>
       {% else %}
-        <div class="bg-stone-100 px-5 py-22 text-center">
-          <span class="text-4xl">🌱</span><h2 class="text-2xl font-bold">Nothing growing here yet</h2><p class="mb-6 text-xs text-neutral-500">Try another search or browse all products.</p><a class="inline-flex min-h-12 items-center gap-6 bg-red-700 px-5 text-xs font-semibold text-white" href="{% url 'shop' %}">See all products ↗</a>
+        <!-- Empty State -->
+        <div class="rounded-2xl border border-neutral-200 bg-stone-50 px-6 py-16 text-center">
+          <span class="text-4xl">🌱</span>
+          <h2 class="mt-3 font-display text-xl font-semibold text-neutral-900">No products found</h2>
+          <p class="mt-1 text-xs text-neutral-500">Try adjusting your search or explore our complete catalog.</p>
+          <a class="mt-5 inline-flex min-h-11 items-center gap-3 rounded-lg bg-red-700 px-5 text-xs font-semibold text-white shadow-sm transition hover:bg-red-800" href="{% url 'shop' %}">
+            See all products ↗
+          </a>
         </div>
       {% endif %}
     </div>

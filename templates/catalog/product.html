@@ -9,83 +9,125 @@
 {% block og_image %}{% if absolute_product_image %}{{ absolute_product_image }}{% else %}{{ block.super }}{% endif %}{% endblock %}
 {% block extra_head %}<script type="application/ld+json">{{ structured_data }}</script>{% endblock %}
 {% block content %}
-  <div class="mx-auto w-full max-w-7xl px-8 py-6 pb-20 max-md:px-5 max-sm:pb-14">
-    <div class="mb-6 text-xs leading-relaxed text-neutral-500">
-      <a href="{% url 'home' %}">Home</a> / <a href="{% url 'shop' %}">Shop</a> / <a href="{{ product.category.get_absolute_url }}">{{ product.category.name }}</a> / <span>{{ product.name }}</span>
+  <div class="mx-auto w-full max-w-7xl px-4 py-4 sm:px-6 sm:py-8 lg:px-8">
+    <!-- Breadcrumb -->
+    <div class="mb-4 text-xs leading-relaxed text-neutral-500 overflow-hidden text-ellipsis whitespace-nowrap">
+      <a href="{% url 'home' %}" class="hover:text-red-700">Home</a> / 
+      <a href="{% url 'shop' %}" class="hover:text-red-700">Shop</a> / 
+      <a href="{{ product.category.get_absolute_url }}" class="hover:text-red-700">{{ product.category.name }}</a> / 
+      <span class="text-neutral-800">{{ product.name }}</span>
     </div>
-    <div class="grid grid-cols-2 items-start gap-18 max-md:gap-9 max-sm:grid-cols-1 max-sm:gap-4">
-      <div class="relative h-118 bg-stone-100 max-md:h-98 max-sm:h-72">
+
+    <!-- Main Product Detail Layout -->
+    <div class="grid grid-cols-1 items-start gap-6 sm:gap-8 md:grid-cols-2 lg:gap-14">
+      <!-- Product Image Stage -->
+      <div class="relative overflow-hidden rounded-2xl border border-neutral-200 bg-stone-100 aspect-square sm:aspect-4/3 md:h-118 md:aspect-auto">
         {% if product.display_image %}
-          <img class="h-full w-full object-cover" src="{{ product.display_image }}" alt="{{ product.name }} in Kenya" fetchpriority="high" width="900" height="720" />
+          <img class="size-full object-cover" src="{{ product.display_image }}" alt="{{ product.name }} in Kenya" fetchpriority="high" width="900" height="720" />
         {% else %}
-          <span class="grid h-full place-items-center px-4 text-center text-sm text-neutral-500">Add product photo in admin</span>
+          <span class="grid size-full place-items-center p-6 text-center text-sm text-neutral-400">Product photo available upon request</span>
         {% endif %}
         {% if product.active_promo %}
-          <span class="absolute left-3 top-3 bg-rose-100 px-2 py-1.5 text-xs font-bold uppercase tracking-wider text-red-700">{{ product.active_promo.badge_text }}</span>
+          <span class="absolute left-3 top-3 rounded-lg bg-rose-100/95 px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-red-700 backdrop-blur-sm shadow-xs">{{ product.active_promo.badge_text }}</span>
         {% elif product.badge %}
-          <span class="absolute left-3 top-3 bg-rose-100 px-2 py-1.5 text-xs font-bold uppercase tracking-wider text-red-700">{{ product.badge }}</span>
+          <span class="absolute left-3 top-3 rounded-lg bg-rose-100/95 px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-red-700 backdrop-blur-sm shadow-xs">{{ product.badge }}</span>
+        {% endif %}
+        {% if product.discount_percent %}
+          <span class="absolute bottom-3 left-3 rounded-lg bg-red-700 px-2.5 py-1 text-xs font-bold text-white shadow-md">
+            -{{ product.discount_percent }}% OFF
+          </span>
         {% endif %}
       </div>
-      <div class="py-6 max-sm:py-2">
-        <span class="mb-1 inline-block text-xs font-bold tracking-[1.7px] text-red-700">{{ product.category.name }}</span>
-        <h1 class="my-2 font-display text-5xl font-semibold leading-tight tracking-tight max-sm:text-4xl">{{ product.name }}</h1>
-        <div class="border-b border-neutral-200 pb-5 text-2xl font-bold text-red-700 max-sm:text-xl">
+
+      <!-- Product Information -->
+      <div class="flex flex-col">
+        <span class="mb-1 text-xs font-bold tracking-[1.7px] text-red-700 uppercase">{{ product.category.name }}</span>
+        <h1 class="font-display text-2xl font-semibold leading-tight tracking-tight sm:text-3xl lg:text-4xl text-neutral-900">{{ product.name }}</h1>
+        
+        <!-- Price Display -->
+        <div class="my-3 flex items-baseline gap-2.5 border-b border-neutral-200 pb-4">
           {% if product.active_promo %}
-            <del class="text-neutral-500 mr-2">KSh {{ product.price|intcomma }}</del><strong class="font-bold text-red-700">KSh {{ product.current_price|intcomma }}</strong>
+            <strong class="font-display text-2xl sm:text-3xl font-bold text-red-700">KSh {{ product.current_price|intcomma }}</strong>
+            <del class="text-sm font-normal text-neutral-400">KSh {{ product.price|intcomma }}</del>
+            {% if product.discount_percent %}
+              <span class="ml-1 rounded-md bg-rose-100 px-2 py-0.5 text-xs font-bold text-red-700">-{{ product.discount_percent }}%</span>
+            {% endif %}
           {% else %}
-            KSh {{ product.current_price|intcomma }}
+            <strong class="font-display text-2xl sm:text-3xl font-bold text-neutral-900">KSh {{ product.current_price|intcomma }}</strong>
           {% endif %}
         </div>
-        <div class="my-4 flex items-center gap-2 text-xs text-green-700">
-          <span>●</span> Available to order from Nairobi
+
+        <!-- In-Stock / Availability Badge -->
+        <div class="mb-4 flex items-center gap-2 text-xs font-medium text-green-700">
+          <span class="inline-block size-2 rounded-full bg-green-600 animate-pulse"></span> Available to order from Nairobi store
         </div>
-        <p class="mb-5 text-sm leading-[1.8] text-neutral-600 max-sm:text-xs">{{ product.description }}</p>
-        <div class="mb-3 flex flex-wrap gap-2">
+
+        <!-- Description -->
+        <div class="mb-6 text-xs sm:text-sm leading-relaxed text-neutral-600">
+          <p>{{ product.description }}</p>
+        </div>
+
+        <!-- Primary Actions: Add to Cart & Wishlist -->
+        <div class="mb-3 flex flex-col sm:flex-row gap-2.5">
           <!-- Add to Cart Form -->
-          <form method="post" action="{% url 'cart_action' product.pk %}" data-async-form data-product-name="{{ product.name }}">
+          <form method="post" action="{% url 'cart_action' product.pk %}" data-async-form data-product-name="{{ product.name }}" class="flex-1">
             {% csrf_token %}
             <input type="hidden" name="action" value="add" />
             <input type="hidden" name="next" value="{% url 'cart' %}" />
-            <button class="inline-flex min-h-12 items-center gap-6 rounded-sm bg-red-700 px-5 text-xs font-semibold text-white transition hover:-translate-y-0.5 hover:bg-red-800">
-              Add to cart <span>＋</span>
+            <button type="submit" class="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-red-700 px-6 text-xs sm:text-sm font-bold text-white shadow-sm transition hover:bg-red-800 active:scale-95">
+              <span>Add to cart</span>
+              <span class="text-base leading-none">＋</span>
             </button>
           </form>
 
           <!-- Wishlist Form -->
-          <form method="post" action="{% url 'wishlist_action' product.pk %}" data-async-form data-product-name="{{ product.name }}">
+          <form method="post" action="{% url 'wishlist_action' product.pk %}" data-async-form data-product-name="{{ product.name }}" class="sm:shrink-0">
             {% csrf_token %}
             <input type="hidden" name="next" value="{{ request.get_full_path }}" />
-            <button class="inline-flex min-h-12 items-center gap-6 rounded-sm border border-neutral-300 bg-white px-5 text-xs font-semibold text-neutral-800 transition hover:-translate-y-0.5 hover:bg-stone-50">
-              ♡ Save for later
+            <button type="submit" class="flex min-h-12 w-full sm:w-auto items-center justify-center gap-2 rounded-xl border border-neutral-300 bg-white px-5 text-xs sm:text-sm font-semibold text-neutral-700 transition hover:bg-stone-50 active:scale-95">
+              <span>♡</span> <span>Save</span>
             </button>
           </form>
         </div>
-        <a class="inline-flex min-h-12 min-w-52 items-center justify-between rounded-sm bg-red-700 px-5 text-xs font-semibold text-white transition hover:-translate-y-0.5 hover:bg-red-800" href="https://wa.me/254700007552?text=Hi%20Qiksearch%2C%20I%27m%20interested%20in%20{{ product.name|urlencode }}" target="_blank" rel="noopener">
-          Ask about this product <span>↗</span>
+
+        <!-- WhatsApp Direct Inquiry -->
+        <a class="mb-5 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-green-600 px-6 text-xs sm:text-sm font-bold text-white shadow-sm transition hover:bg-green-700 active:scale-95" href="https://wa.me/254700007552?text=Hi%20Qiksearch%2C%20I%27m%20interested%20in%20{{ product.name|urlencode }}" target="_blank" rel="noopener">
+          <svg class="size-4.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 11.5a8.4 8.4 0 0 1-12.4 7.4L4 20l1.2-3.4A8.4 8.4 0 1 1 20 11.5Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M9 8.5c.3-.6.6-.6.9-.6h.5c.2 0 .4.1.5.4l.7 1.7c.1.2 0 .4-.1.6l-.5.6c-.2.2-.2.4 0 .7.4.7 1.1 1.4 1.8 1.8.3.2.5.2.7 0l.7-.8c.2-.2.4-.2.6-.1l1.7.8c.3.1.4.3.4.5 0 .3-.2 1-.6 1.3-.5.4-1.1.6-1.8.5-1-.1-2.3-.7-3.5-1.8-1.3-1.1-2.1-2.4-2.4-3.4-.3-.9-.1-1.6.4-2.2Z" /></svg>
+          Ask about this product on WhatsApp <span>↗</span>
         </a>
-        <div class="flex gap-5 border-b border-neutral-200 py-5 text-xs text-neutral-600 max-sm:gap-3 max-sm:text-xs">
-          <span>✳ &nbsp; Advice from a real person</span>
-          <span>⌁ &nbsp; Delivery across Kenya</span>
+
+        <!-- Service Guarantee Badges -->
+        <div class="grid grid-cols-2 gap-3 border-y border-neutral-200 py-3.5 text-xs text-neutral-600">
+          <span class="flex items-center gap-2">✳ Advice from agronomists</span>
+          <span class="flex items-center gap-2">⌁ Countrywide delivery</span>
         </div>
-        <div class="flex justify-between border-b border-neutral-200 py-3 text-xs">
-          <span>SKU</span><strong>{{ product.sku|default:product.slug|upper }}</strong>
-        </div>
-        <div class="flex justify-between border-b border-neutral-200 py-3 text-xs">
-          <span>Category</span><a href="{{ product.category.get_absolute_url }}">{{ product.category.name }}</a>
+
+        <!-- Specifications & Meta -->
+        <div class="divide-y divide-neutral-100 text-xs text-neutral-600">
+          <div class="flex justify-between py-2.5">
+            <span class="text-neutral-500">SKU</span>
+            <strong class="font-mono text-neutral-800">{{ product.sku|default:product.slug|upper }}</strong>
+          </div>
+          <div class="flex justify-between py-2.5">
+            <span class="text-neutral-500">Category</span>
+            <a href="{{ product.category.get_absolute_url }}" class="font-semibold text-red-700 hover:underline">{{ product.category.name }}</a>
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- Related Products -->
     {% if related %}
-      <div class="mb-7 mt-18 flex items-end justify-between max-sm:mt-12">
-        <div>
-          <span class="mb-1 inline-block text-xs font-bold tracking-[1.7px] text-red-700">MORE FROM THIS COLLECTION</span>
-          <h2 class="my-3 font-display text-2xl font-semibold leading-tight tracking-tight">While you're here<span class="text-red-700">.</span></h2>
+      <div class="mt-14 sm:mt-18 border-t border-neutral-200 pt-8 sm:pt-10">
+        <div class="mb-6">
+          <span class="text-[11px] font-bold tracking-[1.7px] text-red-700 uppercase">MORE FROM THIS COLLECTION</span>
+          <h2 class="mt-1 font-display text-2xl font-semibold tracking-tight text-neutral-900">While you're here<span class="text-red-700">.</span></h2>
         </div>
-      </div>
-      <div class="grid grid-cols-4 gap-x-4 gap-y-6 max-md:grid-cols-2">
-        {% for product in related %}
-          {% include 'catalog/_product_card.html' %}
-        {% endfor %}
+        <div class="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
+          {% for product in related %}
+            {% include 'catalog/_product_card.html' %}
+          {% endfor %}
+        </div>
       </div>
     {% endif %}
   </div>
@@ -115,8 +157,18 @@
                 window.showToast(data.message, data.type || 'success');
               }
               if (data.cart_count !== undefined) {
-                const badge = document.getElementById('header-cart-badge');
-                if (badge) badge.textContent = data.cart_count;
+                const headerBadge = document.getElementById('header-cart-badge');
+                if (headerBadge) headerBadge.textContent = data.cart_count;
+                const bottomBadge = document.getElementById('bottom-cart-badge');
+                if (bottomBadge) bottomBadge.textContent = data.cart_count;
+              }
+              if (data.wishlist_count !== undefined) {
+                const navBadge = document.getElementById('nav-wishlist-badge');
+                if (navBadge) navBadge.textContent = data.wishlist_count;
+                const drawerBadge = document.getElementById('drawer-wishlist-badge');
+                if (drawerBadge) drawerBadge.textContent = data.wishlist_count;
+                const bottomBadge = document.getElementById('bottom-wishlist-badge');
+                if (bottomBadge) bottomBadge.textContent = data.wishlist_count;
               }
             } else {
               form.submit();

@@ -1,26 +1,36 @@
 {% extends 'base.html' %}
 {% block title %}
-  Wishlist | Qiksearch
+  Your Wishlist | Qiksearch Kenya
 {% endblock %}
 {% block robots %}noindex,nofollow{% endblock %}
 {% block content %}
-  <div class="relative flex min-h-54 items-center overflow-hidden bg-stone-100">
-    <div class="mx-auto w-full max-w-7xl px-8 max-md:px-5 max-md:px-5">
-      <div class="mb-6 text-xs leading-relaxed text-neutral-500">
-        <a href="{% url 'home' %}">Home</a> / Wishlist
-      </div><span class="mb-1 inline-block text-xs font-bold tracking-[1.7px] text-red-700">SAVED FOR LATER</span><h1 class="my-2 font-display text-5xl font-semibold leading-tight tracking-tight max-sm:text-4xl">Your wishlist<span class="text-red-700">.</span></h1>
+  <div class="relative overflow-hidden bg-stone-100 py-8 sm:py-12">
+    <div class="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="mb-3 text-xs leading-relaxed text-neutral-500">
+        <a href="{% url 'home' %}" class="hover:text-red-700">Home</a> / <span class="text-neutral-800">Wishlist</span>
+      </div>
+      <span class="inline-block text-[11px] sm:text-xs font-bold tracking-[1.7px] text-red-700 uppercase">SAVED FOR LATER</span>
+      <h1 class="mt-1 font-display text-3xl font-semibold leading-tight tracking-tight sm:text-4xl lg:text-5xl">Your wishlist<span class="text-red-700">.</span></h1>
+      <p class="mt-1 text-xs sm:text-sm text-neutral-500">Keep track of farm equipment you plan to purchase.</p>
     </div>
+    <span class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-8xl sm:text-9xl font-bold leading-none text-stone-200/70" aria-hidden="true">♡</span>
   </div>
-  <section class="mx-auto w-full max-w-7xl px-8 max-md:px-5 max-md:px-5 py-20 max-sm:py-12">
+
+  <section class="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
     {% if products %}
-      <div class="grid grid-cols-4 gap-x-4 gap-y-6 max-md:grid-cols-2">
+      <div class="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
         {% for product in products %}
           {% include 'catalog/_product_card.html' %}
         {% endfor %}
       </div>
     {% else %}
-      <div class="bg-stone-100 px-5 py-22 text-center">
-        <span>♡</span><h2 class="my-3 font-display text-2xl font-semibold leading-tight tracking-tight">Nothing saved just yet</h2><p>Save products you want to come back to.</p><a class="inline-flex min-h-12 items-center gap-6 rounded-sm px-5 text-xs font-semibold transition hover:-translate-y-0.5 bg-red-700 text-white" href="{% url 'shop' %}">Browse products ↗</a>
+      <div class="rounded-2xl border border-neutral-200 bg-stone-50 px-6 py-16 text-center">
+        <span class="text-4xl">♡</span>
+        <h2 class="mt-3 font-display text-xl font-semibold text-neutral-900">Nothing saved just yet</h2>
+        <p class="mt-1 text-xs text-neutral-500">Save products while browsing and they will show up here.</p>
+        <a class="mt-5 inline-flex min-h-11 items-center gap-3 rounded-lg bg-red-700 px-5 text-xs font-semibold text-white shadow-sm transition hover:bg-red-800" href="{% url 'shop' %}">
+          Browse products ↗
+        </a>
       </div>
     {% endif %}
   </section>

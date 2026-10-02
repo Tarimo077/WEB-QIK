@@ -12,24 +12,52 @@
   Contact Qiksearch | Nairobi, Kenya
 {% endblock %}
 {% block content %}
-  <div class="relative flex min-h-54 items-center overflow-hidden bg-stone-100">
-    <div class="mx-auto w-full max-w-7xl px-8 max-md:px-5 max-md:px-5">
-      <div class="mb-6 text-xs leading-relaxed text-neutral-500">
-        <a href="{% url 'home' %}">Home</a> / Contact
-      </div><span class="mb-1 inline-block text-xs font-bold tracking-[1.7px] text-red-700">REAL PEOPLE, READY TO HELP</span><h1 class="my-2 font-display text-5xl font-semibold leading-tight tracking-tight max-sm:text-4xl">Let's talk<span class="text-red-700">.</span></h1><p>Questions about a product? Our Nairobi team is here for you.</p>
+  <div class="relative overflow-hidden bg-stone-100 py-8 sm:py-12">
+    <div class="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="mb-3 text-xs leading-relaxed text-neutral-500">
+        <a href="{% url 'home' %}" class="hover:text-red-700">Home</a> / <span class="text-neutral-800">Contact</span>
+      </div>
+      <span class="inline-block text-[11px] sm:text-xs font-bold tracking-[1.7px] text-red-700 uppercase">REAL PEOPLE, READY TO HELP</span>
+      <h1 class="mt-1 font-display text-3xl font-semibold leading-tight tracking-tight sm:text-4xl lg:text-5xl">Let's talk<span class="text-red-700">.</span></h1>
+      <p class="mt-1 text-xs sm:text-sm text-neutral-500">Questions about a product or need advice? Our Nairobi store team is here for you.</p>
     </div>
+    <span class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-8xl sm:text-9xl font-bold leading-none text-stone-200/70" aria-hidden="true">📞</span>
   </div>
-  <section class="mx-auto grid w-full max-w-7xl px-8 max-md:px-5 grid-cols-3 gap-4 py-12 max-md:px-5 max-sm:grid-cols-1 max-sm:py-8 mx-auto w-full max-w-7xl px-8 max-md:px-5 max-md:px-5">
-    <div class="min-h-54 bg-stone-100 p-7 max-sm:min-h-0 max-sm:p-5">
-      <span class="mb-1 inline-block text-xs font-bold tracking-[1.7px] text-red-700">CALL OUR TEAM</span><h2 class="my-3 font-display text-2xl font-semibold leading-tight tracking-tight">+254 700 007 552</h2><p>Monday to Saturday, 8am–6pm</p><a class="inline-flex min-h-12 items-center gap-6 rounded-sm px-5 text-xs font-semibold transition hover:-translate-y-0.5 bg-red-700 text-white mt-8" href="tel:+254700007552">Call Qiksearch <span>↗</span></a>
+
+  <section class="mx-auto grid w-full max-w-7xl grid-cols-1 gap-4 px-4 py-8 sm:px-6 sm:py-12 md:grid-cols-3 md:gap-6 lg:px-8">
+    <div class="flex flex-col justify-between rounded-2xl border border-neutral-200 bg-stone-50 p-6 sm:p-7 shadow-xs">
+      <div>
+        <span class="mb-1 inline-block text-[11px] font-bold tracking-[1.7px] text-red-700 uppercase">CALL OUR TEAM</span>
+        <h2 class="my-2 font-display text-xl sm:text-2xl font-semibold text-neutral-900">+254 700 007 552</h2>
+        <p class="text-xs text-neutral-600">Monday to Saturday, 8:00 AM – 6:00 PM</p>
+      </div>
+      <a class="mt-6 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-red-700 px-5 text-xs font-semibold text-white shadow-sm transition hover:bg-red-800 active:scale-95" href="tel:+254700007552">
+        Call Qiksearch <span>↗</span>
+      </a>
     </div>
-    <div class="min-h-54 bg-stone-100 p-7 max-sm:min-h-0 max-sm:p-5">
-      <span class="mb-1 inline-block text-xs font-bold tracking-[1.7px] text-red-700">SEND US A NOTE</span><h2 class="my-3 font-display text-2xl font-semibold leading-tight tracking-tight">We'd love to hear from you.</h2><p>Tell us what you're looking for and we'll get back to you.</p><a class="inline-flex min-h-12 items-center gap-6 rounded-sm px-5 text-xs font-semibold transition hover:-translate-y-0.5 bg-red-700 text-white mt-2" href="mailto:info@qiksearch.co.ke?subject=Qiksearch%20enquiry">Email our team <span>↗</span></a>
+
+    <div class="flex flex-col justify-between rounded-2xl border border-neutral-200 bg-stone-50 p-6 sm:p-7 shadow-xs">
+      <div>
+        <span class="mb-1 inline-block text-[11px] font-bold tracking-[1.7px] text-red-700 uppercase">SEND US A NOTE</span>
+        <h2 class="my-2 font-display text-xl sm:text-2xl font-semibold text-neutral-900">info@qiksearch.co.ke</h2>
+        <p class="text-xs text-neutral-600">Tell us what you need and we will respond promptly.</p>
+      </div>
+      <a class="mt-6 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-red-700 px-5 text-xs font-semibold text-white shadow-sm transition hover:bg-red-800 active:scale-95" href="mailto:info@qiksearch.co.ke?subject=Qiksearch%20enquiry">
+        Email our team <span>↗</span>
+      </a>
     </div>
-    <div class="min-h-54 bg-stone-100 p-7 max-sm:min-h-0 max-sm:p-5 contact-address">
-      <span class="mb-1 inline-block text-xs font-bold tracking-[1.7px] text-red-700">COME SAY HELLO</span><h2 class="my-3 font-display text-2xl font-semibold leading-tight tracking-tight">Find us in Nairobi.</h2><p>
-        Opposite City Stadium,<br />Lusaka Road, Industrial Area<br />Nairobi, Kenya
-      </p><a href="https://maps.google.com/?q=City+Stadium+Nairobi" target="_blank" rel="noopener" class="text-link">Get directions ↗</a>
+
+    <div class="flex flex-col justify-between rounded-2xl border border-neutral-200 bg-stone-50 p-6 sm:p-7 shadow-xs">
+      <div>
+        <span class="mb-1 inline-block text-[11px] font-bold tracking-[1.7px] text-red-700 uppercase">COME SAY HELLO</span>
+        <h2 class="my-2 font-display text-xl sm:text-2xl font-semibold text-neutral-900">Find us in Nairobi.</h2>
+        <p class="text-xs leading-relaxed text-neutral-600">
+          Opposite City Stadium,<br />Lusaka Road, Industrial Area<br />Nairobi, Kenya
+        </p>
+      </div>
+      <a href="https://maps.google.com/?q=City+Stadium+Nairobi" target="_blank" rel="noopener" class="mt-6 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-neutral-300 bg-white px-5 text-xs font-semibold text-neutral-800 shadow-xs transition hover:bg-stone-100 active:scale-95">
+        Get directions ↗
+      </a>
     </div>
   </section>
 {% endblock %}

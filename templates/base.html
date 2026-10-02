@@ -39,8 +39,6 @@
         <!-- Quick action links -->
         <div class="flex shrink-0 items-center gap-4 text-[11px] font-medium max-sm:hidden sm:text-xs">
           <a href="{% url 'deals' %}" class="transition-colors hover:text-rose-200">Daily deals</a>
-          <span class="text-rose-300/60">|</span>
-          <a href="{% url 'wishlist' %}" class="transition-colors hover:text-rose-200">Wishlist</a>
         </div>
       </div>
     </div>
@@ -64,78 +62,252 @@
       </script>
     {% endif %}
 
-    <header class="relative z-30 bg-white">
-      <div class="mx-auto flex h-22 w-full max-w-7xl px-8 max-md:px-5 items-center justify-between gap-8 max-md:px-5 max-sm:gap-3">
-        <a class="flex min-w-42 items-center max-sm:min-w-0" href="{% url 'home' %}" aria-label="Qiksearch home">
-          <img class="block h-auto max-h-14 w-40 object-contain mix-blend-multiply max-sm:w-33" src="{% static 'catalog/images/qiksearch-logo.png' %}" alt="Qiksearch" width="160" height="56" />
+    <header class="sticky top-0 z-40 border-b border-neutral-200 bg-white/95 backdrop-blur-md">
+      <!-- Top Row: Logo, Live Search (Desktop), Actions & Mobile Toggle -->
+      <div class="mx-auto flex h-16 sm:h-20 w-full max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
+        <!-- Logo -->
+        <a class="flex shrink-0 items-center" href="{% url 'home' %}" aria-label="Qiksearch home">
+          <img class="block h-auto max-h-11 sm:max-h-13 w-32 sm:w-40 object-contain mix-blend-multiply" src="{% static 'catalog/images/qiksearch-logo.png' %}" alt="Qiksearch" width="160" height="56" />
         </a>
         
-        <!-- Search Form Container -->
-        <div class="relative flex-1 max-w-136">
-          <form class="flex h-12 w-full items-center rounded border border-neutral-200 bg-stone-50 p-1 pl-4" action="{% url 'shop' %}" method="get">
-            <span class="mr-2 rotate-[-20deg] text-2xl text-neutral-500">⌕</span>
+        <!-- Live Search Bar (Desktop & Tablet) -->
+        <div class="relative hidden flex-1 max-w-md md:block">
+          <form class="flex h-11 w-full items-center rounded-lg border border-neutral-200 bg-stone-50 p-1 pl-3.5 focus-within:border-red-700 focus-within:bg-white focus-within:ring-1 focus-within:ring-red-700" action="{% url 'shop' %}" method="get">
+            <span class="mr-2 rotate-[-20deg] text-xl text-neutral-400">⌕</span>
             <input 
               id="live-search-input"
-              class="min-w-0 flex-1 border-0 bg-transparent text-sm outline-none" 
+              class="min-w-0 flex-1 border-0 bg-transparent text-xs sm:text-sm outline-none placeholder:text-neutral-400" 
               name="q" 
               value="{{ query|default:'' }}" 
               placeholder="What are you looking for?" 
               aria-label="Search products" 
               autocomplete="off" 
             />
-            <button class="cursor-pointer rounded-sm bg-red-700 px-5 py-2.5 text-xs font-semibold text-white">Search</button>
+            <button type="submit" class="cursor-pointer rounded bg-red-700 px-4 py-2 text-xs font-semibold text-white transition hover:bg-red-800">Search</button>
           </form>
 
-          <!-- Compact, Scrollable Results Dropdown -->
+          <!-- Compact, Scrollable Results Dropdown (Desktop) -->
           <div 
             id="live-search-dropdown" 
-            class="absolute left-0 right-0 top-full z-50 mt-1 hidden max-h-56 overflow-y-auto divide-y divide-neutral-100 rounded-md border border-neutral-200 bg-white shadow-lg"
+            class="absolute left-0 right-0 top-full z-50 mt-1.5 hidden max-h-72 overflow-y-auto divide-y divide-neutral-100 rounded-xl border border-neutral-200 bg-white shadow-xl"
           ></div>
         </div>
 
-        <a class="flex items-center gap-2.5 max-md:hidden" href="https://wa.me/254700007552" target="_blank" rel="noopener">
-          <span class="grid size-10 place-items-center rounded-full border border-neutral-200 text-xl text-red-700">↗</span>
-          <span>
-            <small class="mb-1 block text-xs text-neutral-500">Need help? Call us</small>
-            <strong class="block text-xs">+254 700 007 552</strong>
-          </span>
-        </a>
+        <!-- Right Action Items -->
+        <div class="flex items-center gap-2 sm:gap-4">
+          <!-- WhatsApp Contact Help (Desktop only) -->
+          <a class="hidden lg:flex items-center gap-2.5 transition hover:opacity-80" href="https://wa.me/254700007552" target="_blank" rel="noopener">
+            <span class="grid size-9 place-items-center rounded-full border border-neutral-200 text-lg text-red-700">↗</span>
+            <span class="leading-tight">
+              <small class="block text-[10px] text-neutral-500">Need help? Call us</small>
+              <strong class="block text-xs font-bold text-neutral-900">+254 700 007 552</strong>
+            </span>
+          </a>
+
+          <!-- Cart Icon Header Button -->
+          <a class="relative flex items-center justify-center rounded-full p-2 text-neutral-700 transition hover:bg-stone-100 hover:text-red-700" href="{% url 'cart' %}" aria-label="Shopping cart, {{ request.session.cart|length|default:0 }} items">
+            <svg class="size-6 fill-none stroke-current stroke-[1.8]" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3 4h2l2.2 11.1a2 2 0 0 0 2 1.6h8.5a2 2 0 0 0 1.9-1.4L22 8H6" />
+              <circle cx="10" cy="20" r="1.3" />
+              <circle cx="18" cy="20" r="1.3" />
+            </svg>
+            <span id="header-cart-badge" class="absolute -right-0.5 -top-0.5 grid size-5 place-items-center rounded-full bg-red-700 text-[10px] font-bold text-white shadow-sm">
+              {{ request.session.cart|length|default:0 }}
+            </span>
+          </a>
+
+          <!-- Mobile Hamburger Menu Button -->
+          <button 
+            id="mobile-menu-toggle" 
+            type="button" 
+            class="grid size-10 place-items-center rounded-lg border border-neutral-200 text-neutral-700 transition hover:bg-stone-100 active:scale-95 md:hidden"
+            aria-label="Toggle navigation menu"
+            aria-expanded="false"
+          >
+            <svg id="menu-icon-bars" class="size-5.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+            </svg>
+            <svg id="menu-icon-close" class="hidden size-5.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
       </div>
-      <nav class="mx-auto flex h-12 w-full max-w-7xl px-8 max-md:px-5 items-stretch gap-7 overflow-x-auto border-t border-neutral-200 text-xs text-neutral-600 max-md:px-5 max-sm:gap-4 max-sm:text-xs">
-        <a class="flex shrink-0 items-center bg-red-700 px-4 font-semibold text-white" href="{% url 'shop' %}">☰ &nbsp; Shop all</a>
-        <a class="flex shrink-0 items-center" href="{% url 'home' %}">Home</a>
-        <a class="flex shrink-0 items-center" href="{% url 'categories' %}">Categories</a>
-        <a class="flex shrink-0 items-center" href="{% url 'deals' %}">Daily deals</a>
-        <a class="flex shrink-0 items-center" href="{% url 'about' %}">About</a>
-        <a class="flex shrink-0 items-center" href="{% url 'contact' %}">Contact</a>
-        <a class="flex shrink-0 items-center" href="{% url 'terms' %}">Terms</a>
-        <a class="flex shrink-0 items-center" href="{% url 'track_order' %}">Track order</a>
-        <a class="ml-auto flex shrink-0 items-center gap-2 font-bold text-red-700 max-sm:ml-0" href="{% url 'cart' %}" aria-label="Shopping cart, {{ request.session.cart|length|default:0 }} items">
-          <svg class="size-6 fill-none stroke-current stroke-[1.8]" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M3 4h2l2.2 11.1a2 2 0 0 0 2 1.6h8.5a2 2 0 0 0 1.9-1.4L22 8H6" />
-            <circle cx="10" cy="20" r="1.3" />
-            <circle cx="18" cy="20" r="1.3" />
-          </svg>
-          <span id="header-cart-badge" class="grid size-5 place-items-center rounded-full bg-red-700 text-xs text-white">{{ request.session.cart|length|default:0 }}</span>
+
+      <!-- Mobile Search Bar (Directly below header on small screens) -->
+      <div class="border-t border-neutral-100 px-4 py-2 md:hidden">
+        <div class="relative">
+          <form class="flex h-10 w-full items-center rounded-lg border border-neutral-200 bg-stone-50 p-1 pl-3 focus-within:border-red-700 focus-within:bg-white" action="{% url 'shop' %}" method="get">
+            <span class="mr-1.5 rotate-[-20deg] text-base text-neutral-400">⌕</span>
+            <input 
+              id="mobile-live-search-input"
+              class="min-w-0 flex-1 border-0 bg-transparent text-xs outline-none placeholder:text-neutral-400" 
+              name="q" 
+              value="{{ query|default:'' }}" 
+              placeholder="Search farm equipment, seeds, tools..." 
+              aria-label="Search products" 
+              autocomplete="off" 
+            />
+            <button type="submit" class="rounded bg-red-700 px-3 py-1.5 text-xs font-semibold text-white">Go</button>
+          </form>
+
+          <!-- Compact Mobile Live Search Results Dropdown -->
+          <div 
+            id="mobile-live-search-dropdown" 
+            class="absolute left-0 right-0 top-full z-50 mt-1 hidden max-h-64 overflow-y-auto divide-y divide-neutral-100 rounded-xl border border-neutral-200 bg-white shadow-2xl"
+          ></div>
+        </div>
+      </div>
+
+      <!-- Desktop Nav Bar (Hidden on Mobile) -->
+      <nav class="hidden mx-auto h-11 w-full max-w-7xl items-stretch gap-6 overflow-x-auto border-t border-neutral-100 px-4 sm:px-6 lg:px-8 text-xs font-medium text-neutral-700 md:flex">
+        <a class="flex shrink-0 items-center bg-red-700 px-4 font-semibold text-white transition hover:bg-red-800" href="{% url 'shop' %}">☰ &nbsp; Shop all</a>
+        <a class="flex shrink-0 items-center transition hover:text-red-700" href="{% url 'home' %}">Home</a>
+        <a class="flex shrink-0 items-center transition hover:text-red-700" href="{% url 'categories' %}">Categories</a>
+        <a class="flex shrink-0 items-center transition hover:text-red-700" href="{% url 'deals' %}">Daily deals</a>
+        <a class="flex shrink-0 items-center transition hover:text-red-700" href="{% url 'about' %}">About</a>
+        <a class="flex shrink-0 items-center transition hover:text-red-700" href="{% url 'contact' %}">Contact</a>
+        <a class="flex shrink-0 items-center transition hover:text-red-700" href="{% url 'terms' %}">Terms</a>
+        <a class="flex shrink-0 items-center transition hover:text-red-700" href="{% url 'track_order' %}">Track order</a>
+        <a class="flex shrink-0 items-center gap-1.5 transition hover:text-red-700" href="{% url 'wishlist' %}" aria-label="Wishlist">
+          <span class="text-rose-600">♡</span> <span>Wishlist</span>
+          <span id="nav-wishlist-badge" class="grid size-4.5 place-items-center rounded-full bg-stone-200 text-[10px] font-bold text-neutral-800 {% if request.session.wishlist|length %}bg-red-700 text-white{% endif %}">
+            {{ request.session.wishlist|length|default:0 }}
+          </span>
         </a>
       </nav>
     </header>
 
-    <main>
+    <!-- Mobile Slide-out Drawer Menu -->
+    <div id="mobile-menu-drawer" class="fixed inset-0 z-50 hidden md:hidden" aria-modal="true" role="dialog">
+      <!-- Backdrop Overlay -->
+      <div id="mobile-menu-backdrop" class="fixed inset-0 bg-neutral-950/60 backdrop-blur-sm transition-opacity opacity-0"></div>
+
+      <!-- Drawer Content -->
+      <div id="mobile-menu-panel" class="fixed inset-y-0 right-0 flex w-full max-w-xs flex-col bg-white shadow-2xl transition-transform transform translate-x-full">
+        <!-- Drawer Header -->
+        <div class="flex items-center justify-between border-b border-neutral-200 px-5 py-4">
+          <span class="text-xs font-bold tracking-wider text-red-700 uppercase">Navigation</span>
+          <button id="mobile-menu-close" type="button" class="grid size-8 place-items-center rounded-full text-neutral-500 hover:bg-stone-100 hover:text-neutral-900" aria-label="Close menu">
+            <svg class="size-5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+          </button>
+        </div>
+
+        <!-- Drawer Links -->
+        <nav class="flex-1 overflow-y-auto px-4 py-3 text-sm font-medium text-neutral-800 divide-y divide-neutral-100">
+          <div class="py-2 space-y-1">
+            <a href="{% url 'home' %}" class="flex items-center gap-3 rounded-lg px-3 py-2.5 hover:bg-stone-100 transition">
+              <span class="text-base">🏡</span> Home
+            </a>
+            <a href="{% url 'shop' %}" class="flex items-center gap-3 rounded-lg bg-red-50 px-3 py-2.5 font-bold text-red-700 transition">
+              <span class="text-base">🛒</span> Shop all products
+            </a>
+            <a href="{% url 'categories' %}" class="flex items-center gap-3 rounded-lg px-3 py-2.5 hover:bg-stone-100 transition">
+              <span class="text-base">📦</span> Categories
+            </a>
+            <a href="{% url 'deals' %}" class="flex items-center gap-3 rounded-lg px-3 py-2.5 hover:bg-stone-100 transition">
+              <span class="text-base">🔥</span> Daily deals
+            </a>
+            <a href="{% url 'wishlist' %}" class="flex items-center justify-between rounded-lg px-3 py-2.5 hover:bg-stone-100 transition">
+              <span class="flex items-center gap-3"><span class="text-base">♡</span> Wishlist</span>
+              <span id="drawer-wishlist-badge" class="grid size-5 place-items-center rounded-full bg-stone-200 text-[10px] font-bold text-neutral-800 {% if request.session.wishlist|length %}bg-red-700 text-white{% endif %}">
+                {{ request.session.wishlist|length|default:0 }}
+              </span>
+            </a>
+          </div>
+
+          <div class="py-3 space-y-1 text-xs text-neutral-600">
+            <a href="{% url 'track_order' %}" class="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-stone-100 transition">
+              <span>📍</span> Track order
+            </a>
+            <a href="{% url 'about' %}" class="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-stone-100 transition">
+              <span>🌱</span> About Qiksearch
+            </a>
+            <a href="{% url 'contact' %}" class="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-stone-100 transition">
+              <span>📞</span> Contact us
+            </a>
+            <a href="{% url 'faqs' %}" class="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-stone-100 transition">
+              <span>❓</span> FAQs
+            </a>
+            <a href="{% url 'returns' %}" class="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-stone-100 transition">
+              <span>↩</span> Returns & refunds
+            </a>
+            <a href="{% url 'terms' %}" class="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-stone-100 transition">
+              <span>📋</span> Terms & conditions
+            </a>
+          </div>
+        </nav>
+
+        <!-- Drawer Footer with quick WhatsApp & Call CTA -->
+        <div class="border-t border-neutral-200 bg-stone-50 p-4">
+          <p class="mb-2 text-[11px] font-medium text-neutral-500">Need immediate help with your farm order?</p>
+          <a href="https://wa.me/254700007552" target="_blank" rel="noopener noreferrer" class="flex w-full items-center justify-center gap-2 rounded-lg bg-green-600 px-4 py-2.5 text-xs font-semibold text-white shadow-sm transition hover:bg-green-700">
+            <svg class="size-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 11.5a8.4 8.4 0 0 1-12.4 7.4L4 20l1.2-3.4A8.4 8.4 0 1 1 20 11.5Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M9 8.5c.3-.6.6-.6.9-.6h.5c.2 0 .4.1.5.4l.7 1.7c.1.2 0 .4-.1.6l-.5.6c-.2.2-.2.4 0 .7.4.7 1.1 1.4 1.8 1.8.3.2.5.2.7 0l.7-.8c.2-.2.4-.2.6-.1l1.7.8c.3.1.4.3.4.5 0 .3-.2 1-.6 1.3-.5.4-1.1.6-1.8.5-1-.1-2.3-.7-3.5-1.8-1.3-1.1-2.1-2.4-2.4-3.4-.3-.9-.1-1.6.4-2.2Z" /></svg>
+            Chat on WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Area with padding for bottom mobile nav -->
+    <main class="pb-16 md:pb-0">
       {% block content %}
 
       {% endblock %}
     </main>
 
-    <footer class="bg-stone-100 px-0 pt-14 text-neutral-800">
-      <div class="mx-auto grid w-full max-w-7xl px-8 max-md:px-5 grid-cols-[1.6fr_.8fr_1fr_1fr] gap-12 pb-11 max-md:px-5 max-md:grid-cols-2 max-md:gap-7 max-sm:[&>div:first-child]:col-span-full">
+    <!-- Mobile Fixed Bottom App Navigation Bar -->
+    <nav class="fixed bottom-0 left-0 right-0 z-40 flex h-15 items-center justify-around border-t border-neutral-200 bg-white/95 px-2 backdrop-blur-lg shadow-[0_-4px_12px_rgba(0,0,0,0.06)] md:hidden">
+      <a href="{% url 'home' %}" class="flex flex-1 flex-col items-center justify-center py-1 text-center transition hover:text-red-700 {% if request.resolver_match.url_name == 'home' %}text-red-700 font-bold{% else %}text-neutral-600{% endif %}">
+        <svg class="size-5.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+        </svg>
+        <span class="mt-0.5 text-[10px]">Home</span>
+      </a>
+
+      <a href="{% url 'shop' %}" class="flex flex-1 flex-col items-center justify-center py-1 text-center transition hover:text-red-700 {% if request.resolver_match.url_name == 'shop' %}text-red-700 font-bold{% else %}text-neutral-600{% endif %}">
+        <svg class="size-5.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.25A2.25 2.25 0 0 1 0 18.75V5.25A2.25 2.25 0 0 1 2.25 3h13.5A2.25 2.25 0 0 1 18 5.25v13.5A2.25 2.25 0 0 1 15.75 21h-2.25Z" />
+        </svg>
+        <span class="mt-0.5 text-[10px]">Shop</span>
+      </a>
+
+      <a href="{% url 'categories' %}" class="flex flex-1 flex-col items-center justify-center py-1 text-center transition hover:text-red-700 {% if request.resolver_match.url_name == 'categories' %}text-red-700 font-bold{% else %}text-neutral-600{% endif %}">
+        <svg class="size-5.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
+        </svg>
+        <span class="mt-0.5 text-[10px]">Categories</span>
+      </a>
+
+      <a href="{% url 'wishlist' %}" class="relative flex flex-1 flex-col items-center justify-center py-1 text-center transition hover:text-red-700 {% if request.resolver_match.url_name == 'wishlist' %}text-red-700 font-bold{% else %}text-neutral-600{% endif %}">
+        <svg class="size-5.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
+        </svg>
+        <span id="bottom-wishlist-badge" class="absolute top-0.5 right-1/4 grid size-4.5 place-items-center rounded-full bg-red-700 text-[9px] font-bold text-white shadow-sm">
+          {{ request.session.wishlist|length|default:0 }}
+        </span>
+        <span class="mt-0.5 text-[10px]">Wishlist</span>
+      </a>
+
+      <a href="{% url 'cart' %}" class="relative flex flex-1 flex-col items-center justify-center py-1 text-center transition hover:text-red-700 {% if request.resolver_match.url_name == 'cart' %}text-red-700 font-bold{% else %}text-neutral-600{% endif %}">
+        <svg class="size-5.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.7 2.6-7.5H5.106m2.394 7.5L5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+        </svg>
+        <span id="bottom-cart-badge" class="absolute top-0.5 right-1/4 grid size-4.5 place-items-center rounded-full bg-red-700 text-[9px] font-bold text-white shadow-sm">
+          {{ request.session.cart|length|default:0 }}
+        </span>
+        <span class="mt-0.5 text-[10px]">Cart</span>
+      </a>
+    </nav>
+
+    <footer class="bg-stone-100 px-0 pt-12 pb-20 md:pb-6 text-neutral-800">
+      <div class="mx-auto grid w-full max-w-7xl grid-cols-1 gap-8 px-4 sm:px-6 sm:grid-cols-2 lg:grid-cols-[1.6fr_.8fr_1fr_1fr] lg:gap-12 lg:px-8 pb-10">
         <div>
-          <a class="mb-4 inline-flex min-w-40 items-center" href="{% url 'home' %}">
-            <img class="h-14 w-40 object-contain mix-blend-multiply" src="{% static 'catalog/images/qiksearch-logo.png' %}" alt="Qiksearch" width="160" height="56" />
+          <a class="mb-4 inline-flex items-center" href="{% url 'home' %}">
+            <img class="h-12 sm:h-14 w-36 sm:w-40 object-contain mix-blend-multiply" src="{% static 'catalog/images/qiksearch-logo.png' %}" alt="Qiksearch" width="160" height="56" />
           </a>
           <p class="max-w-xs text-xs leading-relaxed text-neutral-500">Tools, supplies and know-how for the people who grow our future.</p>
 
-          <!-- Social Media Profiles -->
           <!-- Social Media Profiles -->
           <div class="mt-5">
             <h5 class="mb-2 text-[11px] font-bold uppercase tracking-wider text-neutral-500">Follow us</h5>
@@ -161,14 +333,6 @@
                 </svg>
               </a>
 
-              <!-- WhatsApp 
-              <a href="https://wa.me/254700007552" target="_blank" rel="noopener noreferrer" class="grid size-8 place-items-center rounded-full border border-neutral-300 bg-white text-neutral-700 transition hover:border-red-700 hover:bg-red-700 hover:text-white" aria-label="Chat with Qiksearch on WhatsApp" title="WhatsApp">
-                <svg class="size-4 fill-none stroke-currentColor stroke-2" viewBox="0 0 24 24" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M20 11.5a8.4 8.4 0 0 1-12.4 7.4L4 20l1.2-3.4A8.4 8.4 0 1 1 20 11.5Z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 8.5c.3-.6.6-.6.9-.6h.5c.2 0 .4.1.5.4l.7 1.7c.1.2 0 .4-.1.6l-.5.6c-.2.2-.2.4 0 .7.4.7 1.1 1.4 1.8 1.8.3.2.5.2.7 0l.7-.8c.2-.2.4-.2.6-.1l1.7.8c.3.1.4.3.4.5 0 .3-.2 1-.6 1.3-.5.4-1.1.6-1.8.5-1-.1-2.3-.7-3.5-1.8-1.3-1.1-2.1-2.4-2.4-3.4-.3-.9-.1-1.6.4-2.2Z" />
-                </svg>
-              </a> -->
-
               <!-- YouTube -->
               <a href="https://www.youtube.com/@Qiksearch" target="_blank" rel="noopener noreferrer" class="grid size-8 place-items-center rounded-full border border-neutral-300 bg-white text-neutral-700 transition hover:border-red-700 hover:bg-red-700 hover:text-white" aria-label="Subscribe to Qiksearch on YouTube" title="YouTube">
                 <svg class="size-4 fill-currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -180,43 +344,45 @@
         </div>
 
         <div>
-          <h4 class="mb-4 mt-1 text-xs font-bold">Find your way</h4>
-          <a class="mb-3 block text-xs text-neutral-600 transition hover:text-red-700" href="{% url 'shop' %}">Shop all</a>
-          <a class="mb-3 block text-xs text-neutral-600 transition hover:text-red-700" href="{% url 'categories' %}">Product categories</a>
-          <a class="mb-3 block text-xs text-neutral-600 transition hover:text-red-700" href="{% url 'deals' %}">Daily deals</a>
-          <a class="mb-3 block text-xs text-neutral-600 transition hover:text-red-700" href="{% url 'wishlist' %}">Wishlist</a>
-          <a class="mb-3 block text-xs text-neutral-600 transition hover:text-red-700" href="{% url 'about' %}">About Qiksearch</a>
-          <a class="mb-3 block text-xs text-neutral-600 transition hover:text-red-700" href="{% url 'terms' %}">Terms and conditions</a>
-          <a class="mb-3 block text-xs text-neutral-600 transition hover:text-red-700" href="{% url 'returns' %}">Returns and refunds</a>
-          <a class="mb-3 block text-xs text-neutral-600 transition hover:text-red-700" href="{% url 'faqs' %}">FAQs</a>
-          <a class="mb-3 block text-xs text-neutral-600 transition hover:text-red-700" href="{% url 'track_order' %}">Track your order</a>
+          <h4 class="mb-3 text-xs font-bold text-neutral-900 uppercase tracking-wider">Find your way</h4>
+          <div class="grid grid-cols-2 gap-x-4 gap-y-2.5 text-xs text-neutral-600 sm:grid-cols-1">
+            <a class="transition hover:text-red-700" href="{% url 'shop' %}">Shop all</a>
+            <a class="transition hover:text-red-700" href="{% url 'categories' %}">Categories</a>
+            <a class="transition hover:text-red-700" href="{% url 'deals' %}">Daily deals</a>
+            <a class="transition hover:text-red-700" href="{% url 'wishlist' %}">Wishlist</a>
+            <a class="transition hover:text-red-700" href="{% url 'about' %}">About us</a>
+            <a class="transition hover:text-red-700" href="{% url 'terms' %}">Terms</a>
+            <a class="transition hover:text-red-700" href="{% url 'returns' %}">Returns</a>
+            <a class="transition hover:text-red-700" href="{% url 'faqs' %}">FAQs</a>
+            <a class="transition hover:text-red-700" href="{% url 'track_order' %}">Track order</a>
+          </div>
         </div>
 
         <div>
-          <h4 class="mb-4 mt-1 text-xs font-bold">Visit us</h4>
+          <h4 class="mb-3 text-xs font-bold text-neutral-900 uppercase tracking-wider">Visit our store</h4>
           <p class="text-xs leading-relaxed text-neutral-500">
             Opposite City Stadium,<br />Lusaka Road, Industrial Area<br />Nairobi, Kenya
           </p>
-          <a class="mt-3 inline-block text-xs text-neutral-600 transition hover:text-red-700" href="{% url 'contact' %}">Contact our team ↗</a>
+          <a class="mt-3 inline-block text-xs font-semibold text-red-700 transition hover:underline" href="{% url 'contact' %}">Store location & directions ↗</a>
         </div>
 
         <div>
-          <h4 class="mb-4 mt-1 text-xs font-bold">Talk to our team</h4>
-          <a class="mb-3 block text-xs text-neutral-600 transition hover:text-red-700" href="tel:+254700007552">+254 700 007 552</a>
-          <a class="mb-3 block text-xs text-neutral-600 transition hover:text-red-700" href="mailto:info@qiksearch.co.ke">info@qiksearch.co.ke</a>
-          <p class="text-xs text-neutral-500">Mon–Sat, 8am–6pm</p>
+          <h4 class="mb-3 text-xs font-bold text-neutral-900 uppercase tracking-wider">Talk to our team</h4>
+          <a class="mb-2 block text-xs font-medium text-neutral-700 transition hover:text-red-700" href="tel:+254700007552">+254 700 007 552</a>
+          <a class="mb-2 block text-xs font-medium text-neutral-700 transition hover:text-red-700" href="mailto:info@qiksearch.co.ke">info@qiksearch.co.ke</a>
+          <p class="text-xs text-neutral-500">Mon–Sat, 8:00 AM – 6:00 PM</p>
         </div>
       </div>
 
-      <div class="mx-auto flex h-12 w-full max-w-7xl px-8 max-md:px-5 items-center justify-between border-t border-neutral-300 text-xs text-neutral-500 max-md:px-5 max-sm:flex-wrap max-sm:py-3">
-        <span>©{% now 'Y' %} Qiksearch Kenya</span>
+      <div class="mx-auto flex flex-col sm:flex-row items-center justify-between border-t border-neutral-200 px-4 sm:px-6 lg:px-8 py-4 text-center text-xs text-neutral-500 gap-2">
+        <span>©{% now 'Y' %} Qiksearch Kenya. All rights reserved.</span>
         <span>Rooted in Kenya. Growing everywhere.</span>
       </div>
     </footer>
 
-    <!-- WhatsApp Quick Float -->
-    <a class="fixed bottom-6 right-6 z-40 grid size-14 cursor-pointer place-items-center rounded-full bg-green-600 text-white shadow-lg transition hover:scale-105 hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-700" href="https://wa.me/254700007552" target="_blank" rel="noopener noreferrer" aria-label="Chat with Qiksearch on WhatsApp" title="Chat with us on WhatsApp">
-      <svg class="size-7 fill-none stroke-current stroke-2" viewBox="0 0 24 24" aria-hidden="true">
+    <!-- WhatsApp Quick Float (Positioned neatly above bottom bar on mobile) -->
+    <a class="fixed bottom-18 right-4 z-40 grid size-12 sm:size-14 place-items-center rounded-full bg-green-600 text-white shadow-xl transition hover:scale-105 hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-700 md:bottom-6 md:right-6" href="https://wa.me/254700007552" target="_blank" rel="noopener noreferrer" aria-label="Chat with Qiksearch on WhatsApp" title="Chat with us on WhatsApp">
+      <svg class="size-6 sm:size-7 fill-none stroke-current stroke-2" viewBox="0 0 24 24" aria-hidden="true">
         <path stroke-linecap="round" stroke-linejoin="round" d="M20 11.5a8.4 8.4 0 0 1-12.4 7.4L4 20l1.2-3.4A8.4 8.4 0 1 1 20 11.5Z" />
         <path stroke-linecap="round" stroke-linejoin="round" d="M9 8.5c.3-.6.6-.6.9-.6h.5c.2 0 .4.1.5.4l.7 1.7c.1.2 0 .4-.1.6l-.5.6c-.2.2-.2.4 0 .7.4.7 1.1 1.4 1.8 1.8.3.2.5.2.7 0l.7-.8c.2-.2.4-.2.6-.1l1.7.8c.3.1.4.3.4.5 0 .3-.2 1-.6 1.3-.5.4-1.1.6-1.8.5-1-.1-2.3-.7-3.5-1.8-1.3-1.1-2.1-2.4-2.4-3.4-.3-.9-.1-1.6.4-2.2Z" />
       </svg>
@@ -289,10 +455,10 @@
         }
       }
 
-      /* --- 2. Live Search Dropdown --- */
-      (() => {
-        const input = document.getElementById('live-search-input');
-        const dropdown = document.getElementById('live-search-dropdown');
+      /* --- 2. Live Search Dropdown (Desktop & Mobile) --- */
+      function setupLiveSearch(inputId, dropdownId) {
+        const input = document.getElementById(inputId);
+        const dropdown = document.getElementById(dropdownId);
         if (!input || !dropdown) return;
 
         let debounceTimer = null;
@@ -319,19 +485,19 @@
                 data.results.forEach(item => {
                   const link = document.createElement('a');
                   link.href = item.url;
-                  link.className = 'flex items-center gap-2.5 px-3 py-1.5 hover:bg-neutral-50 transition-colors text-xs text-neutral-800';
+                  link.className = 'flex items-center gap-3 px-3 py-2 hover:bg-neutral-50 transition-colors text-xs text-neutral-800';
                   link.innerHTML = `
-                    ${item.image ? `<img src="${item.image}" alt="${item.name}" class="h-7 w-7 shrink-0 rounded object-cover border border-neutral-200" />` : ''}
+                    ${item.image ? `<img src="${item.image}" alt="${item.name}" class="h-8 w-8 shrink-0 rounded object-cover border border-neutral-200" />` : ''}
                     <div class="flex-1 min-w-0">
                       <p class="font-medium text-xs truncate leading-snug text-neutral-900">${item.name}</p>
-                      ${item.price ? `<p class="text-[11px] font-semibold text-red-700 leading-none">KES ${item.price}</p>` : ''}
+                      ${item.price ? `<p class="text-[11px] font-semibold text-red-700 leading-none mt-0.5">KSh ${item.price}</p>` : ''}
                     </div>
                   `;
                   dropdown.appendChild(link);
                 });
                 dropdown.classList.remove('hidden');
               } else {
-                dropdown.innerHTML = '<div class="py-2.5 px-3 text-center text-xs text-neutral-400">No matching products found</div>';
+                dropdown.innerHTML = '<div class="py-3 px-3 text-center text-xs text-neutral-400">No matching products found</div>';
                 dropdown.classList.remove('hidden');
               }
             } catch (err) {
@@ -351,7 +517,129 @@
             dropdown.classList.remove('hidden');
           }
         });
+      }
+
+      setupLiveSearch('live-search-input', 'live-search-dropdown');
+      setupLiveSearch('mobile-live-search-input', 'mobile-live-search-dropdown');
+
+      /* --- 3. Mobile Navigation Drawer Controls --- */
+      (() => {
+        const toggleBtn = document.getElementById('mobile-menu-toggle');
+        const drawer = document.getElementById('mobile-menu-drawer');
+        const backdrop = document.getElementById('mobile-menu-backdrop');
+        const panel = document.getElementById('mobile-menu-panel');
+        const closeBtn = document.getElementById('mobile-menu-close');
+        const iconBars = document.getElementById('menu-icon-bars');
+        const iconClose = document.getElementById('menu-icon-close');
+
+        if (!toggleBtn || !drawer || !backdrop || !panel) return;
+
+        function openDrawer() {
+          drawer.classList.remove('hidden');
+          toggleBtn.setAttribute('aria-expanded', 'true');
+          document.body.classList.add('overflow-hidden');
+          if (iconBars) iconBars.classList.add('hidden');
+          if (iconClose) iconClose.classList.remove('hidden');
+          requestAnimationFrame(() => {
+            backdrop.classList.remove('opacity-0');
+            backdrop.classList.add('opacity-100');
+            panel.classList.remove('translate-x-full');
+            panel.classList.add('translate-x-0');
+          });
+        }
+
+        function closeDrawer() {
+          backdrop.classList.remove('opacity-100');
+          backdrop.classList.add('opacity-0');
+          panel.classList.remove('translate-x-0');
+          panel.classList.add('translate-x-full');
+          toggleBtn.setAttribute('aria-expanded', 'false');
+          document.body.classList.remove('overflow-hidden');
+          if (iconBars) iconBars.classList.remove('hidden');
+          if (iconClose) iconClose.classList.add('hidden');
+          setTimeout(() => {
+            drawer.classList.add('hidden');
+          }, 300);
+        }
+
+        toggleBtn.addEventListener('click', () => {
+          const isOpen = toggleBtn.getAttribute('aria-expanded') === 'true';
+          if (isOpen) closeDrawer();
+          else openDrawer();
+        });
+
+        if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+        if (backdrop) backdrop.addEventListener('click', closeDrawer);
+
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && toggleBtn.getAttribute('aria-expanded') === 'true') {
+            closeDrawer();
+          }
+        });
       })();
+
+      /* --- 4. Global Async Cart & Wishlist Form Submissions --- */
+      document.addEventListener('submit', async (e) => {
+        const form = e.target.closest('form[data-async-form]');
+        if (!form) return;
+
+        e.preventDefault();
+        const submitBtn = form.querySelector('button');
+        if (submitBtn) submitBtn.disabled = true;
+
+        try {
+          const formData = new FormData(form);
+          const response = await fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+              'X-Requested-With': 'XMLHttpRequest'
+            }
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            if (data.message && window.showToast) {
+              window.showToast(data.message, data.type || 'success');
+            }
+            if (data.cart_count !== undefined) {
+              const headerBadge = document.getElementById('header-cart-badge');
+              if (headerBadge) headerBadge.textContent = data.cart_count;
+              const bottomBadge = document.getElementById('bottom-cart-badge');
+              if (bottomBadge) bottomBadge.textContent = data.cart_count;
+            }
+            if (data.wishlist_count !== undefined) {
+              const navBadge = document.getElementById('nav-wishlist-badge');
+              if (navBadge) {
+                navBadge.textContent = data.wishlist_count;
+                if (data.wishlist_count > 0) {
+                  navBadge.classList.remove('bg-stone-200', 'text-neutral-800');
+                  navBadge.classList.add('bg-red-700', 'text-white');
+                } else {
+                  navBadge.classList.add('bg-stone-200', 'text-neutral-800');
+                  navBadge.classList.remove('bg-red-700', 'text-white');
+                }
+              }
+              const drawerBadge = document.getElementById('drawer-wishlist-badge');
+              if (drawerBadge) {
+                drawerBadge.textContent = data.wishlist_count;
+                if (data.wishlist_count > 0) {
+                  drawerBadge.classList.remove('bg-stone-200', 'text-neutral-800');
+                  drawerBadge.classList.add('bg-red-700', 'text-white');
+                }
+              }
+              const bottomBadge = document.getElementById('bottom-wishlist-badge');
+              if (bottomBadge) bottomBadge.textContent = data.wishlist_count;
+            }
+          } else {
+            form.submit();
+          }
+        } catch (err) {
+          form.submit();
+        } finally {
+          if (submitBtn) submitBtn.disabled = false;
+        }
+      });
     </script>
   </body>
 </html>

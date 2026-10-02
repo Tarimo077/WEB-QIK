@@ -71,6 +71,18 @@ class Product(models.Model):
         return promo.discounted_price_for(self.price) if promo else self.price
 
     @property
+    def discount_percent(self):
+        """Returns integer discount percentage if product has an active promo or reduced old_price."""
+        promo = self.active_promo()
+        if promo and self.price > 0:
+            diff = self.price - self.current_price
+            if diff > 0:
+                return int(round((Decimal(diff) / Decimal(self.price)) * 100))
+        elif self.old_price and self.old_price > self.price:
+            return int(round(((self.old_price - self.price) / self.old_price) * 100))
+        return 0
+
+    @property
     def structured_price(self):
         """Unformatted price string for machine-readable Product JSON-LD."""
         return format(self.current_price, "f")

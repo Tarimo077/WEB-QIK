@@ -1,21 +1,37 @@
 {% extends 'base.html' %}
 {% block title %}
-  Returns and Refunds | Qiksearch
+  Returns and Refunds | Qiksearch Kenya
 {% endblock %}
 {% block description %}Read Qiksearch Kenya's returns and refunds guidance, and contact our Nairobi team for help with an order.{% endblock %}
 {% block canonical_url %}{{ request.scheme }}://{{ request.get_host }}{% url 'returns' %}{% endblock %}
 {% block content %}
-  <div class="relative flex min-h-54 items-center overflow-hidden bg-stone-100">
-    <div class="mx-auto w-full max-w-7xl px-8 max-md:px-5 max-md:px-5">
-      <div class="mb-6 text-xs leading-relaxed text-neutral-500">
-        <a href="{% url 'home' %}">Home</a> / Returns and Refunds
-      </div><span class="mb-1 inline-block text-xs font-bold tracking-[1.7px] text-red-700">HERE TO HELP</span><h1 class="my-2 font-display text-5xl font-semibold leading-tight tracking-tight max-sm:text-4xl">Returns & refunds<span class="text-red-700">.</span></h1>
+  <div class="relative overflow-hidden bg-stone-100 py-8 sm:py-12">
+    <div class="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="mb-3 text-xs leading-relaxed text-neutral-500">
+        <a href="{% url 'home' %}" class="hover:text-red-700">Home</a> / <span class="text-neutral-800">Returns and Refunds</span>
+      </div>
+      <span class="inline-block text-[11px] sm:text-xs font-bold tracking-[1.7px] text-red-700 uppercase">HERE TO HELP</span>
+      <h1 class="mt-1 font-display text-3xl font-semibold leading-tight tracking-tight sm:text-4xl lg:text-5xl">Returns & refunds<span class="text-red-700">.</span></h1>
     </div>
+    <span class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-8xl sm:text-9xl font-bold leading-none text-stone-200/70" aria-hidden="true">↩</span>
   </div>
-  <article class="mx-auto max-w-4xl px-5 py-11 text-xs leading-[1.9] text-neutral-600 max-sm:py-7 mx-auto w-full max-w-7xl px-8 max-md:px-5 max-md:px-5">
-    <h2 class="my-3 font-display text-2xl font-semibold leading-tight tracking-tight">Need help with an order?</h2><p>Contact Qiksearch as soon as possible with your order details and a description of the issue. Our team will review the item, its condition, and the order information and explain the available options.</p><h2 class="my-3 font-display text-2xl font-semibold leading-tight tracking-tight">Before returning an item</h2><p>Please contact us before sending any product back. We will confirm whether a return is appropriate, how to package the item, and where it should be delivered. Items should be kept in their original condition and packaging where possible.</p><h2 class="my-3 font-display text-2xl font-semibold leading-tight tracking-tight">Refunds</h2><p>Where a refund is approved, our team will confirm the amount and payment method. Timing may depend on the original payment provider. Special-order, installed, perishable, or used products may require individual review.</p>
-    <p>
-      For help, call <a href="tel:+254700007552">+254 700 007 552</a> or email <a href="mailto:info@qiksearch.co.ke">info@qiksearch.co.ke</a>.
-    </p>
+
+  <article class="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 text-xs sm:text-sm leading-relaxed text-neutral-600 space-y-6">
+    <div class="rounded-2xl border border-neutral-200 bg-white p-6 sm:p-8 shadow-xs">
+      <h2 class="font-display text-xl sm:text-2xl font-semibold text-neutral-900">Need help with an order?</h2>
+      <p class="mt-2">Contact Qiksearch as soon as possible with your order details and a description of the issue. Our team will review the item, its condition, and the order information and explain the available options.</p>
+
+      <h2 class="mt-6 font-display text-xl sm:text-2xl font-semibold text-neutral-900">Before returning an item</h2>
+      <p class="mt-2">Please contact us before sending any product back. We will confirm whether a return is appropriate, how to package the item, and where it should be delivered. Items should be kept in their original condition and packaging where possible.</p>
+
+      <h2 class="mt-6 font-display text-xl sm:text-2xl font-semibold text-neutral-900">Refunds</h2>
+      <p class="mt-2">Where a refund is approved, our team will confirm the amount and payment method. Timing may depend on the original payment provider. Special-order, installed, perishable, or used products may require individual review.</p>
+      
+      <div class="mt-6 rounded-xl bg-stone-50 p-4 border border-neutral-200">
+        <p class="font-medium text-neutral-800">
+          For help, call <a href="tel:+254700007552" class="text-red-700 hover:underline">+254 700 007 552</a> or email <a href="mailto:info@qiksearch.co.ke" class="text-red-700 hover:underline">info@qiksearch.co.ke</a>.
+        </p>
+      </div>
+    </div>
   </article>
 {% endblock %}
