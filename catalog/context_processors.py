@@ -7,7 +7,7 @@ def site_settings(request):
     """
     defaults = {
         "site_name": "Qiksearch Kenya",
-        "announcement_text": "Special offer! Free countrywide delivery consultations on bulk farm equipment.",
+        "announcement_text": "Welcome to Qiksearch",
         "phone_number": "+254 700 007 552",
         "phone_raw": "0700007552",
         "whatsapp_number": "254700007552",

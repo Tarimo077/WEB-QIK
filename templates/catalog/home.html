@@ -8,47 +8,49 @@
 {% block og_title %}Farm equipment, seeds & livestock supplies in Kenya | Qiksearch{% endblock %}
 {% block og_description %}Shop practical farm equipment, livestock supplies, seeds and fodder from Qiksearch in Nairobi, Kenya.{% endblock %}
 {% block content %}
-  <!-- Top Hero Section (Rounded with fitted logo in background) -->
-  <section class="relative mx-auto my-4 sm:my-6 w-full max-w-7xl overflow-hidden rounded-2xl bg-red-950 text-white min-h-[460px] sm:min-h-[520px] lg:min-h-[560px] shadow-lg flex items-center">
-    <!-- Background Texture Image -->
-    <img class="absolute inset-0 size-full object-cover opacity-25 saturate-90 mix-blend-overlay" src="{% static 'catalog/images/qiksearch-site-background.jpeg' %}" alt="Qiksearch farm supplies Kenya" fetchpriority="high" decoding="async" />
-    
-    <!-- Rich Multi-Stop Linear & Radial Gradient Overlays -->
-    <div class="absolute inset-0 bg-gradient-to-r from-red-950 via-red-950/90 to-red-900/60"></div>
-    <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_75%_50%,rgba(244,63,94,0.15)_0%,transparent_60%)]"></div>
-    
-    <!-- Seamless Background Logo Watermark (No white bounding box) -->
-    <div class="pointer-events-none absolute -right-4 sm:right-6 lg:right-12 top-1/2 -translate-y-1/2 flex items-center justify-center opacity-40 sm:opacity-50 select-none">
-      <img 
-        src="{% static 'catalog/images/qiksearch-logo-white.png' %}" 
-        alt="" 
-        class="h-auto max-h-48 sm:max-h-64 lg:max-h-80 w-64 sm:w-80 lg:w-[460px] object-contain" 
-        aria-hidden="true" 
-        loading="lazy" 
-      />
-    </div>
+  <!-- Top Hero Section (Rounded with fitted logo in background, same container width) -->
+  <section class="mx-auto my-4 sm:my-6 w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="relative w-full overflow-hidden rounded-2xl bg-red-950 text-white min-h-[460px] sm:min-h-[520px] lg:min-h-[560px] shadow-lg flex items-center">
+      <!-- Background Texture Image -->
+      <img class="absolute inset-0 size-full object-cover opacity-25 saturate-90 mix-blend-overlay" src="{% static 'catalog/images/qiksearch-site-background.jpeg' %}" alt="Qiksearch farm supplies Kenya" fetchpriority="high" decoding="async" />
+      
+      <!-- Rich Multi-Stop Linear & Radial Gradient Overlays -->
+      <div class="absolute inset-0 bg-gradient-to-r from-red-950 via-red-950/90 to-red-900/60"></div>
+      <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_75%_50%,rgba(244,63,94,0.15)_0%,transparent_60%)]"></div>
+      
+      <!-- Seamless Background Logo Watermark (No white bounding box) -->
+      <div class="pointer-events-none absolute -right-4 sm:right-6 lg:right-12 top-1/2 -translate-y-1/2 flex items-center justify-center opacity-40 sm:opacity-50 select-none">
+        <img 
+          src="{% static 'catalog/images/qiksearch-logo-white.png' %}" 
+          alt="" 
+          class="h-auto max-h-48 sm:max-h-64 lg:max-h-80 w-64 sm:w-80 lg:w-[460px] object-contain" 
+          aria-hidden="true" 
+          loading="lazy" 
+        />
+      </div>
 
-    <!-- Main Hero Content -->
-    <div class="relative z-10 mx-auto flex w-full flex-col justify-center px-5 py-12 sm:px-8 sm:py-16 lg:px-12">
-      <div class="max-w-xl">
-        <span class="block text-[11px] sm:text-xs font-bold tracking-[2px] text-lime-200 uppercase">{{ site_settings.hero_badge|default:"GOOD THINGS GROW HERE" }}</span>
-        <h1 class="my-3 sm:my-4 font-display text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">
-          {{ site_settings.hero_title|default:"For the love of growing." }}
-        </h1>
-        <p class="mb-6 max-w-md text-sm leading-relaxed text-neutral-100 sm:text-base">
-          {{ site_settings.hero_description|default:"Thoughtful tools and trusted supplies for the people who make Kenya bloom." }}
-        </p>
-        <div class="flex flex-wrap items-center gap-3">
-          <a class="inline-flex min-h-11 sm:min-h-12 items-center gap-3 rounded-xl bg-rose-200 px-5 sm:px-6 text-xs sm:text-sm font-bold text-red-950 shadow-md transition hover:-translate-y-0.5 hover:bg-rose-100 active:scale-95" href="{% url 'shop' %}">
-            Find your farm essentials <span>↗</span>
-          </a>
-          <a class="inline-flex min-h-11 sm:min-h-12 items-center gap-2 rounded-xl border border-white/40 bg-white/10 px-4 sm:px-5 text-xs sm:text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20 active:scale-95" href="{% url 'categories' %}">
-            Browse categories
-          </a>
-        </div>
-        <div class="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-xs text-neutral-200">
-          <span>✳ &nbsp;Rooted in Kenya</span>
-          <span>✳ &nbsp;Here to help you grow</span>
+      <!-- Main Hero Content -->
+      <div class="relative z-10 flex w-full flex-col justify-center px-6 py-12 sm:px-10 sm:py-16 lg:px-14">
+        <div class="max-w-xl">
+          <span class="block text-[11px] sm:text-xs font-bold tracking-[2px] text-lime-200 uppercase">{{ site_settings.hero_badge|default:"GOOD THINGS GROW HERE" }}</span>
+          <h1 class="my-3 sm:my-4 font-display text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">
+            {{ site_settings.hero_title|default:"For the love of growing." }}
+          </h1>
+          <p class="mb-6 max-w-md text-sm leading-relaxed text-neutral-100 sm:text-base">
+            {{ site_settings.hero_description|default:"Thoughtful tools and trusted supplies for the people who make Kenya bloom." }}
+          </p>
+          <div class="flex flex-wrap items-center gap-3">
+            <a class="inline-flex min-h-11 sm:min-h-12 items-center gap-3 rounded-xl bg-rose-200 px-5 sm:px-6 text-xs sm:text-sm font-bold text-red-950 shadow-md transition hover:-translate-y-0.5 hover:bg-rose-100 active:scale-95" href="{% url 'shop' %}">
+              Find your farm essentials <span>↗</span>
+            </a>
+            <a class="inline-flex min-h-11 sm:min-h-12 items-center gap-2 rounded-xl border border-white/40 bg-white/10 px-4 sm:px-5 text-xs sm:text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20 active:scale-95" href="{% url 'categories' %}">
+              Browse categories
+            </a>
+          </div>
+          <div class="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-xs text-neutral-200">
+            <span>✳ &nbsp;Rooted in Kenya</span>
+            <span>✳ &nbsp;Here to help you grow</span>
+          </div>
         </div>
       </div>
     </div>
@@ -56,8 +58,8 @@
 
   <!-- Daily Deals Section (if active) -->
   {% if deals %}
-    <section class="mx-auto my-4 sm:my-6 w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 rounded-2xl bg-stone-100 border border-neutral-200/80 shadow-xs">
-      <div>
+    <section class="mx-auto my-4 sm:my-6 w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="w-full rounded-2xl bg-stone-100 border border-neutral-200/80 p-5 sm:p-8 lg:p-10 shadow-xs">
         <div class="mb-6 flex items-end justify-between gap-4">
           <div>
             <span class="inline-block text-[11px] sm:text-xs font-bold tracking-[1.7px] text-red-700 uppercase">Limited-time savings</span>
@@ -76,7 +78,7 @@
     </section>
   {% endif %}
 
-  <!-- Value Props Strip (Container width matching elements above and below) -->
+  <!-- Value Props Strip (For Kenyan farms) -->
   <section class="mx-auto my-4 sm:my-6 w-full max-w-7xl px-4 sm:px-6 lg:px-8">
     <div class="grid w-full grid-cols-2 gap-4 rounded-2xl border border-neutral-200 bg-stone-50 p-5 sm:p-6 sm:grid-cols-2 lg:grid-cols-4 lg:p-7 shadow-xs">
       <div class="flex items-start gap-2.5">
@@ -111,7 +113,7 @@
   </section>
 
   <!-- Farm Favourites Grid -->
-  <section class="mx-auto my-4 sm:my-6 w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+  <section class="mx-auto my-4 sm:my-6 w-full max-w-7xl px-4 sm:px-6 lg:px-8">
     <div class="mb-6 flex items-end justify-between gap-4">
       <div>
         <span class="inline-block text-[11px] sm:text-xs font-bold tracking-[1.7px] text-red-700 uppercase">Good picks for good work</span>
@@ -129,73 +131,77 @@
   </section>
 
   <!-- Our Story Highlight / Bottom Hero -->
-  <section class="relative mx-auto my-6 grid w-full max-w-7xl grid-cols-1 overflow-hidden rounded-2xl bg-red-900 text-white shadow-lg md:grid-cols-2">
-    <!-- Left: Branded Logo Visual Container with Image & Gradient Overlay -->
-    <div class="relative flex min-h-[260px] sm:min-h-[320px] md:min-h-[380px] w-full flex-col items-center justify-center overflow-hidden bg-neutral-950 p-6 sm:p-8">
-      <!-- Background Texture Layer -->
-      <div class="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-30 mix-blend-overlay"
-        style="background-image: url('{% static 'catalog/images/qiksearch-site-background.jpeg' %}');"></div>
-      
-      <!-- Gradient Overlays for depth and high contrast -->
-      <div class="absolute inset-0 bg-gradient-to-br from-neutral-950/95 via-red-950/80 to-neutral-900/90"></div>
-      <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08)_0%,transparent_70%)]"></div>
-      
-      <!-- Decorative Blur Elements -->
-      <div class="pointer-events-none absolute -right-6 -top-6 size-32 rounded-full bg-red-700/20 blur-2xl"></div>
-      <div class="pointer-events-none absolute -bottom-6 -left-6 size-32 rounded-full bg-rose-600/15 blur-2xl"></div>
+  <section class="mx-auto my-4 sm:my-6 w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="relative grid w-full grid-cols-1 overflow-hidden rounded-2xl bg-red-900 text-white shadow-lg md:grid-cols-2">
+      <!-- Left: Branded Logo Visual Container with Image & Gradient Overlay -->
+      <div class="relative flex min-h-[260px] sm:min-h-[320px] md:min-h-[380px] w-full flex-col items-center justify-center overflow-hidden bg-neutral-950 p-6 sm:p-8">
+        <!-- Background Texture Layer -->
+        <div class="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-30 mix-blend-overlay"
+          style="background-image: url('{% static 'catalog/images/qiksearch-site-background.jpeg' %}');"></div>
+        
+        <!-- Gradient Overlays for depth and high contrast -->
+        <div class="absolute inset-0 bg-gradient-to-br from-neutral-950/95 via-red-950/80 to-neutral-900/90"></div>
+        <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08)_0%,transparent_70%)]"></div>
+        
+        <!-- Decorative Blur Elements -->
+        <div class="pointer-events-none absolute -right-6 -top-6 size-32 rounded-full bg-red-700/20 blur-2xl"></div>
+        <div class="pointer-events-none absolute -bottom-6 -left-6 size-32 rounded-full bg-rose-600/15 blur-2xl"></div>
 
-      <!-- Prominent, Properly Sized Logo Card -->
-      <div class="relative z-10 flex flex-col items-center text-center">
-        <div class="mb-3.5 flex items-center justify-center rounded-2xl bg-white/95 p-4 sm:p-5 shadow-2xl backdrop-blur-md transition-transform duration-300 hover:scale-105">
-          <img 
-            src="{% static 'catalog/images/qiksearch-logo.png' %}" 
-            alt="Qiksearch Kenya" 
-            class="h-auto max-h-14 sm:max-h-18 w-44 sm:w-56 object-contain"
-            width="224"
-            height="72"
-          />
+        <!-- Prominent, Properly Sized Logo Card -->
+        <div class="relative z-10 flex flex-col items-center text-center">
+          <div class="mb-3.5 flex items-center justify-center rounded-2xl bg-white/95 p-4 sm:p-5 shadow-2xl backdrop-blur-md transition-transform duration-300 hover:scale-105">
+            <img 
+              src="{% static 'catalog/images/qiksearch-logo.png' %}" 
+              alt="Qiksearch Kenya" 
+              class="h-auto max-h-14 sm:max-h-18 w-44 sm:w-56 object-contain"
+              width="224"
+              height="72"
+            />
+          </div>
+          <span class="text-[10px] sm:text-[11px] font-bold tracking-[2.5px] text-rose-200/90 uppercase">
+            ROOTED IN KENYA · GROWING TOGETHER
+          </span>
         </div>
-        <span class="text-[10px] sm:text-[11px] font-bold tracking-[2.5px] text-rose-200/90 uppercase">
-          ROOTED IN KENYA · GROWING TOGETHER
-        </span>
+
+        <!-- Story Section Marker -->
+        <div class="absolute bottom-3 left-4 text-xs font-semibold tracking-wider text-rose-200/80 sm:bottom-4 sm:left-6">
+          OUR STORY
+        </div>
       </div>
 
-      <!-- Story Section Marker -->
-      <div class="absolute bottom-3 left-4 text-xs font-semibold tracking-wider text-rose-200/80 sm:bottom-4 sm:left-6">
-        OUR STORY
-      </div>
-    </div>
-
-    <!-- Right: Story Narrative Content -->
-    <div class="flex flex-col justify-center bg-red-900 px-6 py-10 sm:px-10 sm:py-14 lg:px-14">
-      <span class="inline-block text-[11px] sm:text-xs font-bold tracking-[2px] text-lime-200">GROUNDED IN SOMETHING GOOD</span>
-      <h2 class="my-3 font-display text-2xl sm:text-3xl lg:text-4xl font-semibold leading-tight tracking-tight">
-        Big things begin<br />with <em class="font-serif font-normal text-rose-200">good soil.</em>
-      </h2>
-      <p class="mb-6 text-xs sm:text-sm leading-relaxed text-neutral-100">
-        We're a Nairobi-born social enterprise working alongside Kenya's agricultural communities. We bring together useful farm equipment, quality supplies and a real understanding of what it takes to grow.
-      </p>
-      <div>
-        <a href="{% url 'about' %}" class="inline-flex min-h-11 items-center gap-3 rounded-lg bg-white px-5 text-xs sm:text-sm font-bold text-red-900 shadow-md transition hover:bg-stone-100 active:scale-95">
-          A little about us <span>↗</span>
-        </a>
+      <!-- Right: Story Narrative Content -->
+      <div class="flex flex-col justify-center bg-red-900 px-6 py-10 sm:px-10 sm:py-14 lg:px-14">
+        <span class="inline-block text-[11px] sm:text-xs font-bold tracking-[2px] text-lime-200">GROUNDED IN SOMETHING GOOD</span>
+        <h2 class="my-3 font-display text-2xl sm:text-3xl lg:text-4xl font-semibold leading-tight tracking-tight">
+          Big things begin<br />with <em class="font-serif font-normal text-rose-200">good soil.</em>
+        </h2>
+        <p class="mb-6 text-xs sm:text-sm leading-relaxed text-neutral-100">
+          We're a Nairobi-born social enterprise working alongside Kenya's agricultural communities. We bring together useful farm equipment, quality supplies and a real understanding of what it takes to grow.
+        </p>
+        <div>
+          <a href="{% url 'about' %}" class="inline-flex min-h-11 items-center gap-3 rounded-lg bg-white px-5 text-xs sm:text-sm font-bold text-red-900 shadow-md transition hover:bg-stone-100 active:scale-95">
+            A little about us <span>↗</span>
+          </a>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- Promise & Help Banner -->
-  <section class="mx-auto my-4 sm:my-6 flex w-full max-w-7xl flex-col items-start justify-between gap-6 px-4 py-8 sm:flex-row sm:items-center sm:px-6 sm:py-10 lg:px-8 rounded-2xl bg-stone-100 border border-neutral-200/80">
-    <div class="flex items-start gap-4">
-      <span class="text-xl text-red-700">✳</span>
-      <div>
-        <span class="inline-block text-[11px] font-bold tracking-[1.7px] text-red-700 uppercase">A little promise from us</span>
-        <h2 class="mt-1 font-display text-2xl sm:text-3xl font-semibold leading-tight tracking-tight">
-          Good tools. Good people.<br /><em class="font-serif font-normal text-red-700">Better growing.</em>
-        </h2>
+  <section class="mx-auto my-4 sm:my-6 w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="flex w-full flex-col items-start justify-between gap-6 p-6 sm:flex-row sm:items-center sm:p-8 lg:p-10 rounded-2xl bg-stone-100 border border-neutral-200/80 shadow-xs">
+      <div class="flex items-start gap-4">
+        <span class="text-xl text-red-700">✳</span>
+        <div>
+          <span class="inline-block text-[11px] font-bold tracking-[1.7px] text-red-700 uppercase">A little promise from us</span>
+          <h2 class="mt-1 font-display text-2xl sm:text-3xl font-semibold leading-tight tracking-tight">
+            Good tools. Good people.<br /><em class="font-serif font-normal text-red-700">Better growing.</em>
+          </h2>
+        </div>
       </div>
+      <a class="inline-flex min-h-12 w-full sm:w-auto items-center justify-center gap-3 rounded-xl bg-red-700 px-6 text-xs sm:text-sm font-semibold text-white shadow-sm transition hover:bg-red-800 active:scale-95" href="https://wa.me/254700007552" target="_blank" rel="noopener">
+        Talk to our team <span>↗</span>
+      </a>
     </div>
-    <a class="inline-flex min-h-12 w-full sm:w-auto items-center justify-center gap-3 rounded-xl bg-red-700 px-6 text-xs sm:text-sm font-semibold text-white shadow-sm transition hover:bg-red-800 active:scale-95" href="https://wa.me/254700007552" target="_blank" rel="noopener">
-      Talk to our team <span>↗</span>
-    </a>
   </section>
 {% endblock %}
